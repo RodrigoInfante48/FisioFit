@@ -1,0 +1,110 @@
+/* ==========================================================================
+   FisioFit — Figura muscular (contenedor "liquid glass" + estilos SVG)
+   ========================================================================== */
+
+/* Cápsula de vidrio que envuelve la figura, flotando dentro del stage */
+.figure-shell {
+  position: relative;
+  width: min(100%, 360px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sombra proyectada que "responde" a la flotación (se atenúa/expande) */
+.figure-shell::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: 46%;
+  height: 5%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0) 72%
+  );
+  filter: blur(4px);
+  animation: figure-shadow 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Envoltorio que oscila — separado del shell para no interferir con la sombra */
+.figure-float {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: figure-float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes figure-float {
+  0%,
+  100% {
+    transform: translateY(-4px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes figure-shadow {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translateX(-50%) scale(0.85);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure-float,
+  .figure-shell::after {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   SVG — figura anatómica
+   ========================================================================== */
+
+.muscle-figure {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.45));
+}
+
+/* Silueta base decorativa: no interactiva, tono neutro de tejido */
+.body-decor {
+  pointer-events: none;
+}
+
+.body-decor > * {
+  fill: rgba(150, 88, 88, 0.4);
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 1;
+}
+
+/* Grupos musculares — temporalmente con stroke visible para verificar
+   que cada path está bien delimitado. El fill/heatmap real llega después. */
+.muscle-path {
+  fill: rgba(239, 43, 23, 0.16);
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  cursor: pointer;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.muscle-path:hover {
+  fill: rgba(239, 43, 23, 0.34);
+  stroke: var(--color-accent-strong);
+}
