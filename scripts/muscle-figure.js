@@ -329,3 +329,37 @@ document.addEventListener("workoutGroupChanged", (event) => {
   pendingGroup = event.detail.group;
   if (figureReady) applyHeatmap(pendingGroup);
 });
+
+// ============================================================================
+// Selección individual — click en cualquier <path data-muscle>, esté o no
+// resaltado por el heatmap actual. Sólo un músculo puede estar seleccionado
+// a la vez (click de nuevo lo deselecciona). La selección se marca en ambos
+// <path> con el mismo data-muscle (frontal y posterior) para que sobreviva
+// al rotar la figura, aunque el evento se dispare una sola vez por click.
+// ============================================================================
+
+let selectedMuscle = null;
+
+function applySelection() {
+  document.querySelectorAll(".muscle-path[data-muscle]").forEach((path) => {
+    path.classList.toggle(
+      "is-selected",
+      path.dataset.muscle === selectedMuscle
+    );
+  });
+}
+
+document.addEventListener("click", (event) => {
+  const path = event.target.closest(".muscle-path[data-muscle]");
+  if (!path) return;
+
+  const muscle = path.dataset.muscle;
+  selectedMuscle = selectedMuscle === muscle ? null : muscle;
+  applySelection();
+
+  const muscleSelected = new CustomEvent("muscleSelected", {
+    detail: { muscle: selectedMuscle },
+  });
+  document.dispatchEvent(muscleSelected);
+  console.log("muscleSelected", muscleSelected.detail);
+});

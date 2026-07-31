@@ -239,3 +239,14 @@
     filter: drop-shadow(0 0 8px var(--muscle-color));
   }
 }
+
+/* Selección individual de músculo: outline/glow cian (--color-accent), en
+   contraste deliberado con la paleta fría->roja del heatmap de grupo, para
+   que "seleccionado" nunca se confunda visualmente con "resaltado por
+   heatmap". Se superpone a is-active/is-dimmed/is-hero, no los reemplaza. */
+.muscle-path.is-selected {
+  stroke: var(--color-accent-strong);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--color-accent-glow))
+    drop-shadow(0 0 3px var(--color-accent-strong));
+}
