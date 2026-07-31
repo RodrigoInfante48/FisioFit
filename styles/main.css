@@ -199,3 +199,55 @@ button {
 .glass-btn:active {
   transform: translateY(0) scale(0.99);
 }
+
+/* Hover con insinuación de color por categoría */
+.glass-btn[data-movement="push"]:hover {
+  border-color: rgba(255, 122, 69, 0.3);
+}
+
+.glass-btn[data-movement="pull"]:hover {
+  border-color: rgba(79, 141, 255, 0.3);
+}
+
+.glass-btn[data-movement="legs"]:hover {
+  border-color: rgba(61, 220, 132, 0.3);
+}
+
+/* Estado seleccionado — glow de color distinto por categoría */
+.glass-btn.is-selected {
+  color: var(--color-text);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.glass-btn[data-movement="push"].is-selected {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 122, 69, 0.22) 0%,
+    rgba(255, 122, 69, 0.08) 100%
+  );
+  border-color: var(--color-push);
+  box-shadow: 0 0 0 1px rgba(255, 122, 69, 0.4), 0 0 24px var(--color-push-glow),
+    var(--shadow-inset-highlight);
+}
+
+.glass-btn[data-movement="pull"].is-selected {
+  background: linear-gradient(
+    160deg,
+    rgba(79, 141, 255, 0.22) 0%,
+    rgba(79, 141, 255, 0.08) 100%
+  );
+  border-color: var(--color-pull);
+  box-shadow: 0 0 0 1px rgba(79, 141, 255, 0.4), 0 0 24px var(--color-pull-glow),
+    var(--shadow-inset-highlight);
+}
+
+.glass-btn[data-movement="legs"].is-selected {
+  background: linear-gradient(
+    160deg,
+    rgba(61, 220, 132, 0.22) 0%,
+    rgba(61, 220, 132, 0.08) 100%
+  );
+  border-color: var(--color-legs);
+  box-shadow: 0 0 0 1px rgba(61, 220, 132, 0.4), 0 0 24px var(--color-legs-glow),
+    var(--shadow-inset-highlight);
+}
