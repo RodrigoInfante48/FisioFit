@@ -11,6 +11,37 @@
 // fetch por CORS y hay que servir con un servidor local.
 
 const FRONT_VIEW_URL = "assets/muscle-front.svg";
+const BACK_VIEW_URL = "assets/muscle-back.svg";
+
+// Ambas vistas se cargan e inyectan a la vez (no sólo la activa): así el
+// heatmap puede aplicarse una sola vez a los <path data-muscle> de las dos,
+// y rotar es sólo un cambio de transform/opacity, sin más fetch/parseo.
+let shellEl = null;
+let frontFaceEl = null;
+let backFaceEl = null;
+
+// Estado de rotación — declarado aquí (y no junto al resto de la lógica más
+// abajo) porque loadMuscleFigure() llama a setupRotationControls() de forma
+// síncrona, antes de cualquier await: si "let activeFace" viviera más abajo
+// en el archivo, esa llamada la referenciaría antes de su inicialización
+// (temporal dead zone) y lanzaría un ReferenceError.
+const ROTATE_TRANSITION_MS = 900; // debe coincidir con la transición CSS de .figure-face
+const DRAG_FULL_DISTANCE_PX = 160; // px arrastrados para t = ±1 (giro completo)
+const DRAG_COMMIT_T = 0.5; // progreso mínimo al soltar para completar el giro
+
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+const rotateTransitionMs = prefersReducedMotion ? 0 : ROTATE_TRANSITION_MS;
+
+// activeFace: la cara actualmente de frente (t=0, opacidad 1).
+// inactiveFace: la otra, en reposo fuera de vista (opacidad 0).
+let activeFace = null;
+let inactiveFace = null;
+let isBackView = false;
+let isAnimating = false;
+let isDragging = false;
+let dragStartX = 0;
 
 async function loadMuscleFigure() {
   const stage = document.querySelector(".stage");
@@ -18,26 +49,162 @@ async function loadMuscleFigure() {
 
   const shell = document.createElement("div");
   shell.className = "figure-shell";
+  shellEl = shell;
 
   const float = document.createElement("div");
   float.className = "figure-float";
-  shell.appendChild(float);
 
+  const perspective = document.createElement("div");
+  perspective.className = "figure-perspective";
+
+  const frontFace = document.createElement("div");
+  frontFace.className = "figure-face figure-face--front";
+  frontFaceEl = frontFace;
+
+  const backFace = document.createElement("div");
+  backFace.className = "figure-face figure-face--back";
+  backFaceEl = backFace;
+
+  perspective.append(frontFace, backFace);
+  float.appendChild(perspective);
+  shell.appendChild(float);
   stage.appendChild(shell);
 
+  setupRotationControls();
+
   try {
-    const response = await fetch(FRONT_VIEW_URL);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    float.innerHTML = await response.text();
+    const [frontResponse, backResponse] = await Promise.all([
+      fetch(FRONT_VIEW_URL),
+      fetch(BACK_VIEW_URL),
+    ]);
+    if (!frontResponse.ok) throw new Error(`HTTP ${frontResponse.status}`);
+    if (!backResponse.ok) throw new Error(`HTTP ${backResponse.status}`);
+
+    const [frontMarkup, backMarkup] = await Promise.all([
+      frontResponse.text(),
+      backResponse.text(),
+    ]);
+    frontFace.innerHTML = frontMarkup;
+    backFace.innerHTML = backMarkup;
+
     figureReady = true;
     applyHeatmap(pendingGroup);
   } catch (error) {
     console.error("No se pudo cargar la figura muscular:", error);
-    float.textContent = "No se pudo cargar la figura.";
+    frontFace.textContent = "No se pudo cargar la figura.";
   }
 }
 
 loadMuscleFigure();
+
+// ============================================================================
+// Rotación — arrastre horizontal (mouse/touch) o botón "girar" alternan entre
+// vista frontal y posterior. Vive en .figure-perspective, dentro de
+// .figure-float, por lo que la flotación (Prompt 3) nunca se detiene, ni
+// durante ni después del giro. El heatmap ya está aplicado a ambas caras
+// (mismos data-muscle), así que rotar no requiere volver a calcularlo.
+//
+// Cada cara gira, como mucho, ±90° (nunca los 180° completos): la saliente
+// pasa de 0° a 90° perdiendo opacidad, la entrante de -90°(u opuesto) a 0°
+// ganándola, en paralelo — ver comentario de diseño en muscle-figure.css.
+// Así "t" (progreso de -1 a 1) controla ambas caras a la vez, y en t=±0.5
+// (mitad del giro) el crossfade está exactamente al 50/50.
+// ============================================================================
+
+function applyFaceProgress(outgoing, incoming, t) {
+  const clamped = Math.max(-1, Math.min(1, t));
+  const sign = clamped === 0 ? 1 : Math.sign(clamped);
+
+  outgoing.style.transform = `rotateY(${90 * clamped}deg)`;
+  outgoing.style.opacity = String(1 - Math.abs(clamped));
+
+  incoming.style.transform = `rotateY(${90 * (clamped - sign)}deg)`;
+  incoming.style.opacity = String(Math.abs(clamped));
+}
+
+// Lleva la rotación a su estado final (targetT = 0 cancela y vuelve al
+// reposo, ±1 completa el giro). `freshStart` sólo hace falta cuando se
+// arranca desde reposo (botón): reposiciona instantáneamente (sin
+// transición, invisible porque su opacidad es 0) la cara entrante al lado
+// correcto para que la transición subsiguiente la traiga girando en la
+// misma dirección que la saliente.
+function settleRotation(targetT, { freshStart = false } = {}) {
+  const outgoing = activeFace;
+  const incoming = inactiveFace;
+
+  if (freshStart && targetT !== 0) {
+    const sign = Math.sign(targetT);
+    incoming.style.transition = "none";
+    incoming.style.transform = `rotateY(${-90 * sign}deg)`;
+    incoming.getBoundingClientRect(); // fuerza reflow antes de re-habilitar la transición
+    incoming.style.transition = "";
+  }
+
+  isAnimating = true;
+  applyFaceProgress(outgoing, incoming, targetT);
+
+  if (targetT !== 0) {
+    activeFace = incoming;
+    inactiveFace = outgoing;
+    isBackView = activeFace === backFaceEl;
+  }
+
+  window.setTimeout(() => {
+    isAnimating = false;
+  }, rotateTransitionMs);
+}
+
+function rotateToOppositeView() {
+  if (isAnimating || isDragging || !figureReady) return;
+  settleRotation(1, { freshStart: true });
+}
+
+function setupRotationControls() {
+  activeFace = frontFaceEl;
+  inactiveFace = backFaceEl;
+
+  shellEl.addEventListener("pointerdown", onPointerDown);
+
+  const rotateButton = document.getElementById("rotate-figure-btn");
+  rotateButton?.addEventListener("click", rotateToOppositeView);
+}
+
+function onPointerDown(event) {
+  if (isAnimating || !figureReady) return;
+  if (event.button !== undefined && event.button !== 0) return;
+
+  isDragging = true;
+  dragStartX = event.clientX;
+
+  shellEl.classList.add("is-dragging");
+  shellEl.setPointerCapture?.(event.pointerId);
+
+  window.addEventListener("pointermove", onPointerMove);
+  window.addEventListener("pointerup", onPointerUp);
+  window.addEventListener("pointercancel", onPointerUp);
+}
+
+function onPointerMove(event) {
+  if (!isDragging) return;
+  const t = (event.clientX - dragStartX) / DRAG_FULL_DISTANCE_PX;
+  applyFaceProgress(activeFace, inactiveFace, t);
+}
+
+function onPointerUp(event) {
+  if (!isDragging) return;
+  isDragging = false;
+  shellEl.classList.remove("is-dragging");
+
+  window.removeEventListener("pointermove", onPointerMove);
+  window.removeEventListener("pointerup", onPointerUp);
+  window.removeEventListener("pointercancel", onPointerUp);
+
+  const t = (event.clientX - dragStartX) / DRAG_FULL_DISTANCE_PX;
+  const committed = Math.abs(t) >= DRAG_COMMIT_T;
+  const targetT = committed ? Math.sign(t) : 0;
+
+  settleRotation(targetT);
+}
 
 // ============================================================================
 // Heatmap — conecta "workoutGroupChanged" (menú superior) con los <path> de
