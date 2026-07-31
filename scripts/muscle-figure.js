@@ -87,6 +87,7 @@ async function loadMuscleFigure() {
     frontFace.innerHTML = frontMarkup;
     backFace.innerHTML = backMarkup;
 
+    enhanceMuscleAccessibility();
     figureReady = true;
     applyHeatmap(pendingGroup);
   } catch (error) {
@@ -331,29 +332,47 @@ document.addEventListener("workoutGroupChanged", (event) => {
 });
 
 // ============================================================================
-// Selección individual — click en cualquier <path data-muscle>, esté o no
-// resaltado por el heatmap actual. Sólo un músculo puede estar seleccionado
-// a la vez (click de nuevo lo deselecciona). La selección se marca en ambos
-// <path> con el mismo data-muscle (frontal y posterior) para que sobreviva
-// al rotar la figura, aunque el evento se dispare una sola vez por click.
+// Accesibilidad — cada <path data-muscle> se vuelve enfocable/operable por
+// teclado (tabindex + role="button", como pide un elemento no nativo que
+// responde a click). MUSCLE_CONTENT (data/muscle-content.js) ya está
+// disponible acá: ese script corre de forma síncrona antes de que este
+// await se resuelva (ver comentario de FRONT_VIEW_URL/BACK_VIEW_URL arriba).
+// ============================================================================
+
+function enhanceMuscleAccessibility() {
+  document.querySelectorAll(".muscle-path[data-muscle]").forEach((path) => {
+    const muscle = path.dataset.muscle;
+    const label = typeof MUSCLE_CONTENT !== "undefined" && MUSCLE_CONTENT[muscle]
+      ? MUSCLE_CONTENT[muscle].nombre
+      : muscle;
+
+    path.setAttribute("tabindex", "0");
+    path.setAttribute("role", "button");
+    path.setAttribute("aria-pressed", "false");
+    path.setAttribute("aria-label", label);
+  });
+}
+
+// ============================================================================
+// Selección individual — click o teclado (Enter/Espacio) en cualquier
+// <path data-muscle>, esté o no resaltado por el heatmap actual. Sólo un
+// músculo puede estar seleccionado a la vez (activarlo de nuevo lo
+// deselecciona). La selección se marca en ambos <path> con el mismo
+// data-muscle (frontal y posterior) para que sobreviva al rotar la figura,
+// aunque el evento se dispare una sola vez por activación.
 // ============================================================================
 
 let selectedMuscle = null;
 
 function applySelection() {
   document.querySelectorAll(".muscle-path[data-muscle]").forEach((path) => {
-    path.classList.toggle(
-      "is-selected",
-      path.dataset.muscle === selectedMuscle
-    );
+    const isSelected = path.dataset.muscle === selectedMuscle;
+    path.classList.toggle("is-selected", isSelected);
+    path.setAttribute("aria-pressed", String(isSelected));
   });
 }
 
-document.addEventListener("click", (event) => {
-  const path = event.target.closest(".muscle-path[data-muscle]");
-  if (!path) return;
-
-  const muscle = path.dataset.muscle;
+function selectMuscle(muscle) {
   selectedMuscle = selectedMuscle === muscle ? null : muscle;
   applySelection();
 
@@ -362,4 +381,21 @@ document.addEventListener("click", (event) => {
   });
   document.dispatchEvent(muscleSelected);
   console.log("muscleSelected", muscleSelected.detail);
+}
+
+document.addEventListener("click", (event) => {
+  const path = event.target.closest(".muscle-path[data-muscle]");
+  if (!path) return;
+
+  selectMuscle(path.dataset.muscle);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+
+  const path = event.target.closest(".muscle-path[data-muscle]");
+  if (!path) return;
+
+  event.preventDefault(); // evita el scroll de página que dispara la barra espaciadora
+  selectMuscle(path.dataset.muscle);
 });

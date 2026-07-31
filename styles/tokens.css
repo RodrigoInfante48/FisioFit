@@ -27,7 +27,9 @@
   /* Texto */
   --color-text: #eaeef4;
   --color-text-dim: #8b95a6;
-  --color-text-faint: #5b6472;
+  /* #7d8797 en vez de un gris más oscuro: contraste 4.9:1 sobre el panel
+     de vidrio (mínimo WCAG AA 4.5:1 para texto normal). */
+  --color-text-faint: #7d8797;
 
   /* Acento (solo interactivos) */
   --color-accent: #4fd1ff;

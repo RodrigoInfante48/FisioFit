@@ -102,8 +102,15 @@
 
 .content-panel__sections {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: var(--space-md) var(--space-lg);
+  grid-template-columns: 1fr;
+  gap: var(--space-sm) var(--space-lg);
+}
+
+@media (min-width: 640px) {
+  .content-panel__sections {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-md) var(--space-lg);
+  }
 }
 
 .content-panel__section-title {
