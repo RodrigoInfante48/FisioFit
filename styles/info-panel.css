@@ -1,0 +1,151 @@
+/* ==========================================================================
+   FisioFit — Panel inferior de contenido (Ejercicio / Estiramiento /
+   Recuperación). Vive dentro de .info-panel (glass-panel, ver main.css).
+   ========================================================================== */
+
+.content-panel {
+  height: 100%;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.content-panel.is-swapping {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-panel {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Estado vacío
+   ========================================================================== */
+
+.content-panel__empty {
+  height: 100%;
+  min-height: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  text-align: center;
+  color: var(--color-text-faint);
+}
+
+.content-panel__empty svg {
+  opacity: 0.6;
+}
+
+.content-panel__empty p {
+  max-width: 34rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Cabecera — nombre del músculo/grupo + badge de categoría
+   ========================================================================== */
+
+.content-panel__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.content-panel__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
+
+.content-panel__badge {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.7rem;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.content-panel__badge--push {
+  color: var(--color-push-strong);
+  background: rgba(255, 122, 69, 0.14);
+  border-color: rgba(255, 122, 69, 0.35);
+}
+
+.content-panel__badge--pull {
+  color: var(--color-pull-strong);
+  background: rgba(79, 141, 255, 0.14);
+  border-color: rgba(79, 141, 255, 0.35);
+}
+
+.content-panel__badge--legs {
+  color: var(--color-legs-strong);
+  background: rgba(61, 220, 132, 0.14);
+  border-color: rgba(61, 220, 132, 0.35);
+}
+
+/* ==========================================================================
+   Sub-secciones — Ejercicio / Estiramiento / Recuperación
+   ========================================================================== */
+
+.content-panel__sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-md) var(--space-lg);
+}
+
+.content-panel__section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: var(--space-xs);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-strong);
+}
+
+.content-panel__section-title svg {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.content-panel__text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--color-text-dim);
+}
+
+.content-panel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-text-dim);
+  list-style: none;
+}
+
+.content-panel__list li {
+  padding-left: var(--space-sm);
+  border-left: 2px solid var(--glass-border-dark);
+}
+
+.content-panel__list strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
