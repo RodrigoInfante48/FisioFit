@@ -93,18 +93,58 @@
   stroke-width: 1;
 }
 
-/* Grupos musculares — temporalmente con stroke visible para verificar
-   que cada path está bien delimitado. El fill/heatmap real llega después. */
+/* Grupos musculares — estado neutro: tono frío/transparente (heatmap 0.0).
+   El heatmap real (fill por --muscle-color) se aplica vía JS al seleccionar
+   un grupo de movimiento (workoutGroupChanged). */
 .muscle-path {
-  fill: rgba(239, 43, 23, 0.16);
-  stroke: rgba(255, 255, 255, 0.55);
+  fill: var(--heatmap-stop-0);
+  stroke: rgba(255, 255, 255, 0.35);
   stroke-width: 1.25;
   stroke-linejoin: round;
   cursor: pointer;
-  transition: fill 0.2s ease, stroke 0.2s ease;
+  opacity: 1;
+  transition: fill 0.6s ease, opacity 0.6s ease, filter 0.6s ease,
+    stroke 0.6s ease;
 }
 
 .muscle-path:hover {
-  fill: rgba(239, 43, 23, 0.34);
   stroke: var(--color-accent-strong);
+}
+
+/* Músculo involucrado en el grupo seleccionado: se colorea según su
+   intensidad (--muscle-color, calculado en JS interpolando tokens.css). */
+.muscle-path.is-active {
+  fill: var(--muscle-color);
+  stroke: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+}
+
+/* Músculo no involucrado en el grupo seleccionado: se atenúa y desatura
+   para que el contraste con los músculos activos sea claro. */
+.muscle-path.is-dimmed {
+  stroke: rgba(255, 255, 255, 0.12);
+  opacity: 0.3;
+  filter: grayscale(0.7);
+}
+
+/* Protagonistas (intensidad >= 0.9): glow/pulse para que salten a la vista. */
+.muscle-path.is-hero {
+  animation: muscle-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes muscle-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px var(--muscle-color)) brightness(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 14px var(--muscle-color)) brightness(1.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .muscle-path.is-hero {
+    animation: none;
+    filter: drop-shadow(0 0 8px var(--muscle-color));
+  }
 }
