@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FisioFit</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header glass-panel glass-nav">
+      <span class="app-header__logo">FisioFit</span>
+      <nav class="movement-menu">
+        <button class="glass-btn" type="button" data-movement="push">Push</button>
+        <button class="glass-btn" type="button" data-movement="pull">Pull</button>
+        <button class="glass-btn" type="button" data-movement="legs">Legs</button>
+      </nav>
+    </header>
+
+    <main class="stage glass-panel glass-panel--stage">
+      <!-- Aquí irá la figura muscular (frontal/posterior) -->
+    </main>
+
+    <section class="info-panel glass-panel glass-panel--info">
+      <!-- Aquí irá el texto de ejercicio / estiramiento / recuperación -->
+    </section>
+  </div>
+
+  <script src="scripts/main.js"></script>
+</body>
+</html>
