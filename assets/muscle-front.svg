@@ -22,6 +22,12 @@
       C214,220 210,260 202,296 C196,316 182,326 160,326 C138,326 124,316 118,296
       C110,260 106,220 104,178 C102,148 106,120 118,112 Z" />
 
+    <!-- Core/abdomen: relleno decorativo entre pecho y cuádriceps, no forma
+      parte del mapeo músculo -> botón de CLAUDE.md, así que no es
+      seleccionable ni tiene contenido propio en data/muscle-content.js. -->
+    <path id="core" d="M144,204 C140,230 140,262 146,292 C150,310 170,310 174,292
+      C180,262 180,230 176,204 C168,210 152,210 144,204 Z" />
+
     <!-- Brazo base derecho (imagen), hombro -> mano -->
     <path id="brazo-base-der" d="M220,124 C238,122 254,138 256,160 C259,212 255,300 244,388
       C240,408 236,424 230,436 L206,436 C208,420 212,400 216,378 C224,300 224,212 216,162
@@ -81,10 +87,6 @@
        C233,292 217,292 213,278 C207,252 208,222 213,196 C216,182 216,176 222,170 Z
        M98,170 C86,166 72,176 70,200 C68,226 74,256 82,280
        C87,292 103,292 107,278 C113,252 112,222 107,196 C104,182 104,176 98,170 Z" />
-
-  <path id="core" data-muscle="core" class="muscle-path"
-    d="M144,204 C140,230 140,262 146,292 C150,310 170,310 174,292
-       C180,262 180,230 176,204 C168,210 152,210 144,204 Z" />
 
   <path id="cuadriceps" data-muscle="cuadriceps" class="muscle-path"
     d="M162,310 C180,308 200,318 204,342 C208,372 206,422 200,462

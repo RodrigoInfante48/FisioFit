@@ -162,5 +162,8 @@ document.addEventListener("muscleSelected", (event) => {
 
 document.addEventListener("workoutGroupChanged", (event) => {
   panelSelectedGroup = event.detail.group;
+  // Un músculo seleccionado de un grupo anterior no debe sobrevivir al
+  // cambio de patrón de movimiento (ver mismo reset en muscle-figure.js).
+  panelSelectedMuscle = null;
   renderPanel();
 });
