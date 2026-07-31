@@ -34,6 +34,19 @@
   --color-accent-strong: #7ce0ff;
   --color-accent-glow: rgba(79, 209, 255, 0.35);
 
+  /* Acentos por categoría de movimiento (menú superior) */
+  --color-push: #ff7a45;
+  --color-push-strong: #ffa26b;
+  --color-push-glow: rgba(255, 122, 69, 0.45);
+
+  --color-pull: #4f8dff;
+  --color-pull-strong: #7cabff;
+  --color-pull-glow: rgba(79, 141, 255, 0.45);
+
+  --color-legs: #3ddc84;
+  --color-legs-strong: #6ee8a4;
+  --color-legs-glow: rgba(61, 220, 132, 0.45);
+
   /* Escala de heatmap: frío/transparente -> rojo-naranja intenso (0.0 - 1.0) */
   --heatmap-stop-0: rgba(56, 189, 248, 0.1); /* 0.00 — inactivo, frío y casi transparente */
   --heatmap-stop-1: #2b6ef2; /* 0.25 — azul */
