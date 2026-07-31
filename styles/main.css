@@ -32,11 +32,14 @@ button {
 
 /* ==========================================================================
    Layout — 3 bloques verticales, viewport completo
+   Mobile-first: valores base pensados para pantallas angostas; los
+   media queries (min-width) sólo amplían espaciado/tamaños en pantallas
+   más grandes, nunca reescriben la estructura.
    ========================================================================== */
 
 .app {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(180px, 1fr) auto;
   grid-template-areas:
     "header"
     "stage"
@@ -44,9 +47,23 @@ button {
   height: 100vh;
   height: 100dvh;
   width: 100%;
-  padding: var(--space-md);
-  gap: var(--space-md);
+  padding: var(--space-xs);
+  gap: var(--space-xs);
   overflow: hidden;
+}
+
+/* Móvil en horizontal (poca altura de viewport): el piso de la figura y el
+   techo del panel inferior se reducen para que las 3 franjas quepan sin
+   recortarse. */
+@media (max-height: 480px) {
+  .app {
+    grid-template-rows: auto minmax(140px, 1fr) auto;
+  }
+
+  .info-panel {
+    min-height: 4rem;
+    max-height: 26vh;
+  }
 }
 
 .app-header {
@@ -54,20 +71,22 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) var(--space-lg);
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
 }
 
 .app-header__logo {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.05rem;
   letter-spacing: 0.04em;
   color: var(--color-text);
 }
 
 .movement-menu {
   display: flex;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
 
 .stage {
@@ -81,10 +100,55 @@ button {
 
 .info-panel {
   grid-area: info;
-  min-height: 8rem;
-  max-height: 32vh;
-  padding: var(--space-lg);
+  min-height: 6rem;
+  max-height: 30vh;
+  padding: var(--space-sm) var(--space-md);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 480px) {
+  .app-header__logo {
+    font-size: 1.2rem;
+  }
+
+  .glass-btn {
+    font-size: 0.95rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .app {
+    padding: var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .app-header {
+    flex-wrap: nowrap;
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  .app-header__logo {
+    font-size: 1.4rem;
+  }
+
+  .movement-menu {
+    gap: var(--space-sm);
+  }
+
+  .info-panel {
+    min-height: 8rem;
+    max-height: 32vh;
+    padding: var(--space-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app {
+    padding: var(--space-lg);
+    gap: var(--space-lg);
+  }
 }
 
 /* ==========================================================================
@@ -177,9 +241,10 @@ button {
   position: relative;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.85rem;
   letter-spacing: 0.03em;
-  padding: var(--space-xs) var(--space-lg);
+  padding: var(--space-xs) var(--space-sm);
+  min-height: 2.75rem;
   background: var(--glass-surface);
   border: 1px solid var(--glass-border-dark);
   border-radius: var(--radius-md);
@@ -198,6 +263,18 @@ button {
 
 .glass-btn:active {
   transform: translateY(0) scale(0.99);
+}
+
+.glass-btn:focus-visible {
+  outline: 3px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+@media (min-width: 640px) {
+  .glass-btn {
+    font-size: 1rem;
+    padding: var(--space-xs) var(--space-lg);
+  }
 }
 
 /* Hover con insinuación de color por categoría */

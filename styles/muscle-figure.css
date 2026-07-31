@@ -202,6 +202,17 @@
   stroke: var(--color-accent-strong);
 }
 
+/* Foco por teclado (Tab): mismo tratamiento visual que .is-selected para
+   que la señal sea inequívoca, ya que outline no sigue el contorno del
+   <path> en todos los navegadores. */
+.muscle-path:focus-visible {
+  outline: none;
+  stroke: var(--color-accent-strong);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--color-accent-glow))
+    drop-shadow(0 0 3px var(--color-accent-strong));
+}
+
 /* Músculo involucrado en el grupo seleccionado: se colorea según su
    intensidad (--muscle-color, calculado en JS interpolando tokens.css). */
 .muscle-path.is-active {
