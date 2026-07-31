@@ -1,0 +1,102 @@
+<svg
+  id="muscle-figure-front"
+  class="muscle-figure"
+  viewBox="0 0 320 760"
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label="Figura muscular, vista frontal"
+>
+  <!-- ==========================================================================
+       Base decorativa (silueta no interactiva): cabeza, cuello, torso base,
+       brazos base, piernas base, manos, pies. Se dibuja primero (detrás de
+       los grupos musculares) para que no queden huecos entre paths.
+       ========================================================================== -->
+  <g class="body-decor" aria-hidden="true">
+    <ellipse id="cabeza" cx="160" cy="54" rx="30" ry="38" />
+
+    <path id="cuello" d="M138,84 C138,98 141,110 146,120 L174,120 C179,110 182,98 182,84
+      C182,94 172,102 160,102 C148,102 138,94 138,84 Z" />
+
+    <!-- Torso base: rellena huecos entre trapecio / pecho / core -->
+    <path id="torso-base" d="M118,112 C140,104 180,104 202,112 C214,120 218,148 216,178
+      C214,220 210,260 202,296 C196,316 182,326 160,326 C138,326 124,316 118,296
+      C110,260 106,220 104,178 C102,148 106,120 118,112 Z" />
+
+    <!-- Brazo base derecho (imagen), hombro -> mano -->
+    <path id="brazo-base-der" d="M220,124 C238,122 254,138 256,160 C259,212 255,300 244,388
+      C240,408 236,424 230,436 L206,436 C208,420 212,400 216,378 C224,300 224,212 216,162
+      C213,146 208,132 220,124 Z" />
+    <ellipse id="mano-der" cx="218" cy="452" rx="13" ry="24" transform="rotate(6 218 452)" />
+
+    <!-- Brazo base izquierdo (mirror) -->
+    <path id="brazo-base-izq" d="M100,124 C82,122 66,138 64,160 C61,212 65,300 76,388
+      C80,408 84,424 90,436 L114,436 C112,420 108,400 104,378 C96,300 96,212 104,162
+      C107,146 112,132 100,124 Z" />
+    <ellipse id="mano-izq" cx="102" cy="452" rx="13" ry="24" transform="rotate(-6 102 452)" />
+
+    <!-- Pierna base derecha: cadera -> pie -->
+    <path id="pierna-base-der" d="M160,300 C182,300 202,312 206,340 C210,390 208,470 200,548
+      C196,590 192,640 186,684 C184,700 178,712 168,714 L160,714 L160,300 Z" />
+    <path id="pie-der" d="M162,706 C172,706 186,708 194,714 C202,720 202,732 194,736
+      C182,741 166,740 160,732 L160,706 Z" />
+
+    <!-- Pierna base izquierda (mirror) -->
+    <path id="pierna-base-izq" d="M160,300 C138,300 118,312 114,340 C110,390 112,470 120,548
+      C124,590 128,640 134,684 C136,700 142,712 152,714 L160,714 L160,300 Z" />
+    <path id="pie-izq" d="M158,706 C148,706 134,708 126,714 C118,720 118,732 126,736
+      C138,741 154,740 160,732 L160,706 Z" />
+  </g>
+
+  <!-- ==========================================================================
+       Grupos musculares interactivos (identificados por id + data-muscle).
+       Cada uno puede tener 1 o 2 sub-paths (bilateral) dentro del mismo <path>.
+       ========================================================================== -->
+
+  <path id="trapecio" data-muscle="trapecio" class="muscle-path"
+    d="M160,98 C170,98 182,104 186,114 C188,120 180,124 172,120
+       C165,117 160,110 160,102 Z
+       M160,98 C150,98 138,104 134,114 C132,120 140,124 148,120
+       C155,117 160,110 160,102 Z" />
+
+  <path id="pecho" data-muscle="pecho" class="muscle-path"
+    d="M162,136 C178,128 200,134 206,158 C209,176 200,196 182,199
+       C168,201 160,190 160,177 L160,146 Z
+       M158,136 C142,128 120,134 114,158 C111,176 120,196 138,199
+       C152,201 160,190 160,177 L160,146 Z" />
+
+  <path id="deltoide-anterior" data-muscle="deltoide-anterior" class="muscle-path"
+    d="M206,118 C216,110 232,116 236,134 C239,150 228,164 214,159
+       C203,154 200,134 206,118 Z
+       M114,118 C104,110 88,116 84,134 C81,150 92,164 106,159
+       C117,154 120,134 114,118 Z" />
+
+  <path id="deltoide-lateral" data-muscle="deltoide-lateral" class="muscle-path"
+    d="M234,128 C248,124 262,138 259,158 C256,176 240,180 228,168
+       C223,155 226,136 234,128 Z
+       M86,128 C72,124 58,138 61,158 C64,176 80,180 92,168
+       C97,155 94,136 86,128 Z" />
+
+  <path id="biceps" data-muscle="biceps" class="muscle-path"
+    d="M222,170 C234,166 248,176 250,200 C252,226 246,256 238,280
+       C233,292 217,292 213,278 C207,252 208,222 213,196 C216,182 216,176 222,170 Z
+       M98,170 C86,166 72,176 70,200 C68,226 74,256 82,280
+       C87,292 103,292 107,278 C113,252 112,222 107,196 C104,182 104,176 98,170 Z" />
+
+  <path id="core" data-muscle="core" class="muscle-path"
+    d="M144,204 C140,230 140,262 146,292 C150,310 170,310 174,292
+       C180,262 180,230 176,204 C168,210 152,210 144,204 Z" />
+
+  <path id="cuadriceps" data-muscle="cuadriceps" class="muscle-path"
+    d="M162,310 C180,308 200,318 204,342 C208,372 206,422 200,462
+       C196,487 190,507 178,513 C168,517 160,511 160,496 L160,340
+       C160,328 160,318 162,310 Z
+       M158,310 C140,308 120,318 116,342 C112,372 114,422 120,462
+       C124,487 130,507 142,513 C152,517 160,511 160,496 L160,340
+       C160,328 160,318 158,310 Z" />
+
+  <path id="gemelos" data-muscle="gemelos" class="muscle-path"
+    d="M162,522 C172,520 182,528 184,552 C186,582 182,622 176,652
+       C172,670 164,674 160,662 L160,532 C160,526 160,524 162,522 Z
+       M158,522 C148,520 138,528 136,552 C134,582 138,622 144,652
+       C148,670 156,674 160,662 L160,532 C160,526 160,524 158,522 Z" />
+</svg>
