@@ -329,6 +329,15 @@ function applyHeatmap(group) {
 document.addEventListener("workoutGroupChanged", (event) => {
   pendingGroup = event.detail.group;
   if (figureReady) applyHeatmap(pendingGroup);
+
+  // Cambiar de patrón de movimiento reemplaza el contexto por completo:
+  // una selección individual de un grupo anterior (ej. trapecio en Pull) ya
+  // no tiene sentido al pasar a Legs, así que se limpia para que la figura
+  // y el panel inferior queden coherentes con el nuevo grupo activo.
+  if (selectedMuscle !== null) {
+    selectedMuscle = null;
+    applySelection();
+  }
 });
 
 // ============================================================================
