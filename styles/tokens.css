@@ -1,0 +1,67 @@
+/* ==========================================================================
+   FisioFit — Design tokens ("Liquid Glass" + Heatmap)
+   ========================================================================== */
+
+:root {
+  /* Tipografía — carácter técnico/deportivo */
+  --font-display: "Rajdhani", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Rajdhani", "Segoe UI", system-ui, sans-serif;
+
+  /* Fondo (dark mode) */
+  --color-bg: #0a0d12;
+  --color-bg-alt: #0f131a;
+  --color-bg-gradient: radial-gradient(
+    ellipse at 50% 0%,
+    #141a24 0%,
+    #0a0d12 55%,
+    #060809 100%
+  );
+
+  /* Superficies de vidrio */
+  --glass-surface: rgba(255, 255, 255, 0.045);
+  --glass-surface-strong: rgba(255, 255, 255, 0.07);
+  --glass-border-light: rgba(255, 255, 255, 0.35);
+  --glass-border-dark: rgba(255, 255, 255, 0.06);
+  --glass-specular: rgba(255, 255, 255, 0.16);
+
+  /* Texto */
+  --color-text: #eaeef4;
+  --color-text-dim: #8b95a6;
+  --color-text-faint: #5b6472;
+
+  /* Acento (solo interactivos) */
+  --color-accent: #4fd1ff;
+  --color-accent-strong: #7ce0ff;
+  --color-accent-glow: rgba(79, 209, 255, 0.35);
+
+  /* Escala de heatmap: frío/transparente -> rojo-naranja intenso (0.0 - 1.0) */
+  --heatmap-stop-0: rgba(56, 189, 248, 0.1); /* 0.00 — inactivo, frío y casi transparente */
+  --heatmap-stop-1: #2b6ef2; /* 0.25 — azul */
+  --heatmap-stop-2: #e9c53d; /* 0.50 — amarillo */
+  --heatmap-stop-3: #f5852f; /* 0.75 — naranja */
+  --heatmap-stop-4: #ef2b17; /* 1.00 — rojo-naranja intenso, máxima intensidad */
+
+  /* Radios de borde */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  /* Blur (liquid glass) */
+  --blur-sm: 8px;
+  --blur-md: 18px;
+  --blur-lg: 32px;
+
+  /* Sombras */
+  --shadow-float: 0 8px 30px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-float-lg: 0 20px 60px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+
+  /* Espaciado */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+}
