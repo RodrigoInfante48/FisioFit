@@ -55,6 +55,15 @@ let dragStartX = 0;
 let dragStartY = 0;
 let dragAxis = null; // null (sin fijar) | "x" (rotación) | "y" (tilt)
 
+// Estado de zoom — mismo motivo que activeFace más arriba: setupRotationControls()
+// asigna zoomResetButton de forma síncrona (antes de cualquier await), así que su
+// "let" no puede vivir más abajo, junto al resto de la lógica de zoom, sin
+// disparar un ReferenceError por temporal dead zone.
+let frontZoomLayer = null;
+let backZoomLayer = null;
+let zoomResetButton = null;
+let zoomActive = false;
+
 async function loadMuscleFigure() {
   const stage = document.querySelector(".stage");
   if (!stage) return;
@@ -104,6 +113,9 @@ async function loadMuscleFigure() {
     ]);
     frontFace.innerHTML = frontMarkup;
     backFace.innerHTML = backMarkup;
+
+    frontZoomLayer = createZoomLayer(frontFace.querySelector("svg.muscle-figure"));
+    backZoomLayer = createZoomLayer(backFace.querySelector("svg.muscle-figure"));
 
     enhanceMuscleAccessibility();
     figureReady = true;
@@ -175,6 +187,13 @@ function settleRotation(targetT, { freshStart = false } = {}) {
 
 function rotateToOppositeView() {
   if (isAnimating || isDragging || !figureReady) return;
+
+  // Un músculo seleccionado no sobrevive al cambio de vista: la mayoría de
+  // los data-muscle sólo existen de un lado (ver assets/muscle-*.svg), así
+  // que el zoom se reinicia limpio antes de girar, igual que al cambiar de
+  // grupo de movimiento (workoutGroupChanged, más abajo).
+  clearMuscleSelection();
+
   settleRotation(1, { freshStart: true });
 }
 
@@ -186,10 +205,18 @@ function setupRotationControls() {
 
   const rotateButton = document.getElementById("rotate-figure-btn");
   rotateButton?.addEventListener("click", rotateToOppositeView);
+
+  zoomResetButton = document.getElementById("zoom-reset-btn");
+  zoomResetButton?.addEventListener("click", clearMuscleSelection);
 }
 
+// Mientras hay un músculo seleccionado (zoom activo) el arrastre para
+// rotar/inclinar se desactiva: pelear el gesto de zoom (que no arrastra)
+// contra el de rotación/tilt (que sí) se sentía confuso al probarlo. Para
+// volver a arrastrar hay que salir del zoom primero (re-click, click vacío
+// o el botón "volver").
 function onPointerDown(event) {
-  if (isAnimating || !figureReady) return;
+  if (isAnimating || !figureReady || selectedMuscle !== null) return;
   if (event.button !== undefined && event.button !== 0) return;
 
   isDragging = true;
@@ -398,6 +425,7 @@ document.addEventListener("workoutGroupChanged", (event) => {
   if (selectedMuscle !== null) {
     selectedMuscle = null;
     applySelection();
+    resetZoom();
   }
 });
 
@@ -442,9 +470,128 @@ function applySelection() {
   });
 }
 
+// ============================================================================
+// Zoom de encuadre — al seleccionar un músculo, la vista activa (frontal o
+// posterior) se acerca a su getBBox() (coordenadas del <svg>, no de pantalla)
+// con margen; al deseleccionar vuelve al encuadre completo. Se anima un <g>
+// contenedor (.muscle-zoom-layer, envuelve TODO el contenido del <svg>
+// activo, ver createZoomLayer) en vez de reescribir el viewBox por frame:
+// así la transición corre por CSS, con la misma familia de easing/duración
+// que la rotación (ROTATE_TRANSITION_MS), sin requerir un rAF propio.
+//
+// Si el músculo tiene sub-paths bilaterales (izq/der), ambos viven en el
+// MISMO <path data-muscle> — un solo `d` con dos subcaminos "M...Z M...Z"
+// (ver assets/muscle-*.svg) — así que getBBox() ya cubre ambos lados sin
+// tratamiento especial.
+// ============================================================================
+
+const ZOOM_TRANSITION_MS = ROTATE_TRANSITION_MS; // misma familia de easing/duración que el giro
+const ZOOM_PADDING_FRACTION = 0.35; // margen proporcional al tamaño propio del músculo
+const ZOOM_MIN_PADDING = 14; // margen mínimo (unidades del viewBox) para músculos muy chicos
+const ZOOM_MAX_SCALE = 3.5; // tope de acercamiento, para no romper el encuadre en músculos finos
+const zoomTransitionMs = prefersReducedMotion ? 0 : ZOOM_TRANSITION_MS;
+
+// Mueve todo el contenido del <svg> (defs + grupos de profundidad) dentro de
+// un <g> nuevo — ese <g> es el que se anima; el <svg> y su viewBox quedan
+// intactos, así que el heatmap/tilt existentes (que operan sobre los <path>
+// y los grupos depth-*) no se ven afectados por este wrapping extra.
+function createZoomLayer(svg) {
+  if (!svg) return null;
+
+  const layer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  layer.setAttribute("class", "muscle-zoom-layer");
+  layer.style.setProperty("--zoom-transition-ms", `${zoomTransitionMs}ms`);
+
+  while (svg.firstChild) {
+    layer.appendChild(svg.firstChild);
+  }
+  svg.appendChild(layer);
+
+  return layer;
+}
+
+function zoomLayerForActiveFace() {
+  return activeFace === frontFaceEl ? frontZoomLayer : backZoomLayer;
+}
+
+// Encuadra el <path data-muscle> seleccionado de la vista ACTIVA en ese
+// momento. Si el músculo no existe en esa vista (no es visible desde ese
+// lado), no hay nada para encuadrar y se restablece el encuadre completo.
+function applyZoomToMuscle(muscle) {
+  const layer = zoomLayerForActiveFace();
+  const path = activeFace?.querySelector(
+    `.muscle-path[data-muscle="${muscle}"]`
+  );
+  const svg = activeFace?.querySelector("svg.muscle-figure");
+  const viewBox = svg?.viewBox?.baseVal;
+
+  if (!layer || !path || !viewBox) {
+    resetZoom();
+    return;
+  }
+
+  const bbox = path.getBBox();
+  // El margen se basa en el lado MENOR del bbox, no el mayor: los músculos
+  // bilaterales (ej. deltoide-lateral, trapecio) dan un bbox ancho y bajo
+  // al cubrir ambos lados (ver comentario de esta sección), y basar el
+  // margen en su lado más largo terminaba ensanchando el encuadre más allá
+  // del viewBox — anulando el zoom por completo en esos casos.
+  const pad = Math.max(
+    ZOOM_MIN_PADDING,
+    Math.min(bbox.width, bbox.height) * ZOOM_PADDING_FRACTION
+  );
+  const paddedWidth = bbox.width + pad * 2;
+  const paddedHeight = bbox.height + pad * 2;
+
+  const rawScale = Math.min(
+    viewBox.width / paddedWidth,
+    viewBox.height / paddedHeight
+  );
+  const scale = Math.min(ZOOM_MAX_SCALE, Math.max(1, rawScale));
+
+  const centerX = bbox.x + bbox.width / 2;
+  const centerY = bbox.y + bbox.height / 2;
+  const viewBoxCenterX = viewBox.x + viewBox.width / 2;
+  const viewBoxCenterY = viewBox.y + viewBox.height / 2;
+
+  // transform-origin de .muscle-zoom-layer es 0 0 (ver CSS), así que el
+  // offset ya incluye el corrimiento necesario para que el centro del bbox
+  // (multiplicado por scale) caiga en el centro del viewBox.
+  const offsetX = viewBoxCenterX - scale * centerX;
+  const offsetY = viewBoxCenterY - scale * centerY;
+
+  layer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+
+  zoomActive = true;
+  updateZoomUi();
+}
+
+function resetZoom() {
+  if (frontZoomLayer) frontZoomLayer.style.transform = "";
+  if (backZoomLayer) backZoomLayer.style.transform = "";
+
+  zoomActive = false;
+  updateZoomUi();
+}
+
+function updateZoomUi() {
+  shellEl?.classList.toggle("is-zoomed", zoomActive);
+
+  if (!zoomResetButton) return;
+  zoomResetButton.classList.toggle("is-visible", zoomActive);
+  zoomResetButton.setAttribute("aria-hidden", String(!zoomActive));
+  zoomResetButton.tabIndex = zoomActive ? 0 : -1;
+}
+
 function selectMuscle(muscle) {
   selectedMuscle = selectedMuscle === muscle ? null : muscle;
   applySelection();
+
+  if (selectedMuscle) {
+    applyZoomToMuscle(selectedMuscle);
+  } else {
+    resetZoom();
+  }
 
   const muscleSelected = new CustomEvent("muscleSelected", {
     detail: { muscle: selectedMuscle },
@@ -453,11 +600,36 @@ function selectMuscle(muscle) {
   console.log("muscleSelected", muscleSelected.detail);
 }
 
+// Deselecciona el músculo activo (si hay uno) desde un disparador que no es
+// "clickear el mismo músculo de nuevo": click en zona vacía del stage, botón
+// "volver", o cambio de vista. Dispara "muscleSelected" con muscle:null
+// (igual que el toggle en selectMuscle) para que el panel de texto también
+// vuelva al resumen del grupo o al estado vacío.
+function clearMuscleSelection() {
+  if (selectedMuscle === null) return;
+
+  selectedMuscle = null;
+  applySelection();
+  resetZoom();
+
+  const muscleSelected = new CustomEvent("muscleSelected", {
+    detail: { muscle: null },
+  });
+  document.dispatchEvent(muscleSelected);
+}
+
 document.addEventListener("click", (event) => {
   const path = event.target.closest(".muscle-path[data-muscle]");
-  if (!path) return;
+  if (path) {
+    selectMuscle(path.dataset.muscle);
+    return;
+  }
 
-  selectMuscle(path.dataset.muscle);
+  // Salir del zoom sin tener que re-clickear el músculo exacto: cualquier
+  // click en una zona vacía del stage (fuera de un músculo) deselecciona.
+  if (selectedMuscle !== null && event.target.closest(".stage")) {
+    clearMuscleSelection();
+  }
 });
 
 document.addEventListener("keydown", (event) => {
