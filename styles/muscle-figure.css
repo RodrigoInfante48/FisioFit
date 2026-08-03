@@ -122,7 +122,7 @@
   height: 100%;
   transform: rotateX(calc(var(--tilt-deg, 0) * 1deg));
   transform-style: preserve-3d;
-  transition: transform var(--tilt-settle-ms, 420ms)
+  transition: transform var(--tilt-settle-ms, 450ms)
     cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform;
 }
@@ -146,6 +146,14 @@
 .figure-face--back {
   transform: rotateY(0deg);
   opacity: 0;
+}
+
+/* Respaldo para navegadores sin soporte de "inert" (propiedad IDL fijada en
+   JS, ver updateFaceInteractivity en muscle-figure.js): sin esto, la cara
+   inactiva —invisible pero todavía pintada por encima en el orden del DOM—
+   sigue pudiendo interceptar clicks destinados a la cara visible. */
+.figure-face[aria-hidden="true"] {
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -198,13 +206,13 @@
 
 .depth-torso {
   transform: translateY(calc(var(--tilt-deg, 0) * 0.3px));
-  transition: transform var(--tilt-settle-ms, 420ms)
+  transition: transform var(--tilt-settle-ms, 450ms)
     cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .depth-limbs {
   transform: translateY(calc(var(--tilt-deg, 0) * 1.1px));
-  transition: transform var(--tilt-settle-ms, 420ms)
+  transition: transform var(--tilt-settle-ms, 450ms)
     cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -336,17 +344,6 @@
   stroke: var(--color-accent-strong);
 }
 
-/* Foco por teclado (Tab): mismo tratamiento visual que .is-selected para
-   que la señal sea inequívoca, ya que outline no sigue el contorno del
-   <path> en todos los navegadores. */
-.muscle-path:focus-visible {
-  outline: none;
-  stroke: var(--color-accent-strong);
-  stroke-width: 2.5;
-  filter: drop-shadow(0 0 10px var(--color-accent-glow))
-    drop-shadow(0 0 3px var(--color-accent-strong));
-}
-
 /* Músculo involucrado en el grupo seleccionado: se colorea según su
    intensidad (--muscle-color, calculado en JS interpolando tokens.css). */
 .muscle-path.is-active {
@@ -385,6 +382,21 @@
   }
 }
 
+/* Foco por teclado (Tab): mismo tratamiento visual que .is-selected para
+   que la señal sea inequívoca, ya que outline no sigue el contorno del
+   <path> en todos los navegadores. Declarada DESPUÉS de .is-active/
+   .is-dimmed (misma especificidad, gana por orden en la cascada): un
+   músculo tabulado casi siempre es también el resaltado por el heatmap
+   activo, y antes el stroke blanco de .is-active pisaba el cian del foco,
+   dejando la señal de foco casi indistinguible. */
+.muscle-path:focus-visible {
+  outline: none;
+  stroke: var(--color-accent-strong);
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--color-accent-glow))
+    drop-shadow(0 0 3px var(--color-accent-strong));
+}
+
 /* Selección individual de músculo: outline/glow cian (--color-accent), en
    contraste deliberado con la paleta fría->roja del heatmap de grupo, para
    que "seleccionado" nunca se confunda visualmente con "resaltado por
@@ -392,6 +404,22 @@
 .muscle-path.is-selected {
   stroke: var(--color-accent-strong);
   stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--color-accent-glow))
+    drop-shadow(0 0 3px var(--color-accent-strong));
+}
+
+/* Un músculo "hero" pulsa su glow animando "filter" (ver @keyframes
+   muscle-pulse arriba) — y una animación CSS gana la cascada sobre CUALQUIER
+   declaración estática de la misma propiedad, sin importar especificidad ni
+   orden de aparición. Sin esto, el glow cian de foco/selección quedaba
+   tapado por el pulso rojo/naranja del heatmap justo en los músculos más
+   prominentes (los "hero", intensidad >= 0.9) — los que con más
+   probabilidad se tabulan o seleccionan primero. "animation: none" cancela
+   el pulso mientras dure el foco/selección, dejando que el filter estático
+   de arriba se aplique normalmente. */
+.muscle-path.is-hero:focus-visible,
+.muscle-path.is-hero.is-selected {
+  animation: none;
   filter: drop-shadow(0 0 10px var(--color-accent-glow))
     drop-shadow(0 0 3px var(--color-accent-strong));
 }
