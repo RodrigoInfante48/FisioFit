@@ -35,7 +35,13 @@ const DRAG_COMMIT_T = 0.5; // progreso mínimo al soltar para completar el giro
 // muscle-figure.css sobre .figure-tilt / .depth-torso / .depth-limbs.
 const TILT_MAX_DEG = 12; // tope de inclinación en cada sentido (rotateX)
 const TILT_FULL_DISTANCE_PX = 120; // px arrastrados en vertical para |tilt| = TILT_MAX_DEG
-const TILT_SETTLE_MS = 420; // debe coincidir con la transición CSS de .figure-tilt
+// Mitad de ROTATE_TRANSITION_MS (900ms), no un número suelto: el resorte de
+// vuelta a 0° es un gesto más corto e interactivo que el giro/zoom, pero
+// derivado de la misma base para que las tres animaciones (rotación, tilt,
+// zoom) se sientan parte de un mismo sistema de timing en vez de tres
+// velocidades ajustadas por separado. Debe coincidir con la transición CSS
+// de .figure-tilt / .depth-torso / .depth-limbs.
+const TILT_SETTLE_MS = ROTATE_TRANSITION_MS / 2;
 const DRAG_AXIS_LOCK_PX = 6; // px de movimiento antes de fijar el eje dominante del gesto
 
 const prefersReducedMotion = window.matchMedia(
@@ -178,11 +184,27 @@ function settleRotation(targetT, { freshStart = false } = {}) {
     activeFace = incoming;
     inactiveFace = outgoing;
     isBackView = activeFace === backFaceEl;
+    updateFaceInteractivity();
   }
 
   window.setTimeout(() => {
     isAnimating = false;
   }, rotateTransitionMs);
+}
+
+// La cara inactiva (opacity 0, ver .figure-face--back en el CSS) sigue
+// ocupando el mismo rectángulo que la activa y queda por encima suyo en el
+// orden del DOM: sin esto, sus <path data-muscle> — invisibles pero
+// pintados/enfocables igual — interceptan clicks y el Tab destinados a la
+// cara realmente visible (confirmado: clickear el pecho de frente podía
+// seleccionar "dorsal-ancho" de la espalda). "inert" saca a la cara
+// inactiva del hit-testing, del orden de tabulación y del árbol de
+// accesibilidad de una sola vez.
+function updateFaceInteractivity() {
+  activeFace.inert = false;
+  activeFace.removeAttribute("aria-hidden");
+  inactiveFace.inert = true;
+  inactiveFace.setAttribute("aria-hidden", "true");
 }
 
 function rotateToOppositeView() {
@@ -200,6 +222,7 @@ function rotateToOppositeView() {
 function setupRotationControls() {
   activeFace = frontFaceEl;
   inactiveFace = backFaceEl;
+  updateFaceInteractivity();
 
   shellEl.addEventListener("pointerdown", onPointerDown);
 
@@ -215,6 +238,8 @@ function setupRotationControls() {
 // contra el de rotación/tilt (que sí) se sentía confuso al probarlo. Para
 // volver a arrastrar hay que salir del zoom primero (re-click, click vacío
 // o el botón "volver").
+let dragPointerId = null;
+
 function onPointerDown(event) {
   if (isAnimating || !figureReady || selectedMuscle !== null) return;
   if (event.button !== undefined && event.button !== 0) return;
@@ -223,10 +248,15 @@ function onPointerDown(event) {
   dragAxis = null;
   dragStartX = event.clientX;
   dragStartY = event.clientY;
+  dragPointerId = event.pointerId;
 
-  shellEl.classList.add("is-dragging");
-  shellEl.setPointerCapture?.(event.pointerId);
-
+  // OJO: capturar el puntero (o marcar "is-dragging") acá, en pointerdown,
+  // retargetea el "click" sintético subsiguiente al elemento con la
+  // captura (shellEl) en vez del <path> bajo el cursor — rompiendo por
+  // completo la selección de músculo por click (nunca llega a
+  // event.target.closest(".muscle-path")). Por eso ambas cosas se difieren
+  // a onPointerMove, una vez que el gesto realmente fija un eje de arrastre
+  // (dragAxis) — un click simple, sin movimiento, nunca llega a ese punto.
   window.addEventListener("pointermove", onPointerMove);
   window.addEventListener("pointerup", onPointerUp);
   window.addEventListener("pointercancel", onPointerUp);
@@ -247,6 +277,8 @@ function onPointerMove(event) {
     Math.max(Math.abs(dx), Math.abs(dy)) >= DRAG_AXIS_LOCK_PX
   ) {
     dragAxis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+    shellEl.classList.add("is-dragging");
+    shellEl.setPointerCapture?.(dragPointerId);
   }
   if (dragAxis === null) return;
 
@@ -258,6 +290,12 @@ function onPointerMove(event) {
   }
 }
 
+// Si dragAxis nunca se fijó (el puntero no se movió más allá del umbral),
+// el gesto fue un click/tap simple, no un arrastre: no hay rotación ni tilt
+// que resolver, y no tocar isAnimating dejar el "click" subsiguiente (que
+// maneja la selección de músculo, ver el listener de "click" más abajo)
+// libre para llegar sin que un settleRotation(0) de sobra bloquee el
+// siguiente gesto por los próximos ROTATE_TRANSITION_MS.
 function onPointerUp(event) {
   if (!isDragging) return;
   isDragging = false;
@@ -269,7 +307,7 @@ function onPointerUp(event) {
 
   if (dragAxis === "y") {
     settleTilt();
-  } else {
+  } else if (dragAxis === "x") {
     const t = (event.clientX - dragStartX) / DRAG_FULL_DISTANCE_PX;
     const committed = Math.abs(t) >= DRAG_COMMIT_T;
     const targetT = committed ? Math.sign(t) : 0;
@@ -277,6 +315,7 @@ function onPointerUp(event) {
   }
 
   dragAxis = null;
+  dragPointerId = null;
 }
 
 // Inclina la figura (rotateX acotado) siguiendo el dedo/mouse 1:1, sin
@@ -369,6 +408,60 @@ function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
+function rgbToHsl(r, g, b) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+
+  if (max === min) return [0, 0, l];
+
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h;
+  switch (max) {
+    case r:
+      h = (g - b) / d + (g < b ? 6 : 0);
+      break;
+    case g:
+      h = (b - r) / d + 2;
+      break;
+    default:
+      h = (r - g) / d + 4;
+  }
+  return [h * 60, s, l];
+}
+
+function hslToRgb(h, s, l) {
+  if (s === 0) {
+    const gray = Math.round(l * 255);
+    return [gray, gray, gray];
+  }
+
+  const hue = ((h % 360) + 360) % 360;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
+  const m = l - c / 2;
+  const [r1, g1, b1] =
+    hue < 60 ? [c, x, 0] :
+    hue < 120 ? [x, c, 0] :
+    hue < 180 ? [0, c, x] :
+    hue < 240 ? [0, x, c] :
+    hue < 300 ? [x, 0, c] : [c, 0, x];
+
+  return [
+    Math.round((r1 + m) * 255),
+    Math.round((g1 + m) * 255),
+    Math.round((b1 + m) * 255),
+  ];
+}
+
+// Piso de saturación para el resultado del heatmap — ver comentario en
+// intensityToColor.
+const MIN_HEATMAP_SATURATION = 0.5;
+
 function intensityToColor(intensity) {
   const stops = getHeatmapStops();
   const clamped = Math.min(1, Math.max(0, intensity));
@@ -378,12 +471,26 @@ function intensityToColor(intensity) {
   const [r1, g1, b1, a1] = stops[segment];
   const [r2, g2, b2, a2] = stops[segment + 1];
 
-  const r = Math.round(lerp(r1, r2, localT));
-  const g = Math.round(lerp(g1, g2, localT));
-  const b = Math.round(lerp(b1, b2, localT));
+  const r = lerp(r1, r2, localT);
+  const g = lerp(g1, g2, localT);
+  const b = lerp(b1, b2, localT);
   const a = Number(lerp(a1, a2, localT).toFixed(3));
 
-  return `rgba(${r}, ${g}, ${b}, ${a})`;
+  // Un lerp directo en RGB ya ubica el tono (hue) correcto en cada punto de
+  // la escala, pero entre stops casi complementarios (azul -> amarillo, ver
+  // --heatmap-stop-1/2 en tokens.css) la saturación se hunde a mitad de
+  // camino — se notaba como el trapecio (intensidad 0.4 en Pull, ver
+  // CLAUDE.md) luciendo gris/sucio en vez de parte de una escala viva. Se
+  // corrige con un piso de saturación en HSL, sin tocar el hue (que ya es
+  // el correcto) ni la luminosidad.
+  const [h, s, l] = rgbToHsl(r, g, b);
+  const [rBoosted, gBoosted, bBoosted] = hslToRgb(
+    h,
+    Math.max(s, MIN_HEATMAP_SATURATION),
+    l
+  );
+
+  return `rgba(${rBoosted}, ${gBoosted}, ${bBoosted}, ${a})`;
 }
 
 // Aplica el heatmap a todos los <path data-muscle> presentes en el DOM
