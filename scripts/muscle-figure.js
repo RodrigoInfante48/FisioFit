@@ -17,6 +17,7 @@ const BACK_VIEW_URL = "assets/muscle-back.svg";
 // heatmap puede aplicarse una sola vez a los <path data-muscle> de las dos,
 // y rotar es sólo un cambio de transform/opacity, sin más fetch/parseo.
 let shellEl = null;
+let tiltEl = null;
 let frontFaceEl = null;
 let backFaceEl = null;
 
@@ -29,10 +30,19 @@ const ROTATE_TRANSITION_MS = 900; // debe coincidir con la transición CSS de .f
 const DRAG_FULL_DISTANCE_PX = 160; // px arrastrados para t = ±1 (giro completo)
 const DRAG_COMMIT_T = 0.5; // progreso mínimo al soltar para completar el giro
 
+// Tilt (arrastre vertical) — inclinación de cámara acotada, ver
+// applyTilt/settleTilt más abajo y el comentario de diseño en
+// muscle-figure.css sobre .figure-tilt / .depth-torso / .depth-limbs.
+const TILT_MAX_DEG = 12; // tope de inclinación en cada sentido (rotateX)
+const TILT_FULL_DISTANCE_PX = 120; // px arrastrados en vertical para |tilt| = TILT_MAX_DEG
+const TILT_SETTLE_MS = 420; // debe coincidir con la transición CSS de .figure-tilt
+const DRAG_AXIS_LOCK_PX = 6; // px de movimiento antes de fijar el eje dominante del gesto
+
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
 const rotateTransitionMs = prefersReducedMotion ? 0 : ROTATE_TRANSITION_MS;
+const tiltSettleMs = prefersReducedMotion ? 0 : TILT_SETTLE_MS;
 
 // activeFace: la cara actualmente de frente (t=0, opacidad 1).
 // inactiveFace: la otra, en reposo fuera de vista (opacidad 0).
@@ -42,6 +52,8 @@ let isBackView = false;
 let isAnimating = false;
 let isDragging = false;
 let dragStartX = 0;
+let dragStartY = 0;
+let dragAxis = null; // null (sin fijar) | "x" (rotación) | "y" (tilt)
 
 async function loadMuscleFigure() {
   const stage = document.querySelector(".stage");
@@ -57,6 +69,11 @@ async function loadMuscleFigure() {
   const perspective = document.createElement("div");
   perspective.className = "figure-perspective";
 
+  const tilt = document.createElement("div");
+  tilt.className = "figure-tilt";
+  tilt.style.setProperty("--tilt-settle-ms", `${tiltSettleMs}ms`);
+  tiltEl = tilt;
+
   const frontFace = document.createElement("div");
   frontFace.className = "figure-face figure-face--front";
   frontFaceEl = frontFace;
@@ -65,7 +82,8 @@ async function loadMuscleFigure() {
   backFace.className = "figure-face figure-face--back";
   backFaceEl = backFace;
 
-  perspective.append(frontFace, backFace);
+  tilt.append(frontFace, backFace);
+  perspective.appendChild(tilt);
   float.appendChild(perspective);
   shell.appendChild(float);
   stage.appendChild(shell);
@@ -175,7 +193,9 @@ function onPointerDown(event) {
   if (event.button !== undefined && event.button !== 0) return;
 
   isDragging = true;
+  dragAxis = null;
   dragStartX = event.clientX;
+  dragStartY = event.clientY;
 
   shellEl.classList.add("is-dragging");
   shellEl.setPointerCapture?.(event.pointerId);
@@ -185,10 +205,30 @@ function onPointerDown(event) {
   window.addEventListener("pointercancel", onPointerUp);
 }
 
+// El gesto fija su eje dominante (horizontal = rotación, vertical = tilt)
+// apenas el arrastre supera un pequeño umbral (DRAG_AXIS_LOCK_PX), y no
+// vuelve a cambiar durante el resto del gesto — así un drag no puede
+// disparar rotación y tilt a la vez.
 function onPointerMove(event) {
   if (!isDragging) return;
-  const t = (event.clientX - dragStartX) / DRAG_FULL_DISTANCE_PX;
-  applyFaceProgress(activeFace, inactiveFace, t);
+
+  const dx = event.clientX - dragStartX;
+  const dy = event.clientY - dragStartY;
+
+  if (
+    dragAxis === null &&
+    Math.max(Math.abs(dx), Math.abs(dy)) >= DRAG_AXIS_LOCK_PX
+  ) {
+    dragAxis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+  }
+  if (dragAxis === null) return;
+
+  if (dragAxis === "x") {
+    const t = dx / DRAG_FULL_DISTANCE_PX;
+    applyFaceProgress(activeFace, inactiveFace, t);
+  } else {
+    applyTilt(dy);
+  }
 }
 
 function onPointerUp(event) {
@@ -200,11 +240,32 @@ function onPointerUp(event) {
   window.removeEventListener("pointerup", onPointerUp);
   window.removeEventListener("pointercancel", onPointerUp);
 
-  const t = (event.clientX - dragStartX) / DRAG_FULL_DISTANCE_PX;
-  const committed = Math.abs(t) >= DRAG_COMMIT_T;
-  const targetT = committed ? Math.sign(t) : 0;
+  if (dragAxis === "y") {
+    settleTilt();
+  } else {
+    const t = (event.clientX - dragStartX) / DRAG_FULL_DISTANCE_PX;
+    const committed = Math.abs(t) >= DRAG_COMMIT_T;
+    const targetT = committed ? Math.sign(t) : 0;
+    settleRotation(targetT);
+  }
 
-  settleRotation(targetT);
+  dragAxis = null;
+}
+
+// Inclina la figura (rotateX acotado) siguiendo el dedo/mouse 1:1, sin
+// transición (ver .figure-shell.is-dragging en el CSS). El signo invierte
+// dy porque arrastrar hacia abajo debe inclinar la figura "hacia atrás"
+// (como si la cámara bajara), igual que orbitar un objeto con el mouse.
+function applyTilt(dy) {
+  const t = Math.max(-1, Math.min(1, -dy / TILT_FULL_DISTANCE_PX));
+  tiltEl.style.setProperty("--tilt-deg", String(t * TILT_MAX_DEG));
+}
+
+// El tilt nunca queda "trabado": siempre vuelve a 0° al soltar, con la
+// transición spring/ease-out declarada en CSS para .figure-tilt (y
+// sincronizada en .depth-torso/.depth-limbs, que comparten --tilt-deg).
+function settleTilt() {
+  tiltEl.style.setProperty("--tilt-deg", "0");
 }
 
 // ============================================================================
