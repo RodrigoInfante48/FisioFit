@@ -18,9 +18,11 @@
   cursor: grabbing;
 }
 
-/* Mientras se arrastra, el giro debe seguir al puntero sin easing/duración:
-   la transición sólo se re-habilita al soltar (snap) o al usar el botón. */
-.figure-shell.is-dragging .figure-face {
+/* Mientras se arrastra, el giro (y el tilt) deben seguir al puntero sin
+   easing/duración: la transición sólo se re-habilita al soltar (snap del
+   giro, o spring-back a 0° del tilt). */
+.figure-shell.is-dragging .figure-face,
+.figure-shell.is-dragging .figure-tilt {
   transition: none;
 }
 
@@ -103,6 +105,22 @@
   perspective: 1400px;
 }
 
+/* Envoltorio del tilt (eje vertical del drag) — único hijo directo de
+   .figure-perspective, así recibe la proyección de la perspectiva. Necesita
+   preserve-3d para que el rotateY de .figure-face (su hijo) siga
+   componiendo correctamente dentro de la misma escena 3D, sumado al
+   rotateX del tilt. */
+.figure-tilt {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: rotateX(calc(var(--tilt-deg, 0) * 1deg));
+  transform-style: preserve-3d;
+  transition: transform var(--tilt-settle-ms, 420ms)
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
 .figure-face {
   position: absolute;
   inset: 0;
@@ -125,7 +143,52 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .figure-face {
+  .figure-face,
+  .figure-tilt {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   Tilt (eje vertical del drag) — inclinación acotada (rotateX) + parallax
+   por capas de profundidad.
+
+   El drag vertical simula "mirar desde arriba/abajo" inclinando toda la
+   figura (rotateX en .figure-tilt, acotado en JS a un rango pequeño, nunca
+   más de lo que la perspectiva declarada tolera sin romper la ilusión 2D).
+   Al soltar, --tilt-deg vuelve a 0 y la transición de .figure-tilt (arriba)
+   lo trae de nuevo a la posición neutra con un ease-out "spring".
+
+   Además, cada SVG agrupa sus <path> en dos capas de profundidad
+   (depth-torso / depth-limbs, ver assets/muscle-*.svg): mientras se
+   inclina, cada capa se traslada una cantidad distinta (misma variable
+   --tilt-deg, distinto factor) para simular volumen — los brazos/piernas,
+   "más adelante", se desplazan más que el torso. Como ambas reaccionan a
+   la misma variable con una transición propia, quedan sincronizadas con el
+   rotateX general aunque no exista profundidad 3D real (no hay
+   translateZ: es traslación 2D simulando parallax, ver CLAUDE.md).
+   ========================================================================== */
+
+.depth-torso {
+  transform: translateY(calc(var(--tilt-deg, 0) * 0.3px));
+  transition: transform var(--tilt-settle-ms, 420ms)
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.depth-limbs {
+  transform: translateY(calc(var(--tilt-deg, 0) * 1.1px));
+  transition: transform var(--tilt-settle-ms, 420ms)
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.figure-shell.is-dragging .depth-torso,
+.figure-shell.is-dragging .depth-limbs {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .depth-torso,
+  .depth-limbs {
     transition: none;
   }
 }
