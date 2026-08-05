@@ -20,6 +20,7 @@ let shellEl = null;
 let tiltEl = null;
 let frontFaceEl = null;
 let backFaceEl = null;
+let viewBadgeEl = null;
 
 // Estado de rotación — declarado aquí (y no junto al resto de la lógica más
 // abajo) porque loadMuscleFigure() llama a setupRotationControls() de forma
@@ -185,6 +186,7 @@ function settleRotation(targetT, { freshStart = false } = {}) {
     inactiveFace = outgoing;
     isBackView = activeFace === backFaceEl;
     updateFaceInteractivity();
+    updateViewBadge();
   }
 
   window.setTimeout(() => {
@@ -207,6 +209,12 @@ function updateFaceInteractivity() {
   inactiveFace.setAttribute("aria-hidden", "true");
 }
 
+// Señal explícita ("Frente"/"Espalda") que acompaña a la silueta: no depende
+// de que se reconozca qué músculos son visibles desde cada lado.
+function updateViewBadge() {
+  viewBadgeEl?.classList.toggle("is-back", isBackView);
+}
+
 function rotateToOppositeView() {
   if (isAnimating || isDragging || !figureReady) return;
 
@@ -223,6 +231,9 @@ function setupRotationControls() {
   activeFace = frontFaceEl;
   inactiveFace = backFaceEl;
   updateFaceInteractivity();
+
+  viewBadgeEl = document.getElementById("figure-view-badge");
+  updateViewBadge();
 
   shellEl.addEventListener("pointerdown", onPointerDown);
 

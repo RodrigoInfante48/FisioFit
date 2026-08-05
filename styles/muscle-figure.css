@@ -261,6 +261,66 @@
 }
 
 /* ==========================================================================
+   Badge "Frente" / "Espalda" — señal explícita e inequívoca de qué lado se
+   está viendo, independiente de si la silueta se lee a simple vista o no.
+   Las dos etiquetas ocupan el mismo lugar (top:0/left:50%) y hacen crossfade
+   entre sí: isBackView (ver muscle-figure.js) alterna la clase is-back en el
+   contenedor, y cada <span> reacciona a esa clase con su propia opacidad.
+   ========================================================================== */
+
+.figure-view-badge {
+  position: absolute;
+  top: var(--space-sm);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  height: 1.6rem;
+}
+
+.figure-view-badge__label {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 0.3rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  background: rgba(18, 22, 30, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+
+.figure-view-badge__label--front {
+  opacity: 1;
+  color: var(--color-accent-strong);
+  border-color: var(--color-accent-glow);
+}
+
+.figure-view-badge.is-back .figure-view-badge__label--front {
+  opacity: 0;
+}
+
+.figure-view-badge.is-back .figure-view-badge__label--back {
+  opacity: 1;
+  color: var(--color-accent-strong);
+  border-color: var(--color-accent-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure-view-badge__label {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
    Botón "volver" — sale del zoom sin re-clickear el músculo exacto. Vive en
    la esquina opuesta al botón de girar, oculto (opacidad 0 + sin puntero)
    hasta que hay un músculo seleccionado (.is-visible, ver updateZoomUi en
