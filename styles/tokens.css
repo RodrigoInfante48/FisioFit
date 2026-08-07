@@ -36,6 +36,14 @@
   --color-accent-strong: #7ce0ff;
   --color-accent-glow: rgba(79, 209, 255, 0.35);
 
+  /* Borde animado de los portlets — paleta "seria" de tonos joya,
+     coherente con el acento cian existente, sin caer en arcoíris. */
+  --border-cycle-1: #4fd1ff; /* cian — acento */
+  --border-cycle-2: #6c7bff; /* índigo */
+  --border-cycle-3: #9d5cff; /* violeta */
+  --border-cycle-4: #2dd4bf; /* teal */
+  --border-cycle-duration: 14s;
+
   /* Acentos por categoría de movimiento (menú superior) */
   --color-push: #ff7a45;
   --color-push-strong: #ffa26b;
