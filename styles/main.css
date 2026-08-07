@@ -101,11 +101,52 @@ button {
 .info-panel {
   grid-area: info;
   min-height: 6rem;
-  max-height: 30vh;
+  max-height: 34vh;
   padding: var(--space-sm) var(--space-md);
+}
+
+/* El scroll real vive en .info-panel__scroll (ver muscle-content-panel.js),
+   no en .info-panel: así el recorte de bordes/brillo del glass-panel
+   (overflow:hidden) no interfiere con el scroll táctil, y el fade de los
+   bordes superior/inferior puede aplicarse solo al contenido, nunca al
+   borde con gradiente del panel. */
+.info-panel__scroll {
+  height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  --scroll-fade-size: 1.75rem;
+}
+
+/* Fade en los bordes donde hay más contenido oculto — evita que el texto
+   se vea "cortado a la mitad" al hacer scroll. Las clases las alterna JS
+   según scrollTop/scrollHeight (muscle-content-panel.js). */
+.info-panel__scroll.has-fade-top {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--scroll-fade-size));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--scroll-fade-size));
+}
+
+.info-panel__scroll.has-fade-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--scroll-fade-size)), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--scroll-fade-size)), transparent 100%);
+}
+
+.info-panel__scroll.has-fade-top.has-fade-bottom {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--scroll-fade-size),
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--scroll-fade-size),
+    #000 calc(100% - var(--scroll-fade-size)),
+    transparent 100%
+  );
 }
 
 @media (min-width: 480px) {
@@ -139,7 +180,7 @@ button {
 
   .info-panel {
     min-height: 8rem;
-    max-height: 32vh;
+    max-height: 36vh;
     padding: var(--space-lg);
   }
 }
@@ -170,16 +211,6 @@ button {
   box-shadow: var(--shadow-float), var(--shadow-inset-highlight);
   isolation: isolate;
   overflow: hidden;
-}
-
-/* .glass-panel fija overflow:hidden (recorta el borde-gradiente y el brillo
-   especular de las pseudo-clases). Como se declara después de .info-panel
-   en este mismo archivo, con igual especificidad, pisaba su overflow-y:
-   auto y el panel quedaba scrolleable sólo por JS, nunca con touch/rueda
-   real. Se reafirma aquí con mayor especificidad. */
-.info-panel.glass-panel {
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 /* Borde con gradiente que simula refracción de luz, más un barrido de

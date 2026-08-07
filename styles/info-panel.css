@@ -1,6 +1,7 @@
 /* ==========================================================================
    FisioFit — Panel inferior de contenido (Ejercicio / Estiramiento /
-   Recuperación). Vive dentro de .info-panel (glass-panel, ver main.css).
+   Recuperación). Vive dentro de .info-panel__scroll, el contenedor con
+   scroll real (ver main.css), a su vez dentro de .info-panel (glass-panel).
    ========================================================================== */
 
 .content-panel {
