@@ -182,7 +182,16 @@ button {
   overflow-y: auto;
 }
 
-/* Borde con gradiente que simula refracción de luz */
+/* Borde con gradiente que simula refracción de luz, más un barrido de
+   color continuo (paleta seria: cian / índigo / violeta / teal) que da
+   vida al borde sin volverse un efecto arcoíris. --border-angle se anima
+   vía @property para que el conic-gradient rote su origen suavemente. */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .glass-panel::after {
   content: "";
   position: absolute;
@@ -190,17 +199,31 @@ button {
   border-radius: inherit;
   padding: 1px;
   pointer-events: none;
-  background: linear-gradient(
-    135deg,
-    var(--glass-border-light) 0%,
-    transparent 30%,
-    transparent 70%,
-    var(--glass-border-dark) 100%
+  background: conic-gradient(
+    from var(--border-angle),
+    var(--border-cycle-1) 0%,
+    var(--border-cycle-2) 25%,
+    var(--border-cycle-3) 50%,
+    var(--border-cycle-4) 75%,
+    var(--border-cycle-1) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: 0.5;
+  opacity: 0.65;
+  animation: glass-border-cycle var(--border-cycle-duration) linear infinite;
+}
+
+@keyframes glass-border-cycle {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-panel::after {
+    animation: none;
+  }
 }
 
 /* Brillo especular sutil en la esquina superior */
