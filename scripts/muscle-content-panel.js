@@ -4,7 +4,11 @@
 // seleccionado, mostrando el resumen del grupo completo armado a partir de
 // los mismos datos de cada músculo en data/muscle-content.js.
 
-const GROUP_LABELS = { push: "Push", pull: "Pull", legs: "Legs" };
+// "core" no es un patrón de movimiento de CLAUDE.md (Push/Pull/Legs): es el
+// grupo asignado a abdominales/oblicuos, seleccionables individualmente en
+// la figura pero sin heatmap propio ni entrada en GROUP_MUSCLES (nunca
+// aparecen en el resumen de un grupo, sólo en su propia ficha).
+const GROUP_LABELS = { push: "Push", pull: "Pull", legs: "Legs", core: "Core" };
 
 // Orden de músculos por grupo — coincide con el mapeo de CLAUDE.md.
 const GROUP_MUSCLES = {

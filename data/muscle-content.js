@@ -263,4 +263,43 @@ const MUSCLE_CONTENT = {
       "seguido pensando que \"aguantan más\" — pero sin descanso completo " +
       "el estímulo directo se diluye igual que en cualquier otro músculo.",
   },
+  abdominales: {
+    nombre: "Abdominales",
+    grupo: "core",
+    ejercicio:
+      "Ya reciben trabajo isométrico intenso como estabilizadores en la " +
+      "sentadilla, el peso muerto rumano y el press militar; no forman " +
+      "parte de ningún patrón Push/Pull/Legs y el trabajo directo es " +
+      "opcional. Si se agrega, un solo ejercicio (elevaciones de piernas " +
+      "colgado o crunch en polea) con 1 serie al fallo, recorrido completo, " +
+      "sin tirar del cuello con las manos.",
+    estiramiento:
+      "Tendido boca abajo, apoyado sobre los antebrazos o con los brazos " +
+      "extendidos (posición de cobra), dejando caer la cadera para " +
+      "extender suavemente el torso. 20-30 segundos, sin forzar la zona " +
+      "lumbar.",
+    recuperacion:
+      "5-7 días si se entrenaron directo al fallo. Al ser estabilizadores " +
+      "activos en casi cualquier ejercicio compuesto, sumar series extra en " +
+      "días \"libres\" es la forma más común de no dejarlos recuperar del " +
+      "todo.",
+  },
+  oblicuos: {
+    nombre: "Oblicuos",
+    grupo: "core",
+    ejercicio:
+      "Reciben suficiente estímulo indirecto de la sentadilla, el peso " +
+      "muerto y el press por su rol estabilizador del torso; no pertenecen " +
+      "a ningún patrón Push/Pull/Legs. Si se entrenan de forma directa, " +
+      "flexión lateral de torso con mancuerna o giros en polea, 1 serie al " +
+      "fallo por lado, movimiento controlado sin balancear la cadera.",
+    estiramiento:
+      "De pie, un brazo elevado por encima de la cabeza, inclinando el " +
+      "torso hacia el lado contrario hasta sentir el estiramiento en el " +
+      "costado. 20-30 segundos por lado, sin rebotar.",
+    recuperacion:
+      "5-7 días antes de volver a cargarlos directo. Dolor lateral al " +
+      "girar el torso o al toser más allá de 48-72h es señal de que " +
+      "todavía no recuperaron del todo.",
+  },
 };
