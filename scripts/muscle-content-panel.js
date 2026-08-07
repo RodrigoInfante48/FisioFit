@@ -34,6 +34,7 @@ const SWAP_OUT_MS = window.matchMedia("(prefers-reduced-motion: reduce)")
   : 220;
 
 let panelEl = null;
+let scrollEl = null;
 // Prefijo "panel" para no colisionar con "selectedMuscle"/"selectedGroup",
 // ya declarados como top-level let en muscle-figure.js y main.js: los
 // scripts clásicos comparten un mismo ámbito léxico global, así que
@@ -127,6 +128,21 @@ function currentMarkup() {
   return buildEmptyState();
 }
 
+// Indica con un fade en el borde superior/inferior que hay más contenido
+// oculto hacia ese lado, en vez de cortar el texto en seco contra el borde
+// del panel al hacer scroll (ver .info-panel__scroll en main.css).
+const FADE_EDGE_THRESHOLD_PX = 4;
+
+function updateScrollFade() {
+  if (!scrollEl) return;
+  const { scrollTop, scrollHeight, clientHeight } = scrollEl;
+  scrollEl.classList.toggle("has-fade-top", scrollTop > FADE_EDGE_THRESHOLD_PX);
+  scrollEl.classList.toggle(
+    "has-fade-bottom",
+    scrollTop < scrollHeight - clientHeight - FADE_EDGE_THRESHOLD_PX
+  );
+}
+
 // Fade/slide al cambiar de contenido: la clase "is-swapping" desvanece el
 // contenido saliente (ver info-panel.css); una vez transcurrida esa
 // transición se reemplaza el markup y se retira la clase para que el
@@ -140,6 +156,12 @@ function renderPanel() {
     panelEl.innerHTML = currentMarkup();
     void panelEl.offsetWidth; // fuerza reflow antes de re-habilitar la transición de entrada
     panelEl.classList.remove("is-swapping");
+    // El contenido nuevo arranca siempre desde arriba: si quedara el
+    // scrollTop del músculo/grupo anterior, se vería recortado a mitad de
+    // párrafo apenas cambia la selección. behavior:"auto" fuerza el salto
+    // instantáneo sin importar scroll-behavior heredado.
+    if (scrollEl) scrollEl.scrollTo({ top: 0, behavior: "auto" });
+    updateScrollFade();
   }, SWAP_OUT_MS);
 }
 
@@ -147,10 +169,19 @@ function setupContentPanel() {
   const infoPanel = document.querySelector(".info-panel");
   if (!infoPanel) return;
 
+  scrollEl = document.createElement("div");
+  scrollEl.className = "info-panel__scroll";
+
   panelEl = document.createElement("div");
   panelEl.className = "content-panel";
   panelEl.innerHTML = currentMarkup();
-  infoPanel.appendChild(panelEl);
+
+  scrollEl.appendChild(panelEl);
+  infoPanel.appendChild(scrollEl);
+
+  scrollEl.addEventListener("scroll", updateScrollFade, { passive: true });
+  window.addEventListener("resize", updateScrollFade);
+  updateScrollFade();
 }
 
 setupContentPanel();
