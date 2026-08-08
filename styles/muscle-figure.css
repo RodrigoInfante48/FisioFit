@@ -483,3 +483,22 @@
   filter: drop-shadow(0 0 10px var(--color-accent-glow))
     drop-shadow(0 0 3px var(--color-accent-strong));
 }
+
+/* ==========================================================================
+   Textura de fibra muscular — capa decorativa de <path> duplicados sobre
+   cada músculo (mismo "d" que su .muscle-path, ver assets/muscle-*.svg),
+   pintada en mix-blend-mode "overlay" para que la textura reaccione al
+   color de fondo real (heatmap inactivo, --muscle-color activo, o
+   atenuado) sin tocar jamás el fill del músculo. No interactiva: vive en
+   un <g aria-hidden> con pointer-events desactivado, así nunca compite con
+   el click/hover de selección de .muscle-path.
+   ========================================================================== */
+
+.muscle-fiber-overlay {
+  pointer-events: none;
+}
+
+.muscle-fiber-overlay path {
+  mix-blend-mode: overlay;
+  opacity: 0.32;
+}
