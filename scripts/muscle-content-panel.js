@@ -4,9 +4,10 @@
 // seleccionado, mostrando el resumen del grupo completo armado a partir de
 // los mismos datos de cada músculo en data/muscle-content.js.
 
-// "core" y "antebrazos" no son patrones de movimiento de CLAUDE.md
-// (Push/Pull/Legs): son los grupos asignados a abdominales/oblicuos y a
-// antebrazo-flexor/antebrazo-extensor respectivamente, seleccionables
+// "core", "antebrazos" y "espalda" no son patrones de movimiento de
+// CLAUDE.md (Push/Pull/Legs): son los grupos asignados a
+// abdominales/oblicuos, antebrazo-flexor/antebrazo-extensor y
+// romboides/erectores-espinales respectivamente, seleccionables
 // individualmente en la figura pero sin heatmap propio ni entrada en
 // GROUP_MUSCLES (nunca aparecen en el resumen de un grupo, sólo en su
 // propia ficha).
@@ -16,6 +17,7 @@ const GROUP_LABELS = {
   legs: "Legs",
   core: "Core",
   antebrazos: "Antebrazos",
+  espalda: "Espalda",
 };
 
 // Orden de músculos por grupo — coincide con el mapeo de CLAUDE.md.

@@ -109,6 +109,12 @@
   border-color: rgba(157, 92, 255, 0.35);
 }
 
+.content-panel__badge--espalda {
+  color: #ffb4d4;
+  background: rgba(255, 107, 165, 0.14);
+  border-color: rgba(255, 107, 165, 0.35);
+}
+
 /* ==========================================================================
    Sub-secciones — Ejercicio / Estiramiento / Recuperación
    ========================================================================== */
