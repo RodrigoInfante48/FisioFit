@@ -263,6 +263,45 @@ const MUSCLE_CONTENT = {
       "seguido pensando que \"aguantan más\" — pero sin descanso completo " +
       "el estímulo directo se diluye igual que en cualquier otro músculo.",
   },
+  "antebrazo-flexor": {
+    nombre: "Antebrazo (flexores)",
+    grupo: "antebrazos",
+    ejercicio:
+      "Ya reciben trabajo isométrico intenso sosteniendo la barra en " +
+      "dominadas, remo y curl: no forman parte de ningún patrón " +
+      "Push/Pull/Legs y el trabajo directo es opcional. Si se agrega, un " +
+      "solo ejercicio (curl de muñeca con barra o mancuerna, antebrazo " +
+      "apoyado) con 1 serie al fallo, recorrido completo desde la " +
+      "extensión máxima hasta la flexión máxima.",
+    estiramiento:
+      "Brazo extendido al frente, palma hacia arriba, con la otra mano " +
+      "llevando los dedos hacia abajo y atrás hasta sentir tensión en la " +
+      "cara interna del antebrazo. 20-30 segundos por lado.",
+    recuperacion:
+      "4-5 días antes de volver a estimularlos de forma directa. Al recibir " +
+      "uso constante como agarre en casi cualquier ejercicio de tirón, " +
+      "sumar series de curl de muñeca en días \"libres\" es la forma más " +
+      "común de no dejarlos recuperar del todo.",
+  },
+  "antebrazo-extensor": {
+    nombre: "Antebrazo (extensores)",
+    grupo: "antebrazos",
+    ejercicio:
+      "Ya reciben estímulo indirecto sosteniendo la barra con la muñeca " +
+      "fija en el press de banca y el press militar; no forman parte de " +
+      "ningún patrón Push/Pull/Legs. Si se entrenan de forma directa, " +
+      "extensión de muñeca con mancuerna liviana o barra, antebrazo " +
+      "apoyado, 1 serie al fallo, recorrido completo y controlado.",
+    estiramiento:
+      "Brazo extendido al frente, palma hacia abajo, con la otra mano " +
+      "flexionando la muñeca hacia abajo hasta sentir tensión en la cara " +
+      "externa del antebrazo. 20-30 segundos por lado.",
+    recuperacion:
+      "4-5 días antes de volver a cargarlos directo. Son músculos pequeños " +
+      "que se fatigan rápido pero también se recuperan rápido: forzarlos " +
+      "de nuevo antes de tiempo no acelera el progreso, solo acumula " +
+      "fatiga sobre un agarre que ya está en uso en la próxima sesión.",
+  },
   abdominales: {
     nombre: "Abdominales",
     grupo: "core",
