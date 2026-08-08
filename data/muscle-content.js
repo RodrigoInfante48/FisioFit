@@ -184,6 +184,50 @@ const MUSCLE_CONTENT = {
       "además del entrenamiento: si sigue rígido pasado ese período, un " +
       "día extra de descanso rinde más que forzar la próxima sesión.",
   },
+  romboides: {
+    nombre: "Romboides",
+    grupo: "espalda",
+    ejercicio:
+      "Sinergistas del dorsal ancho y el trapecio medio en cualquier " +
+      "remo o dominada: ya reciben trabajo directo suficiente ahí y no " +
+      "forman parte de ningún patrón Push/Pull/Legs por separado. Si se " +
+      "agrega trabajo aislado, remo con agarre estrecho o face pull, " +
+      "codos altos, apretando los omóplatos entre sí en la fase final, " +
+      "1 serie al fallo.",
+    estiramiento:
+      "Brazos cruzados al frente del cuerpo, tomando el hombro contrario " +
+      "con cada mano, redondeando la espalda alta suavemente hasta " +
+      "sentir la separación entre los omóplatos. 20-30 segundos, sin " +
+      "forzar el cuello.",
+    recuperacion:
+      "5-7 días antes de volver a exigirlos de forma directa, igual que " +
+      "el resto de la sesión de Pull en la que ya trabajan. Rigidez " +
+      "entre los omóplatos que persiste más allá de 48h es señal de que " +
+      "todavía no recuperaron del todo.",
+  },
+  "erectores-espinales": {
+    nombre: "Erectores espinales",
+    grupo: "espalda",
+    ejercicio:
+      "Trabajan de forma isométrica intensa como estabilizadores en la " +
+      "sentadilla y, sobre todo, en el peso muerto rumano: no forman " +
+      "parte de ningún patrón Push/Pull/Legs propio y ese estímulo " +
+      "indirecto suele alcanzar y sobrar. Si se agrega trabajo directo, " +
+      "hiperextensiones de espalda baja con el propio peso corporal, " +
+      "recorrido controlado sin hiperextender de golpe, 1 serie al " +
+      "fallo.",
+    estiramiento:
+      "Sentado o de pie, flexionando el torso hacia adelante desde la " +
+      "cadera con las rodillas levemente flexionadas, dejando caer el " +
+      "peso de los brazos hacia el piso hasta sentir el estiramiento a " +
+      "lo largo de la espalda baja. 20-30 segundos, sin rebotar.",
+    recuperacion:
+      "5-7 días antes de someterlos de nuevo a trabajo directo. Al ser " +
+      "estabilizadores activos en la sentadilla, el peso muerto rumano y " +
+      "prácticamente cualquier ejercicio compuesto de pie, cualquier " +
+      "molestia en la espalda baja que persista más allá de 48-72h pide " +
+      "un día extra de descanso antes de la próxima sesión.",
+  },
   cuadriceps: {
     nombre: "Cuádriceps",
     grupo: "legs",
