@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FisioFit — Alimentación</title>
+  <link
+    rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>%F0%9F%8C%A1%EF%B8%8F</text></svg>"
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/nutrition.css" />
+</head>
+<body>
+  <div class="nutrition-page">
+    <header class="app-header glass-panel glass-nav">
+      <span class="app-header__logo">FisioFit</span>
+      <a class="glass-btn glass-btn--back" href="index.html">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M11 6l-6 6 6 6" />
+        </svg>
+        <span>Entrenamiento</span>
+      </a>
+    </header>
+
+    <main class="nutrition-main">
+      <section class="nutrition-intro glass-panel">
+        <h1 class="nutrition-intro__title" id="nutrition-intro-title"></h1>
+        <p class="nutrition-intro__text" id="nutrition-intro-text"></p>
+      </section>
+
+      <section
+        class="nutrition-carousel glass-panel"
+        id="nutrition-carousel"
+        tabindex="0"
+        aria-roledescription="carrusel"
+        aria-label="Plan de comidas por día"
+      >
+        <div class="nutrition-carousel__tabs" role="tablist" aria-label="Elegir día de la semana"></div>
+
+        <div class="nutrition-carousel__viewport">
+          <div class="nutrition-carousel__track"></div>
+        </div>
+
+        <div class="nutrition-carousel__progress">
+          <div class="nutrition-carousel__progress-bar"></div>
+        </div>
+
+        <div class="nutrition-carousel__controls">
+          <button class="nutrition-carousel__arrow nutrition-carousel__arrow--prev" type="button" aria-label="Día anterior">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+          </button>
+
+          <div class="nutrition-carousel__dots"></div>
+
+          <button class="nutrition-carousel__arrow nutrition-carousel__arrow--next" type="button" aria-label="Día siguiente">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+
+          <button class="nutrition-carousel__playpause" type="button" aria-pressed="false" aria-label="Pausar avance automático">
+            <svg class="icon-play" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+              <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+            </svg>
+          </button>
+        </div>
+
+        <p class="visually-hidden nutrition-carousel__announcer" aria-live="polite"></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="data/nutrition-content.js"></script>
+  <script src="scripts/nutrition.js"></script>
+  <script>
+    document.getElementById("nutrition-intro-title").textContent = NUTRITION_INTRO.titulo;
+    document.getElementById("nutrition-intro-text").textContent = NUTRITION_INTRO.texto;
+  </script>
+</body>
+</html>

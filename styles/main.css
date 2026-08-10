@@ -392,3 +392,21 @@ button {
   box-shadow: 0 0 0 1px rgba(61, 220, 132, 0.4), 0 0 24px var(--color-legs-glow),
     var(--shadow-inset-highlight);
 }
+
+/* ==========================================================================
+   Enlace a la sección Alimentación (header)
+   ========================================================================== */
+
+.glass-btn--nutrition {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: var(--color-nutrition-strong);
+  border-color: rgba(242, 201, 76, 0.25);
+}
+
+.glass-btn--nutrition:hover {
+  border-color: var(--color-nutrition);
+  box-shadow: var(--shadow-float), var(--shadow-inset-highlight), 0 0 18px var(--color-nutrition-glow);
+}
