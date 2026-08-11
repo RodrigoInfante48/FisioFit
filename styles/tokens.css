@@ -57,6 +57,18 @@
   --color-legs-strong: #6ee8a4;
   --color-legs-glow: rgba(61, 220, 132, 0.45);
 
+  /* Acento de la sección Alimentación (nav + heros de comida) */
+  --color-nutrition: #f2c94c;
+  --color-nutrition-strong: #f7db7a;
+  --color-nutrition-glow: rgba(242, 201, 76, 0.45);
+
+  /* Días de descanso/recuperación en el plan nutricional — mismo teal que
+     ya usa el borde animado del panel (--border-cycle-4), así el color no
+     introduce una paleta nueva. */
+  --color-rest: #2dd4bf;
+  --color-rest-strong: #6ee8dc;
+  --color-rest-glow: rgba(45, 212, 191, 0.4);
+
   /* Escala de heatmap: frío/transparente -> rojo-naranja intenso (0.0 - 1.0) */
   --heatmap-stop-0: rgba(56, 189, 248, 0.1); /* 0.00 — inactivo, frío y casi transparente */
   --heatmap-stop-1: #2b6ef2; /* 0.25 — azul */
