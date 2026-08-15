@@ -375,6 +375,20 @@
   filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.45));
 }
 
+/* Durante rotación o zoom (ver pauseHeavyFx en muscle-figure.js) se suspende
+   el drop-shadow de arriba: un filter en un ancestro obliga al navegador a
+   re-rasterizar TODA la figura (decenas de <path> con gradientes + textura
+   de fibra) en cada frame de cualquier transform que ocurra debajo —
+   .muscle-zoom-layer al hacer zoom sobre un músculo, .figure-face al girar
+   — en vez de dejar que el compositor anime esos transforms por su cuenta.
+   Eso es lo que se sentía como lag/trabado justo al clickear un músculo.
+   Sin el filter durante esos ~900ms el transform corre en el compositor sin
+   repintar nada; la sombra vuelve apenas se asienta y su ausencia momentánea
+   no se nota en medio del propio movimiento. */
+.figure-shell.is-fx-paused .muscle-figure {
+  filter: none;
+}
+
 /* Silueta base decorativa: no interactiva, tono neutro de tejido */
 .body-decor {
   pointer-events: none;

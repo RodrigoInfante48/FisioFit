@@ -149,6 +149,28 @@ loadMuscleFigure();
 // (mitad del giro) el crossfade está exactamente al 50/50.
 // ============================================================================
 
+// Suspende el drop-shadow de .muscle-figure durante una transición de
+// transform (rotación o zoom, ver .figure-shell.is-fx-paused en
+// muscle-figure.css) — un filter en un ancestro bloquea el fast-path del
+// compositor para cualquier transform animado debajo suyo, forzando un
+// repintado completo de la figura en cada frame; eso es lo que se sentía
+// como lag al clickear un músculo. Contador (no booleano) porque rotar y
+// hacer zoom pueden solaparse: rotateToOppositeView limpia la selección
+// (dispara la transición de zoom-out) y arranca el giro casi al mismo
+// tiempo (ver más abajo).
+let fxPauseDepth = 0;
+
+function pauseHeavyFx(durationMs) {
+  if (durationMs <= 0 || !shellEl) return;
+
+  fxPauseDepth++;
+  shellEl.classList.add("is-fx-paused");
+  window.setTimeout(() => {
+    fxPauseDepth = Math.max(0, fxPauseDepth - 1);
+    if (fxPauseDepth === 0) shellEl.classList.remove("is-fx-paused");
+  }, durationMs);
+}
+
 function applyFaceProgress(outgoing, incoming, t) {
   const clamped = Math.max(-1, Math.min(1, t));
   const sign = clamped === 0 ? 1 : Math.sign(clamped);
@@ -179,6 +201,7 @@ function settleRotation(targetT, { freshStart = false } = {}) {
   }
 
   isAnimating = true;
+  pauseHeavyFx(rotateTransitionMs);
   applyFaceProgress(outgoing, incoming, targetT);
 
   if (targetT !== 0) {
@@ -679,6 +702,7 @@ function applyZoomToMuscle(muscle) {
   const offsetY = viewBoxCenterY - scale * centerY;
 
   layer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  pauseHeavyFx(zoomTransitionMs);
 
   zoomActive = true;
   updateZoomUi();
@@ -687,6 +711,7 @@ function applyZoomToMuscle(muscle) {
 function resetZoom() {
   if (frontZoomLayer) frontZoomLayer.style.transform = "";
   if (backZoomLayer) backZoomLayer.style.transform = "";
+  pauseHeavyFx(zoomTransitionMs);
 
   zoomActive = false;
   updateZoomUi();
