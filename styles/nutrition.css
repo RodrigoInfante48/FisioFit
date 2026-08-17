@@ -43,16 +43,6 @@
   }
 }
 
-.nutrition-page .app-header {
-  padding: var(--space-xs) var(--space-sm);
-}
-
-@media (min-width: 640px) {
-  .nutrition-page .app-header {
-    padding: var(--space-sm) var(--space-lg);
-  }
-}
-
 .glass-btn--back {
   display: inline-flex;
   align-items: center;
