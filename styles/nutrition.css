@@ -48,6 +48,13 @@
   align-items: center;
   gap: 0.35rem;
   text-decoration: none;
+  color: var(--color-nutrition-strong);
+  border-color: rgba(242, 201, 76, 0.25);
+}
+
+.glass-btn--back:hover {
+  border-color: var(--color-nutrition);
+  box-shadow: var(--shadow-float), var(--shadow-inset-highlight), 0 0 18px var(--color-nutrition-glow);
 }
 
 .nutrition-main {
