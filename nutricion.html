@@ -18,9 +18,16 @@
   <link rel="stylesheet" href="styles/nutrition.css" />
 </head>
 <body>
-  <div class="nutrition-page">
+  <div class="auth-loading" aria-hidden="true">
+    <div class="auth-loading__spinner"></div>
+  </div>
+
+  <div class="nutrition-page auth-gated">
     <header class="app-header">
-      <h1 class="app-title">FisioFit</h1>
+      <div class="app-brand">
+        <h1 class="app-title">FisioFit</h1>
+        <p class="app-tagline">Acceso exclusivo por paquete</p>
+      </div>
       <div class="app-nav glass-panel glass-nav">
         <a class="glass-btn glass-btn--back" href="index.html">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
@@ -29,6 +36,9 @@
           </svg>
           <span>Entrenamiento</span>
         </a>
+        <button class="glass-btn glass-btn--logout" type="button" id="logout-btn" hidden>
+          Salir
+        </button>
       </div>
     </header>
 
@@ -87,6 +97,10 @@
     </main>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="scripts/firebase-config.js"></script>
+  <script src="scripts/auth-guard.js"></script>
   <script src="data/nutrition-content.js"></script>
   <script src="scripts/nutrition.js"></script>
   <script>

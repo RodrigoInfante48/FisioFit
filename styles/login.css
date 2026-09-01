@@ -1,0 +1,116 @@
+/* ==========================================================================
+   FisioFit — pantalla de login (scripts/login.js, scripts/auth-guard.js)
+   ========================================================================== */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg-gradient) fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+.login-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.login-card .app-brand {
+  padding-top: 0;
+}
+
+.login-card .app-title {
+  font-size: 2.6rem;
+}
+
+.login-intro {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-dim);
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-dim);
+}
+
+.login-field input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border-dark);
+  border-radius: var(--radius-md);
+  padding: 0.7rem 0.9rem;
+  min-height: 2.75rem;
+}
+
+.login-field input:focus-visible {
+  outline: 3px solid var(--color-accent-strong);
+  outline-offset: 1px;
+}
+
+.login-error {
+  font-size: 0.85rem;
+  color: var(--color-push-strong);
+  background: rgba(255, 122, 69, 0.12);
+  border: 1px solid rgba(255, 122, 69, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+}
+
+.login-submit {
+  width: 100%;
+  justify-content: center;
+  color: var(--color-accent-strong);
+  border-color: rgba(79, 209, 255, 0.3);
+}
+
+.login-submit:hover {
+  box-shadow: var(--shadow-float), var(--shadow-inset-highlight), 0 0 18px var(--color-accent-glow);
+}
+
+.login-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: var(--shadow-inset-highlight) !important;
+}
+
+.login-whatsapp-cta {
+  width: 100%;
+  margin-top: 0;
+}

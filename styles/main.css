@@ -74,17 +74,27 @@ button {
   gap: var(--space-sm);
 }
 
-/* El título vive fuera de cualquier glass-panel (ver index.html/nutricion.html:
-   ya no es .app-header__logo dentro del "cuadro" con borde/blur, sino un <h1>
-   suelto al lado de ese cuadro). Para que igual se sienta parte del mismo
-   lenguaje visual, reusa el mismo conic-gradient + --border-angle animado
-   que .glass-panel::after (ver más abajo), pero como relleno de texto en vez
-   de borde: mismo barrido de color, esta vez en la letra. */
+/* Bloque de marca — centrado a todo el ancho, por encima del menú, para que
+   "FisioFit" sea lo primero que el ojo lee al entrar (branding/recall). El
+   título vive fuera de cualquier glass-panel: reusa el mismo conic-gradient
+   + --border-angle animado que .glass-panel::after (ver más abajo), pero
+   como relleno de texto en vez de borde: mismo barrido de color, esta vez
+   en la letra, más un pulso de brillo propio para que se sienta "vivo" sin
+   depender solo del barrido de color. */
+.app-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.2rem;
+  padding-top: var(--space-xs);
+}
+
 .app-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.6rem;
-  letter-spacing: 0.05em;
+  font-size: 2.2rem;
+  letter-spacing: 0.06em;
   line-height: 1;
   margin: 0;
   background: conic-gradient(
@@ -100,7 +110,29 @@ button {
   color: transparent;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 16px var(--color-accent-glow));
-  animation: glass-border-cycle var(--border-cycle-duration) linear infinite;
+  animation: glass-border-cycle var(--border-cycle-duration) linear infinite,
+    app-title-pulse 3.4s ease-in-out infinite;
+}
+
+@keyframes app-title-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 14px var(--color-accent-glow));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 26px var(--color-accent-glow));
+    transform: scale(1.02);
+  }
+}
+
+.app-tagline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -118,8 +150,23 @@ button {
   padding: var(--space-xs) var(--space-sm);
 }
 
+.glass-btn--logout {
+  color: var(--color-text-faint);
+}
+
+.glass-btn--logout:hover {
+  color: var(--color-text);
+  border-color: var(--glass-border-light);
+}
+
 .movement-menu {
   display: flex;
+  gap: var(--space-xs);
+}
+
+.app-nav__actions {
+  display: flex;
+  align-items: center;
   gap: var(--space-xs);
 }
 
@@ -185,7 +232,7 @@ button {
 
 @media (min-width: 480px) {
   .app-title {
-    font-size: 1.9rem;
+    font-size: 2.5rem;
   }
 
   .glass-btn {
@@ -204,7 +251,11 @@ button {
   }
 
   .app-title {
-    font-size: 2.3rem;
+    font-size: 3rem;
+  }
+
+  .app-tagline {
+    font-size: 0.78rem;
   }
 
   .movement-menu {
@@ -222,6 +273,56 @@ button {
   .app {
     padding: var(--space-lg);
     gap: var(--space-lg);
+  }
+
+  .app-title {
+    font-size: 3.6rem;
+  }
+}
+
+/* ==========================================================================
+   Guardia de acceso (Firebase Auth) — ver scripts/auth-guard.js. Mientras
+   se resuelve la sesión, el overlay de carga cubre la pantalla y ".app"
+   queda oculto para no dejar ver contenido protegido de un parpadeo (FOUC)
+   antes del redirect a login.html cuando no hay sesión.
+   ========================================================================== */
+
+html:not(.auth-ready) .auth-gated {
+  display: none;
+}
+
+.auth-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-gradient) fixed;
+}
+
+html.auth-ready .auth-loading {
+  display: none;
+}
+
+.auth-loading__spinner {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 3px solid var(--glass-border-dark);
+  border-top-color: var(--color-accent);
+  animation: auth-spin 0.8s linear infinite;
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-loading__spinner {
+    animation-duration: 1.6s;
   }
 }
 
