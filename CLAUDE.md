@@ -59,6 +59,12 @@ Todo el contenido textual sobre ejercicio debe reflejar este enfoque:
 - Heatmap: los músculos no son on/off, tienen intensidad continua. El color
   interpola de un tono frío/transparente (inactivo) a rojo-naranja intenso
   (máxima intensidad) según el valor 0.0–1.0 de cada músculo.
+- **Navegación del header**: SIEMPRE vive detrás de un botón de hamburguesa
+  en la esquina superior izquierda, que abre un panel lateral deslizante
+  desde la derecha (angosto, ~260-320px, translúcido tipo Liquid Glass,
+  nunca pantalla completa ni muy opaco). Este patrón es IDÉNTICO en mobile
+  y en desktop — no existe una versión de header con botones en fila para
+  pantallas grandes. Web y mobile deben coincidir siempre.
 
 ## Stack técnico
 

@@ -76,13 +76,18 @@ button {
 }
 
 /* ==========================================================================
-   Menú hamburguesa — solo visible en móvil (ver media query más abajo).
-   Vive fijo en la esquina superior izquierda del header; al abrir, revela
-   ".app-nav" como un panel desplegable (ver scripts/ui-controls.js).
+   Menú de navegación — SIEMPRE vive detrás de este botón de hamburguesa,
+   fijo en la esquina superior izquierda del header, en cualquier ancho de
+   pantalla (mobile y desktop son idénticos: no hay una variante de header
+   con botones en fila para pantallas grandes). Al abrir, revela "#app-nav"
+   como un panel lateral ("drawer") que se desliza desde la derecha de la
+   pantalla — ver el bloque de #app-nav más abajo y scripts/ui-controls.js.
+   Esta decisión está documentada en CLAUDE.md ("Diseño visual — Liquid
+   Glass + Heatmap") para que no se vuelva a implementar como acordeón.
    ========================================================================== */
 
 .hamburger-btn {
-  display: none;
+  display: flex;
   position: absolute;
   top: 0;
   left: 0;
@@ -201,13 +206,58 @@ button {
   }
 }
 
-.app-nav {
+/* Panel lateral ("drawer"): fijo a la derecha de la pantalla, angosto
+   (260–320px) y translúcido (hereda blur de .glass-panel/.glass-nav) para
+   que la figura muscular siga visible detrás. Se identifica por ID (en vez
+   de por .app-nav) para que su posición/tamaño siempre gane sobre
+   .glass-panel sin depender del orden de las reglas en el archivo.
+   Oculto fuera de pantalla con translateX + visibility (no display:none)
+   para poder animar la entrada/salida; visibility evita que sus botones
+   queden en el orden de tabulación mientras el panel está cerrado. */
+#app-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--space-lg);
+  width: clamp(260px, 82vw, 320px);
+  height: 100vh;
+  height: 100dvh;
+  padding: calc(var(--space-xl) + var(--space-sm)) var(--space-md) var(--space-md);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  box-shadow: var(--shadow-float-lg);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.3s ease, visibility 0s linear 0.3s;
+}
+
+#app-nav.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.3s ease, visibility 0s linear 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #app-nav {
+    transition: visibility 0s linear;
+  }
+}
+
+/* Todos los ítems del drawer se ven como una lista vertical de opciones de
+   ancho completo, en vez de los botones compactos en fila que usaban
+   antes en el header. */
+#app-nav .glass-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-  padding: var(--space-xs) var(--space-sm);
+  justify-content: flex-start;
+  width: 100%;
+  gap: 0.6rem;
 }
 
 .glass-btn--logout {
@@ -221,49 +271,16 @@ button {
 
 .movement-menu {
   display: flex;
+  flex-direction: column;
   gap: var(--space-xs);
 }
 
 .app-nav__actions {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-xs);
-}
-
-/* En móvil el header no tiene ancho para el menú + acciones en una sola
-   fila sin apretarse contra el borde izquierdo — se colapsa detrás del
-   botón hamburguesa (arriba) y se despliega como panel al abrirlo. */
-@media (max-width: 639.98px) {
-  .hamburger-btn {
-    display: flex;
-  }
-
-  .app-nav {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    padding: 0 var(--space-sm);
-    transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.35s ease;
-  }
-
-  .app-nav.is-open {
-    max-height: 30rem;
-    opacity: 1;
-    padding: var(--space-sm);
-  }
-
-  .movement-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .app-nav__actions {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--glass-border-dark);
 }
 
 .stage {
@@ -342,20 +359,12 @@ button {
     gap: var(--space-md);
   }
 
-  .app-nav {
-    padding: var(--space-sm) var(--space-lg);
-  }
-
   .app-title {
     font-size: 3rem;
   }
 
   .app-tagline {
     font-size: 0.78rem;
-  }
-
-  .movement-menu {
-    gap: var(--space-sm);
   }
 
   .info-panel {
@@ -648,9 +657,7 @@ html.auth-ready .auth-loading {
 .glass-btn--theme-toggle {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  padding: var(--space-xs);
+  gap: 0.6rem;
   color: var(--color-text-dim);
 }
 
