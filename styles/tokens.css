@@ -69,6 +69,12 @@
   --color-rest-strong: #6ee8dc;
   --color-rest-glow: rgba(45, 212, 191, 0.4);
 
+  /* Acento de la CTA "Agendar sesión de ventosas/fisioterapia" (WhatsApp),
+     ver .content-panel__cta en info-panel.css */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-strong: #4ee08a;
+  --color-whatsapp-glow: rgba(37, 211, 102, 0.4);
+
   /* Escala de heatmap: frío/transparente -> rojo-naranja intenso (0.0 - 1.0) */
   --heatmap-stop-0: rgba(56, 189, 248, 0.1); /* 0.00 — inactivo, frío y casi transparente */
   --heatmap-stop-1: #2b6ef2; /* 0.25 — azul */

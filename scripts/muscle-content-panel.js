@@ -82,6 +82,41 @@ function buildSection(title, iconKey, text) {
   `;
 }
 
+// Número de WhatsApp de Rodrigo para agendar sesiones de ventosas /
+// fisioterapia (fase manual — ver CLAUDE.md "Modelo de negocio y
+// estrategia"). Formato wa.me: código de país + número, sin "+" ni espacios.
+const WHATSAPP_NUMBER = "573209974750";
+
+function buildRecoveryCTA(contextLabel) {
+  const message = encodeURIComponent(
+    `Hola! Estuve viendo en la app FisioFit la recuperación de ${contextLabel} ` +
+      "y quiero agendar una sesión de ventosas / fisioterapia. ¿Tenés disponibilidad?"
+  );
+
+  return `
+    <a
+      class="content-panel__cta"
+      href="https://wa.me/${WHATSAPP_NUMBER}?text=${message}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="content-panel__cta-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.92C21.96 6.45 17.5 2 12.04 2Zm5.8 14.02c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.17-1.56-1.17-2.97 0-1.42.74-2.11 1-2.4.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.57.81 1.98.88 2.12.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.93 1.23 2.21 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.19-.28.37-.23.62-.14.26.09 1.63.77 1.91.91.28.14.47.21.53.33.07.12.07.68-.17 1.36Z" />
+        </svg>
+      </span>
+      <span class="content-panel__cta-text">
+        <strong>Acelerá esta recuperación</strong>
+        Agendá una sesión de ventosas o fisioterapia con Cami o Pipe — por WhatsApp
+      </span>
+      <svg class="content-panel__cta-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </a>
+  `;
+}
+
 function buildSectionList(title, iconKey, muscleIds, field) {
   const items = muscleIds
     .map((id) => {
@@ -114,6 +149,7 @@ function buildMuscleBody(muscleId) {
         ${buildSection("Estiramiento", "estiramiento", data.estiramiento)}
         ${buildSection("Recuperación", "recuperacion", data.recuperacion)}
       </div>
+      ${buildRecoveryCTA(data.nombre)}
     </div>
   `;
 }
@@ -132,6 +168,7 @@ function buildGroupBody(group) {
         ${buildSectionList("Estiramiento", "estiramiento", muscleIds, "estiramiento")}
         ${buildSectionList("Recuperación", "recuperacion", muscleIds, "recuperacion")}
       </div>
+      ${buildRecoveryCTA(GROUP_LABELS[group])}
     </div>
   `;
 }
