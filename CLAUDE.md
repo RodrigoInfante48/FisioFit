@@ -81,7 +81,17 @@ abajo) — el acceso es en sí mismo parte del producto que se vende.
   (mínimo que exige Firebase Auth para password; no 4, como pediría un PIN
   de débito real, pero se comporta igual desde la experiencia del
   usuario). Rodrigo genera y entrega ese código al confirmar el pago del
-  paquete.
+  paquete. **Importante para evitar el loop de reset/keyboard-mismatch que
+  ya pasó una vez**: Firebase Auth no impone máximo de largo ni restringe
+  el password a dígitos — "6 dígitos numéricos" es una convención nuestra,
+  no algo que Firebase valide. Por eso el input de `login.html` **no**
+  fuerza `maxlength="6"` ni teclado numérico (`inputmode="numeric"`): si el
+  código real que quedó seteado en Firebase Console tiene más de 6
+  caracteres o incluye letras, el usuario igual tiene que poder tipearlo
+  completo y ver lo que escribió (toggle de "mostrar código"). Si Rodrigo
+  necesita generar un código a mano, que sea efectivamente 6 dígitos
+  numéricos para mantener la convención — pero el login no debe asumirlo
+  ni bloquear otra cosa.
 - **Fase futura (opcional, cuando haya volumen)**: automatizar la creación
   de cuenta + email de bienvenida al confirmarse el pago (Cloud Function
   disparada por el medio de pago, o Make/Zapier).
@@ -96,9 +106,14 @@ abajo) — el acceso es en sí mismo parte del producto que se vende.
   redirige a `login.html` si no hay sesión activa, y revela `.auth-gated`
   recién cuando Firebase confirma la sesión (evita flash de contenido
   protegido).
-- `login.html` + `scripts/login.js`: pantalla de acceso con email + PIN.
-  Incluye una CTA de WhatsApp para quien todavía no compró el paquete y
-  llega sin credenciales.
+- `login.html` + `scripts/login.js`: pantalla de acceso con email + código
+  de acceso. Incluye toggle de "mostrar código" (para verificar en el
+  teclado del celular qué se tipeó antes de enviar) y un link de "¿Olvidaste
+  tu código de acceso?" que dispara `sendPasswordResetEmail` de Firebase —
+  autoservicio para que el cliente elija su propio código sin depender de
+  que Rodrigo lo resetee a mano cada vez. También incluye una CTA de
+  WhatsApp para quien todavía no compró el paquete y llega sin
+  credenciales.
 
 ## Modelo de negocio y estrategia
 
