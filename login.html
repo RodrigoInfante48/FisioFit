@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FisioFit — Acceso</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <script>
+    // Aplica el tema guardado antes del primer paint, para evitar el flash
+    // del tema por defecto (ver scripts/ui-controls.js).
+    (function () {
+      try {
+        var theme = localStorage.getItem("fisiofit-theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.setAttribute("data-theme", theme);
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
