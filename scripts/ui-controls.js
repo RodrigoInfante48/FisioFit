@@ -16,10 +16,11 @@
     function syncLabel() {
       var isLight = currentTheme() === "light";
       btn.setAttribute("aria-pressed", String(isLight));
-      btn.setAttribute("aria-label", isLight ? "Cambiar a tema oscuro" : "Cambiar a tema claro");
+      btn.setAttribute("aria-label", window.FisioFitI18n.t(isLight ? "theme.toDark" : "theme.toLight"));
     }
 
     syncLabel();
+    document.addEventListener("languageChanged", syncLabel);
 
     btn.addEventListener("click", function () {
       var next = currentTheme() === "light" ? "dark" : "light";
@@ -30,6 +31,57 @@
         // localStorage no disponible (modo privado, etc.) — el tema no persiste.
       }
       syncLabel();
+    });
+  }
+
+  function initLanguageSelector() {
+    var toggleBtn = document.getElementById("lang-toggle-btn");
+    var list = document.getElementById("lang-list");
+    var currentCode = document.getElementById("lang-current-code");
+    if (!toggleBtn || !list || !currentCode) return;
+
+    function setListOpen(open) {
+      list.hidden = !open;
+      toggleBtn.setAttribute("aria-expanded", String(open));
+    }
+
+    function syncSelected() {
+      var lang = window.FisioFitI18n.getLang();
+      currentCode.textContent = lang.toUpperCase();
+      list.querySelectorAll(".lang-option").forEach(function (option) {
+        option.setAttribute("aria-selected", String(option.getAttribute("data-lang") === lang));
+      });
+    }
+
+    syncSelected();
+
+    toggleBtn.addEventListener("click", function (event) {
+      event.stopPropagation();
+      setListOpen(list.hidden);
+    });
+
+    list.addEventListener("click", function (event) {
+      var option = event.target.closest(".lang-option");
+      if (!option) return;
+      window.FisioFitI18n.setLang(option.getAttribute("data-lang"));
+      syncSelected();
+      setListOpen(false);
+    });
+
+    // Cierra la lista de idiomas al tocar fuera, sin cerrar todo el drawer
+    // (el listener de #app-nav sólo cierra el drawer al elegir un idioma
+    // real desde la lista, nunca al abrir/cerrarla).
+    document.addEventListener("click", function (event) {
+      if (list.hidden) return;
+      if (list.contains(event.target) || toggleBtn.contains(event.target)) return;
+      setListOpen(false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !list.hidden) {
+        setListOpen(false);
+        toggleBtn.focus();
+      }
     });
   }
 
@@ -73,4 +125,5 @@
 
   initThemeToggle();
   initHamburgerMenu();
+  initLanguageSelector();
 })();

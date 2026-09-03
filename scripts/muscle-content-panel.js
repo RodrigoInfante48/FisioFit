@@ -11,14 +11,18 @@
 // individualmente en la figura pero sin heatmap propio ni entrada en
 // GROUP_MUSCLES (nunca aparecen en el resumen de un grupo, sólo en su
 // propia ficha).
-const GROUP_LABELS = {
-  push: "Push",
-  pull: "Pull",
-  legs: "Legs",
-  core: "Core",
-  antebrazos: "Antebrazos",
-  espalda: "Espalda",
-};
+// Push/Pull/Legs quedan sin traducir en los 8 idiomas del selector: son
+// términos de gimnasio ya universales en inglés. Core/Antebrazos/Espalda
+// sí son palabras comunes en español y se traducen vía i18n.js.
+function groupLabel(group) {
+  if (group === "push") return "Push";
+  if (group === "pull") return "Pull";
+  if (group === "legs") return "Legs";
+  if (group === "core") return window.FisioFitI18n.t("group.core");
+  if (group === "antebrazos") return window.FisioFitI18n.t("group.forearms");
+  if (group === "espalda") return window.FisioFitI18n.t("group.back");
+  return group;
+}
 
 // Orden de músculos por grupo — coincide con el mapeo de CLAUDE.md.
 const GROUP_MUSCLES = {
@@ -64,9 +68,7 @@ function buildEmptyState() {
         <circle cx="12" cy="7" r="3.2" />
         <path d="M5.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5" />
       </svg>
-      <p>Elegí un patrón de movimiento (Push, Pull o Legs) o tocá un
-      músculo en la figura para ver cómo entrenarlo, estirarlo y
-      recuperarlo.</p>
+      <p>${window.FisioFitI18n.t("panel.empty")}</p>
     </div>
   `;
 }
@@ -89,8 +91,7 @@ const WHATSAPP_NUMBER = "573209974750";
 
 function buildRecoveryCTA(contextLabel) {
   const message = encodeURIComponent(
-    `Hola! Estuve viendo en la app FisioFit la recuperación de ${contextLabel} ` +
-      "y quiero agendar una sesión de ventosas / fisioterapia. ¿Tenés disponibilidad?"
+    window.FisioFitI18n.t("cta.waMessage", { context: contextLabel })
   );
 
   return `
@@ -106,8 +107,8 @@ function buildRecoveryCTA(contextLabel) {
         </svg>
       </span>
       <span class="content-panel__cta-text">
-        <strong>Acelerá esta recuperación</strong>
-        Agendá una sesión de ventosas o fisioterapia con Cami o Pipe — por WhatsApp
+        <strong>${window.FisioFitI18n.t("cta.title")}</strong>
+        ${window.FisioFitI18n.t("cta.subtitle")}
       </span>
       <svg class="content-panel__cta-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none"
         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -142,12 +143,12 @@ function buildMuscleBody(muscleId) {
     <div class="content-panel__body">
       <header class="content-panel__header">
         <h2 class="content-panel__title">${data.nombre}</h2>
-        <span class="content-panel__badge content-panel__badge--${data.grupo}">${GROUP_LABELS[data.grupo]}</span>
+        <span class="content-panel__badge content-panel__badge--${data.grupo}">${groupLabel(data.grupo)}</span>
       </header>
       <div class="content-panel__sections">
-        ${buildSection("Ejercicio", "ejercicio", data.ejercicio)}
-        ${buildSection("Estiramiento", "estiramiento", data.estiramiento)}
-        ${buildSection("Recuperación", "recuperacion", data.recuperacion)}
+        ${buildSection(window.FisioFitI18n.t("panel.section.exercise"), "ejercicio", data.ejercicio)}
+        ${buildSection(window.FisioFitI18n.t("panel.section.stretch"), "estiramiento", data.estiramiento)}
+        ${buildSection(window.FisioFitI18n.t("panel.section.recovery"), "recuperacion", data.recuperacion)}
       </div>
       ${buildRecoveryCTA(data.nombre)}
     </div>
@@ -160,15 +161,15 @@ function buildGroupBody(group) {
   return `
     <div class="content-panel__body">
       <header class="content-panel__header">
-        <h2 class="content-panel__title">${GROUP_LABELS[group]}</h2>
-        <span class="content-panel__badge content-panel__badge--${group}">Grupo completo</span>
+        <h2 class="content-panel__title">${groupLabel(group)}</h2>
+        <span class="content-panel__badge content-panel__badge--${group}">${window.FisioFitI18n.t("panel.fullGroup")}</span>
       </header>
       <div class="content-panel__sections">
-        ${buildSectionList("Ejercicio", "ejercicio", muscleIds, "ejercicio")}
-        ${buildSectionList("Estiramiento", "estiramiento", muscleIds, "estiramiento")}
-        ${buildSectionList("Recuperación", "recuperacion", muscleIds, "recuperacion")}
+        ${buildSectionList(window.FisioFitI18n.t("panel.section.exercise"), "ejercicio", muscleIds, "ejercicio")}
+        ${buildSectionList(window.FisioFitI18n.t("panel.section.stretch"), "estiramiento", muscleIds, "estiramiento")}
+        ${buildSectionList(window.FisioFitI18n.t("panel.section.recovery"), "recuperacion", muscleIds, "recuperacion")}
       </div>
-      ${buildRecoveryCTA(GROUP_LABELS[group])}
+      ${buildRecoveryCTA(groupLabel(group))}
     </div>
   `;
 }
@@ -249,3 +250,8 @@ document.addEventListener("workoutGroupChanged", (event) => {
   panelSelectedMuscle = null;
   renderPanel();
 });
+
+// Re-renderiza los textos fijos (títulos de sección, estado vacío, CTA)
+// en el nuevo idioma. El contenido propio de cada músculo
+// (ejercicio/estiramiento/recuperación) sigue en español — ver i18n.js.
+document.addEventListener("languageChanged", renderPanel);

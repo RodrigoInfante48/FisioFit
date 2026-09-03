@@ -61,10 +61,20 @@ Todo el contenido textual sobre ejercicio debe reflejar este enfoque:
   (máxima intensidad) según el valor 0.0–1.0 de cada músculo.
 - **Navegación del header**: SIEMPRE vive detrás de un botón de hamburguesa
   en la esquina superior izquierda, que abre un panel lateral deslizante
-  desde la derecha (angosto, ~260-320px, translúcido tipo Liquid Glass,
-  nunca pantalla completa ni muy opaco). Este patrón es IDÉNTICO en mobile
-  y en desktop — no existe una versión de header con botones en fila para
-  pantallas grandes. Web y mobile deben coincidir siempre.
+  desde la izquierda —del mismo lado que el botón— (angosto, ~260-320px,
+  translúcido tipo Liquid Glass, nunca pantalla completa ni muy opaco).
+  Este patrón es IDÉNTICO en mobile y en desktop — no existe una versión de
+  header con botones en fila para pantallas grandes. Web y mobile deben
+  coincidir siempre.
+- **Selector de idioma**: botón dedicado en el mismo panel lateral (junto
+  al toggle de tema), con 8 idiomas disponibles: español, inglés,
+  portugués, alemán, francés, chino, ruso y japonés (ver
+  `scripts/i18n.js`). Por ahora sólo traduce el "chrome" de la interfaz
+  (textos del header/menú, títulos de sección y CTA del panel inferior) —
+  el contenido específico de cada músculo en `data/muscle-content.js`
+  (ejercicio/estiramiento/recuperación, filosofía Heavy Duty) sigue sólo en
+  español; traducirlo con precisión a los 8 idiomas es trabajo pendiente,
+  más grande que el selector en sí.
 
 ## Stack técnico
 

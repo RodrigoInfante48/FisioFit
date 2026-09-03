@@ -44,6 +44,7 @@
         aria-expanded="false"
         aria-controls="app-nav"
         aria-label="Abrir menú"
+        data-i18n-aria-label="nav.openMenu"
       >
         <span class="hamburger-btn__line"></span>
         <span class="hamburger-btn__line"></span>
@@ -51,10 +52,10 @@
       </button>
       <div class="app-brand">
         <h1 class="app-title">FisioFit</h1>
-        <p class="app-tagline">Acceso exclusivo por paquete</p>
+        <p class="app-tagline" data-i18n="app.tagline">Acceso exclusivo por paquete</p>
       </div>
       <div class="app-nav glass-panel glass-nav" id="app-nav">
-        <nav class="movement-menu" aria-label="Patrón de movimiento">
+        <nav class="movement-menu" aria-label="Patrón de movimiento" data-i18n-aria-label="nav.movementPattern">
           <button class="glass-btn" type="button" data-movement="push" aria-pressed="false">Push</button>
           <button class="glass-btn" type="button" data-movement="pull" aria-pressed="false">Pull</button>
           <button class="glass-btn" type="button" data-movement="legs" aria-pressed="false">Legs</button>
@@ -67,7 +68,7 @@
               <path d="M15 2c0 3-1.5 4.5-1.5 7s1.5 3 1.5 6" />
               <path d="M6 21c1-4 3-6 6-6s5 2 6 6" />
             </svg>
-            <span>Alimentación</span>
+            <span data-i18n="nav.nutrition">Alimentación</span>
           </a>
           <button class="glass-btn glass-btn--theme-toggle" type="button" id="theme-toggle-btn" aria-pressed="false" aria-label="Cambiar a tema claro">
             <svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
@@ -79,10 +80,31 @@
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
             </svg>
-            <span>Tema</span>
+            <span data-i18n="nav.theme">Tema</span>
           </button>
+          <div class="lang-selector">
+            <button class="glass-btn glass-btn--lang" type="button" id="lang-toggle-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-list">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18M12 3c2.5 2.6 3.8 6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-6-3.8-9s1.3-6.4 3.8-9Z" />
+              </svg>
+              <span data-i18n="nav.language">Idioma</span>
+              <span class="lang-selector__current" id="lang-current-code" aria-hidden="true">ES</span>
+            </button>
+            <div class="lang-selector__list" id="lang-list" role="listbox" aria-label="Idiomas disponibles" data-i18n-aria-label="nav.languageList" hidden>
+              <button type="button" class="lang-option" data-lang="es" role="option" aria-selected="true"><span>Español</span><span class="lang-option__code">ES</span></button>
+              <button type="button" class="lang-option" data-lang="en" role="option" aria-selected="false"><span>English</span><span class="lang-option__code">EN</span></button>
+              <button type="button" class="lang-option" data-lang="pt" role="option" aria-selected="false"><span>Português</span><span class="lang-option__code">PT</span></button>
+              <button type="button" class="lang-option" data-lang="de" role="option" aria-selected="false"><span>Deutsch</span><span class="lang-option__code">DE</span></button>
+              <button type="button" class="lang-option" data-lang="fr" role="option" aria-selected="false"><span>Français</span><span class="lang-option__code">FR</span></button>
+              <button type="button" class="lang-option" data-lang="zh" role="option" aria-selected="false"><span>中文</span><span class="lang-option__code">ZH</span></button>
+              <button type="button" class="lang-option" data-lang="ru" role="option" aria-selected="false"><span>Русский</span><span class="lang-option__code">RU</span></button>
+              <button type="button" class="lang-option" data-lang="ja" role="option" aria-selected="false"><span>日本語</span><span class="lang-option__code">JA</span></button>
+            </div>
+          </div>
           <button class="glass-btn glass-btn--logout" type="button" id="logout-btn" hidden>
-            Salir
+            <span data-i18n="nav.logout">Salir</span>
           </button>
         </div>
       </div>
@@ -132,6 +154,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
   <script src="scripts/firebase-config.js"></script>
   <script src="scripts/auth-guard.js"></script>
+  <script src="scripts/i18n.js"></script>
   <script src="scripts/muscle-figure.js"></script>
   <script src="data/muscle-content.js"></script>
   <script src="scripts/muscle-content-panel.js"></script>
