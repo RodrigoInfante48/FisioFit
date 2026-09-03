@@ -80,8 +80,9 @@ button {
    fijo en la esquina superior izquierda del header, en cualquier ancho de
    pantalla (mobile y desktop son idénticos: no hay una variante de header
    con botones en fila para pantallas grandes). Al abrir, revela "#app-nav"
-   como un panel lateral ("drawer") que se desliza desde la derecha de la
-   pantalla — ver el bloque de #app-nav más abajo y scripts/ui-controls.js.
+   como un panel lateral ("drawer") que se desliza desde la izquierda de la
+   pantalla, del mismo lado que el botón — ver el bloque de #app-nav más
+   abajo y scripts/ui-controls.js.
    Esta decisión está documentada en CLAUDE.md ("Diseño visual — Liquid
    Glass + Heatmap") para que no se vuelva a implementar como acordeón.
    ========================================================================== */
@@ -206,18 +207,19 @@ button {
   }
 }
 
-/* Panel lateral ("drawer"): fijo a la derecha de la pantalla, angosto
-   (260–320px) y translúcido (hereda blur de .glass-panel/.glass-nav) para
-   que la figura muscular siga visible detrás. Se identifica por ID (en vez
-   de por .app-nav) para que su posición/tamaño siempre gane sobre
-   .glass-panel sin depender del orden de las reglas en el archivo.
+/* Panel lateral ("drawer"): fijo a la izquierda de la pantalla, del mismo
+   lado que el botón de hamburguesa que lo abre, angosto (260–320px) y
+   translúcido (hereda blur de .glass-panel/.glass-nav) para que la figura
+   muscular siga visible detrás. Se identifica por ID (en vez de por
+   .app-nav) para que su posición/tamaño siempre gane sobre .glass-panel
+   sin depender del orden de las reglas en el archivo.
    Oculto fuera de pantalla con translateX + visibility (no display:none)
    para poder animar la entrada/salida; visibility evita que sus botones
    queden en el orden de tabulación mientras el panel está cerrado. */
 #app-nav {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   z-index: 40;
   display: flex;
   flex-direction: column;
@@ -230,9 +232,9 @@ button {
   padding: calc(var(--space-xl) + var(--space-sm)) var(--space-md) var(--space-md);
   overflow-y: auto;
   overflow-x: hidden;
-  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   box-shadow: var(--shadow-float-lg);
-  transform: translateX(100%);
+  transform: translateX(-100%);
   visibility: hidden;
   transition: transform 0.3s ease, visibility 0s linear 0.3s;
 }
@@ -251,13 +253,19 @@ button {
 
 /* Todos los ítems del drawer se ven como una lista vertical de opciones de
    ancho completo, en vez de los botones compactos en fila que usaban
-   antes en el header. */
+   antes en el header. Sin blur propio (a diferencia de .glass-btn suelto
+   sobre la figura): #app-nav ya es un .glass-panel con su propio
+   backdrop-filter, y volver a desenfocar por botón apila un blur sobre
+   otro blur — en tema claro eso lava el fondo casi a blanco puro y el
+   texto se vuelve prácticamente ilegible. */
 #app-nav .glass-btn {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
   gap: 0.6rem;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .glass-btn--logout {
@@ -662,8 +670,18 @@ html.auth-ready .auth-loading {
 }
 
 .glass-btn--theme-toggle:hover {
-  color: var(--color-accent-strong);
-  border-color: rgba(79, 209, 255, 0.3);
+  color: var(--color-text);
+  border-color: var(--color-theme-icon);
+  box-shadow: var(--shadow-float), var(--shadow-inset-highlight), 0 0 18px var(--color-theme-icon-glow);
+}
+
+/* El ícono (sol/luna) siempre lleva el ámbar dedicado, no el gris/cian
+   genérico del botón: así queda visible en los dos temas en vez de
+   depender del color de texto de fondo (ver --color-theme-icon en
+   tokens.css). */
+.glass-btn--theme-toggle .icon-sun,
+.glass-btn--theme-toggle .icon-moon {
+  color: var(--color-theme-icon);
 }
 
 .glass-btn--theme-toggle .icon-moon {
@@ -676,4 +694,82 @@ html.auth-ready .auth-loading {
 
 :root[data-theme="light"] .glass-btn--theme-toggle .icon-moon {
   display: block;
+}
+
+/* ==========================================================================
+   Selector de idioma (header) — ver scripts/ui-controls.js / i18n.js.
+   Mismo patrón que el toggle de tema: un glass-btn que despliega, debajo
+   de sí mismo dentro del drawer, una lista compacta de opciones — nunca
+   un <select> nativo, para no romper la estética "Liquid Glass".
+   ========================================================================== */
+
+.lang-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+#app-nav .glass-btn--lang {
+  justify-content: space-between;
+  color: var(--color-text-dim);
+}
+
+.glass-btn--lang:hover {
+  color: var(--color-text);
+  border-color: var(--glass-border-light);
+}
+
+.lang-selector__current {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+}
+
+.lang-selector__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.4rem;
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border-dark);
+  border-radius: var(--radius-md);
+}
+
+.lang-selector__list[hidden] {
+  display: none;
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text-dim);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.lang-option:hover {
+  background: var(--glass-surface-strong);
+  color: var(--color-text);
+}
+
+.lang-option[aria-selected="true"] {
+  color: var(--color-accent-strong);
+  border-color: rgba(79, 209, 255, 0.3);
+  background: var(--glass-surface-strong);
+}
+
+.lang-option__code {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
 }

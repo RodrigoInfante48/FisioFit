@@ -36,6 +36,15 @@
   --color-accent-strong: #7ce0ff;
   --color-accent-glow: rgba(79, 209, 255, 0.35);
 
+  /* Ícono del toggle de tema claro/oscuro — ámbar en vez del gris/cian
+     genérico: en tema oscuro un amarillo pálido más claro que el fondo
+     (contraste ~10:1), en tema claro (ver override más abajo) uno más
+     oscuro/tostado para que no se lave contra el blanco (contraste ~5:1).
+     Antes usaba --color-text-dim + cian de hover, que en tema claro se
+     leía como un amarillo apagado casi invisible sobre fondo blanco. */
+  --color-theme-icon: #ffc857;
+  --color-theme-icon-glow: rgba(255, 200, 87, 0.35);
+
   /* Borde animado de los portlets — paleta "seria" de tonos joya,
      coherente con el acento cian existente, sin caer en arcoíris. */
   --border-cycle-1: #4fd1ff; /* cian — acento */
@@ -137,6 +146,9 @@
   --color-text-faint: #5b6376;
 
   --color-accent-glow: rgba(20, 130, 180, 0.22);
+
+  --color-theme-icon: #a15c00;
+  --color-theme-icon-glow: rgba(161, 92, 0, 0.22);
 
   --shadow-float: 0 8px 24px rgba(20, 24, 34, 0.12), 0 2px 6px rgba(20, 24, 34, 0.07);
   --shadow-float-lg: 0 20px 48px rgba(20, 24, 34, 0.14), 0 4px 12px rgba(20, 24, 34, 0.08);
