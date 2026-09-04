@@ -9,7 +9,15 @@ const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
 
-const GRUPO_LABELS = { push: "Push", pull: "Pull", legs: "Legs", rest: "Descanso" };
+// Push/Pull/Legs quedan sin traducir (términos de gimnasio ya universales
+// en inglés, igual que en groupLabel() de muscle-content-panel.js);
+// "Descanso" sí se traduce vía i18n.js.
+function nutritionGroupLabel(grupo) {
+  if (grupo === "push") return "Push";
+  if (grupo === "pull") return "Pull";
+  if (grupo === "legs") return "Legs";
+  return window.FisioFitI18n.t("nutrition.group.rest");
+}
 
 // Iconos de comida — mismo estilo de trazo (stroke, currentColor) que
 // SECTION_ICONS en muscle-content-panel.js, a mayor tamaño para funcionar
@@ -48,20 +56,25 @@ const MEAL_ICONS = {
     "</svg>",
 };
 
+// data/nutrition-content.js: los campos traducibles (dia/foco/nota/tipo/
+// nombre/alimentos/descripcion) son objetos keyed por idioma — se resuelven
+// acá con window.FisioFitI18n.pick() al idioma actual, con fallback a "es".
+const pick = (field) => window.FisioFitI18n.pick(field);
+
 function buildMealCard(meal) {
-  const alimentos = meal.alimentos.map((item) => `<li>${item}</li>`).join("");
+  const alimentos = meal.alimentos.map((item) => `<li>${pick(item)}</li>`).join("");
 
   return `
     <article class="meal-card">
       <div class="meal-card__icon">${MEAL_ICONS[meal.icono] || ""}</div>
       <div class="meal-card__body">
         <header class="meal-card__header">
-          <span class="meal-card__type">${meal.tipo} · ${meal.hora}</span>
+          <span class="meal-card__type">${pick(meal.tipo)} · ${meal.hora}</span>
           <span class="meal-card__kcal">${meal.calorias} kcal</span>
         </header>
-        <h4 class="meal-card__name">${meal.nombre}</h4>
+        <h4 class="meal-card__name">${pick(meal.nombre)}</h4>
         <ul class="meal-card__foods">${alimentos}</ul>
-        <p class="meal-card__desc">${meal.descripcion}</p>
+        <p class="meal-card__desc">${pick(meal.descripcion)}</p>
       </div>
     </article>
   `;
@@ -69,20 +82,26 @@ function buildMealCard(meal) {
 
 function buildDaySlide(day, index) {
   const meals = day.comidas.map(buildMealCard).join("");
+  const kcalText = window.FisioFitI18n.t("nutrition.kcalApprox", {
+    value: `<strong>${day.totalCalorias}</strong>`,
+  });
+  const proteinText = window.FisioFitI18n.t("nutrition.proteinApprox", {
+    value: `<strong>${day.proteinaAprox} g</strong>`,
+  });
 
   return `
     <div class="nutrition-slide" role="tabpanel" id="nutrition-panel-${day.id}"
       aria-labelledby="nutrition-tab-${day.id}" data-index="${index}" data-grupo="${day.grupo}">
       <header class="nutrition-slide__header">
         <div class="nutrition-slide__title-row">
-          <h3 class="nutrition-slide__day">${day.dia}</h3>
-          <span class="nutrition-slide__badge nutrition-slide__badge--${day.grupo}">${GRUPO_LABELS[day.grupo]}</span>
+          <h3 class="nutrition-slide__day">${pick(day.dia)}</h3>
+          <span class="nutrition-slide__badge nutrition-slide__badge--${day.grupo}">${nutritionGroupLabel(day.grupo)}</span>
         </div>
-        <p class="nutrition-slide__foco">${day.foco}</p>
-        <p class="nutrition-slide__nota">${day.nota}</p>
+        <p class="nutrition-slide__foco">${pick(day.foco)}</p>
+        <p class="nutrition-slide__nota">${pick(day.nota)}</p>
         <div class="nutrition-slide__stats">
-          <span class="nutrition-slide__stat"><strong>${day.totalCalorias}</strong> kcal aprox.</span>
-          <span class="nutrition-slide__stat"><strong>${day.proteinaAprox} g</strong> proteína aprox.</span>
+          <span class="nutrition-slide__stat">${kcalText}</span>
+          <span class="nutrition-slide__stat">${proteinText}</span>
         </div>
       </header>
       <div class="meal-grid">${meals}</div>
@@ -103,8 +122,8 @@ function buildTabs() {
         data-index="${index}"
         data-grupo="${day.grupo}"
       >
-        <span class="nutrition-tab__day">${day.dia.slice(0, 3)}</span>
-        <span class="nutrition-tab__foco">${GRUPO_LABELS[day.grupo]}</span>
+        <span class="nutrition-tab__day">${pick(day.dia).slice(0, 3)}</span>
+        <span class="nutrition-tab__foco">${nutritionGroupLabel(day.grupo)}</span>
       </button>
     `;
   }).join("");
@@ -117,10 +136,18 @@ function buildDots() {
         class="nutrition-dot"
         type="button"
         data-index="${index}"
-        aria-label="Ir a ${day.dia}"
+        aria-label="${window.FisioFitI18n.t("nutrition.goToDay", { day: pick(day.dia) })}"
       ></button>
     `;
   }).join("");
+}
+
+function renderNutritionIntro() {
+  const titleEl = document.getElementById("nutrition-intro-title");
+  const textEl = document.getElementById("nutrition-intro-text");
+  if (!titleEl || !textEl) return;
+  titleEl.textContent = pick(NUTRITION_INTRO.titulo);
+  textEl.textContent = pick(NUTRITION_INTRO.texto);
 }
 
 function setupNutritionCarousel() {
@@ -137,20 +164,15 @@ function setupNutritionCarousel() {
   const announcer = root.querySelector(".nutrition-carousel__announcer");
   const viewport = root.querySelector(".nutrition-carousel__viewport");
 
-  track.innerHTML = NUTRITION_PLAN.map(buildDaySlide).join("");
-  tabsEl.innerHTML = buildTabs();
-  dotsEl.innerHTML = buildDots();
-
-  const tabButtons = Array.from(tabsEl.querySelectorAll(".nutrition-tab"));
-  const dotButtons = Array.from(dotsEl.querySelectorAll(".nutrition-dot"));
   const slideCount = NUTRITION_PLAN.length;
-
   // Arranca en el día de la semana actual: getDay() usa 0=domingo..6=sábado;
   // NUTRITION_PLAN empieza en lunes (índice 0), de ahí el corrimiento +6 %7.
   let currentIndex = (new Date().getDay() + 6) % 7;
   let autoplayTimer = null;
   let isHovering = false;
   let isPausedByUser = false;
+  let tabButtons = [];
+  let dotButtons = [];
 
   function updateTrackPosition() {
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
@@ -168,8 +190,21 @@ function setupNutritionCarousel() {
     });
     if (announcer) {
       const day = NUTRITION_PLAN[currentIndex];
-      announcer.textContent = `${day.dia}: ${day.foco}`;
+      announcer.textContent = `${pick(day.dia)}: ${pick(day.foco)}`;
     }
+  }
+
+  // Reconstruye el contenido traducible del carrusel (slides, tabs, dots)
+  // sin perder el día actualmente seleccionado. Se usa tanto en el render
+  // inicial como al cambiar de idioma ("languageChanged").
+  function renderContent() {
+    track.innerHTML = NUTRITION_PLAN.map(buildDaySlide).join("");
+    tabsEl.innerHTML = buildTabs();
+    dotsEl.innerHTML = buildDots();
+    tabButtons = Array.from(tabsEl.querySelectorAll(".nutrition-tab"));
+    dotButtons = Array.from(dotsEl.querySelectorAll(".nutrition-dot"));
+    updateTrackPosition();
+    updateActiveStates();
   }
 
   function restartProgressBar() {
@@ -219,7 +254,10 @@ function setupNutritionCarousel() {
     isPausedByUser = paused;
     if (playBtn) {
       playBtn.setAttribute("aria-pressed", String(paused));
-      playBtn.setAttribute("aria-label", paused ? "Reanudar avance automático" : "Pausar avance automático");
+      playBtn.setAttribute(
+        "aria-label",
+        window.FisioFitI18n.t(paused ? "nutrition.resume" : "nutrition.pause")
+      );
       playBtn.classList.toggle("is-paused", paused);
     }
     if (paused) {
@@ -339,9 +377,20 @@ function setupNutritionCarousel() {
     { passive: true }
   );
 
-  updateTrackPosition();
-  updateActiveStates();
+  renderContent();
   startAutoplay();
+
+  // Re-renderiza el contenido traducible del carrusel al cambiar de idioma.
+  // En la práctica el selector de idioma recarga la página (ver
+  // ui-controls.js), pero este listener mantiene el mismo patrón que
+  // muscle-content-panel.js por si el idioma cambia sin recarga.
+  document.addEventListener("languageChanged", () => {
+    renderContent();
+    restartProgressBar();
+  });
 }
+
+renderNutritionIntro();
+document.addEventListener("languageChanged", renderNutritionIntro);
 
 setupNutritionCarousel();

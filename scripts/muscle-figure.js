@@ -582,7 +582,7 @@ function enhanceMuscleAccessibility() {
   document.querySelectorAll(".muscle-path[data-muscle]").forEach((path) => {
     const muscle = path.dataset.muscle;
     const label = typeof MUSCLE_CONTENT !== "undefined" && MUSCLE_CONTENT[muscle]
-      ? MUSCLE_CONTENT[muscle].nombre
+      ? window.FisioFitI18n.pick(MUSCLE_CONTENT[muscle].nombre)
       : muscle;
 
     path.setAttribute("tabindex", "0");
@@ -591,6 +591,14 @@ function enhanceMuscleAccessibility() {
     path.setAttribute("aria-label", label);
   });
 }
+
+// Re-etiqueta cada músculo al cambiar de idioma — en la práctica el
+// selector recarga la página (ver ui-controls.js), pero este listener
+// mantiene el mismo patrón que muscle-content-panel.js/nutrition.js por si
+// el idioma cambia sin recarga.
+document.addEventListener("languageChanged", () => {
+  if (figureReady) enhanceMuscleAccessibility();
+});
 
 // ============================================================================
 // Selección individual — click o teclado (Enter/Espacio) en cualquier
