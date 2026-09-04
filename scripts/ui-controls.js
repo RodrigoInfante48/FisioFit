@@ -63,9 +63,16 @@
     list.addEventListener("click", function (event) {
       var option = event.target.closest(".lang-option");
       if (!option) return;
-      window.FisioFitI18n.setLang(option.getAttribute("data-lang"));
-      syncSelected();
-      setListOpen(false);
+      var lang = option.getAttribute("data-lang");
+      if (lang === window.FisioFitI18n.getLang()) {
+        setListOpen(false);
+        return;
+      }
+      window.FisioFitI18n.setLang(lang);
+      // Recarga la página actual para que absolutamente todo (incluyendo
+      // lo que no escucha "languageChanged") quede en el idioma elegido de
+      // una, sin esperar a la próxima navegación o refresh manual.
+      location.reload();
     });
 
     // Cierra la lista de idiomas al tocar fuera, sin cerrar todo el drawer

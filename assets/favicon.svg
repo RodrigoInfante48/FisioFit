@@ -3,7 +3,7 @@
     <linearGradient id="heat" x1="0" y1="0" x2="64" y2="0">
       <stop offset="0%" stop-color="#4fd1ff" />
       <stop offset="50%" stop-color="#ff7a45" />
-      <stop offset="100%" stop-color="#ffd166" />
+      <stop offset="100%" stop-color="#ef2b17" />
     </linearGradient>
     <radialGradient id="bg" cx="30%" cy="25%" r="85%">
       <stop offset="0%" stop-color="#151b24" />

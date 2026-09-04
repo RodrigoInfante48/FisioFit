@@ -511,12 +511,12 @@ function intensityToColor(intensity) {
   const a = Number(lerp(a1, a2, localT).toFixed(3));
 
   // Un lerp directo en RGB ya ubica el tono (hue) correcto en cada punto de
-  // la escala, pero entre stops casi complementarios (azul -> amarillo, ver
-  // --heatmap-stop-1/2 en tokens.css) la saturación se hunde a mitad de
-  // camino — se notaba como el trapecio (intensidad 0.4 en Pull, ver
-  // CLAUDE.md) luciendo gris/sucio en vez de parte de una escala viva. Se
-  // corrige con un piso de saturación en HSL, sin tocar el hue (que ya es
-  // el correcto) ni la luminosidad.
+  // la escala, pero entre stops de hues muy distintos (ver --heatmap-stop-1/2
+  // en tokens.css) la saturación se hunde a mitad de camino — se notaba
+  // como el trapecio (intensidad 0.4 en Pull, ver CLAUDE.md) luciendo
+  // gris/sucio en vez de parte de una escala viva. Se corrige con un piso
+  // de saturación en HSL, sin tocar el hue (que ya es el correcto) ni la
+  // luminosidad.
   const [h, s, l] = rgbToHsl(r, g, b);
   const [rBoosted, gBoosted, bBoosted] = hslToRgb(
     h,

@@ -650,7 +650,7 @@ html.auth-ready .auth-loading {
   gap: 0.4rem;
   text-decoration: none;
   color: var(--color-nutrition-strong);
-  border-color: rgba(242, 201, 76, 0.25);
+  border-color: rgba(255, 92, 147, 0.25);
 }
 
 .glass-btn--nutrition:hover {
@@ -675,7 +675,7 @@ html.auth-ready .auth-loading {
   box-shadow: var(--shadow-float), var(--shadow-inset-highlight), 0 0 18px var(--color-theme-icon-glow);
 }
 
-/* El ícono (sol/luna) siempre lleva el ámbar dedicado, no el gris/cian
+/* El ícono (sol/luna) siempre lleva el cian dedicado, no el gris tenue
    genérico del botón: así queda visible en los dos temas en vez de
    depender del color de texto de fondo (ver --color-theme-icon en
    tokens.css). */
