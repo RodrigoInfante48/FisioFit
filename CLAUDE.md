@@ -85,6 +85,33 @@ Todo el contenido textual sobre ejercicio debe reflejar este enfoque:
 - Debe funcionar directo en GitHub Pages sirviendo desde `/` con
   `index.html` en la raíz del repo.
 
+## Cache-busting de assets locales (`?v=N`)
+
+GitHub Pages sirve detrás de Fastly, que cachea agresivamente y no
+invalida por deploy. Como acá no hay build step (no hay hashing de
+contenido en los nombres de archivo, tipo `nutrition.abc123.js`), un
+navegador puede quedarse sirviendo una versión vieja de un `.js` desde
+caché mientras ya recibe la versión nueva de otro archivo del mismo
+deploy — por ejemplo `scripts/nutrition.js` viejo (esperaba
+`day.dia` como string plano) junto a `data/nutrition-content.js` nuevo
+(con `day.dia` como `{es, en, pt, ...}`), lo que rompe el render
+(`day.dia.slice is not a function`) y deja `nutricion.html` vacío.
+
+Mitigación: todos los `<script src="...">` y `<link rel="stylesheet"
+href="...">` que apuntan a archivos locales (`scripts/*.js`, `data/*.js`,
+`styles/*.css`) en `index.html`, `nutricion.html` y `login.html` llevan un
+query-string `?v=N` (actualmente `?v=2`). Esto no aplica a los `<script>`
+del CDN de Firebase (`gstatic.com/firebasejs/...`) ni a Google Fonts, que
+ya son URLs versionadas/inmutables por sí mismas.
+
+**Regla para cada deploy que cambie contenido o JS/CSS**: subir el número
+`?v=N` en los tres HTML, todos al mismo valor (deben viajar sincronizados
+—es justo el desajuste entre archivos lo que causa el bug de arriba—).
+Un cambio que sólo toca HTML (markup, atributos) sin tocar JS/CSS/data no
+necesita bump. Antes de subir, buscar todas las ocurrencias con
+`grep -rn '?v=' index.html nutricion.html login.html` para no dejar
+ningún `<script>`/`<link>` desincronizado.
+
 ## Acceso — autenticación (Firebase Auth)
 
 La app **no es pública**: está gateada con login (`login.html`). Solo
