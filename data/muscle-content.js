@@ -3,386 +3,831 @@
 // priorizados sobre aislamiento, recuperación larga entre sesiones del mismo
 // grupo. Nunca se sugiere alto volumen ni frecuencia alta sobre un músculo.
 //
+// Cada campo traducible (nombre/ejercicio/estiramiento/recuperacion) es un
+// objeto keyed por idioma { es, en, pt, de, fr, zh, ru, ja } — mismo patrón
+// que I18N_STRINGS en scripts/i18n.js. window.FisioFitI18n.pick() resuelve
+// el idioma actual con fallback a "es" si falta una traducción. "grupo"
+// queda sin traducir: es un id interno (push/pull/legs/espalda/antebrazos/
+// core), el texto visible sale de groupLabel() en muscle-content-panel.js.
+//
 // Declarado como `const` de script clásico (no ES module, sin build step):
 // queda disponible para los scripts que se cargan después en index.html.
 const MUSCLE_CONTENT = {
-  pecho: {
-    nombre: "Pecho",
+  "pecho": {
+    nombre: {
+      es: "Pecho",
+      en: "Chest",
+      pt: "Peito",
+      de: "Brust",
+      fr: "Poitrine",
+      zh: "胸部",
+      ru: "Грудь",
+      ja: "胸",
+    },
     grupo: "push",
-    ejercicio:
-      "Press de banca (barra o mancuernas) como movimiento compuesto " +
-      "principal. Una sola serie de calentamiento progresivo y luego 1-2 " +
-      "series de trabajo llevadas al fallo muscular positivo, técnica " +
-      "estricta, sin rebote en el pecho ni ayuda de las piernas. Si al " +
-      "terminar la serie sentís que podrías haber hecho una repetición " +
-      "más con buena forma, no era el fallo real: el objetivo es la " +
-      "última repetición imposible, no el volumen.",
-    estiramiento:
-      "Estiramiento de pectoral en marco de puerta o esquina: brazo a 90°, " +
-      "antebrazo apoyado, el cuerpo avanza hasta sentir tensión (no dolor) " +
-      "en el pecho y el hombro anterior. Mantener 20-30 segundos por lado, " +
-      "respiración lenta, sin rebotar.",
-    recuperacion:
-      "El pecho necesita entre 5 y 7 días completos antes de volver a " +
-      "recibir un estímulo directo de esta intensidad. Señales de que " +
-      "todavía no recuperó: dolor residual al tacto, pérdida de fuerza " +
-      "respecto a la sesión anterior o fatiga que persiste más allá de 48h. " +
-      "Entrenarlo de nuevo antes de tiempo interrumpe la supercompensación " +
-      "y frena el progreso real.",
+    ejercicio: {
+      es: "Press de banca (barra o mancuernas) como movimiento compuesto principal. Una sola serie de calentamiento progresivo y luego 1-2 series de trabajo llevadas al fallo muscular positivo, técnica estricta, sin rebote en el pecho ni ayuda de las piernas. Si al terminar la serie sentís que podrías haber hecho una repetición más con buena forma, no era el fallo real: el objetivo es la última repetición imposible, no el volumen.",
+      en: "Bench press (barbell or dumbbells) as the main compound movement. One progressive warm-up set, then 1-2 work sets taken to true positive muscular failure, strict technique, no bouncing off the chest and no help from the legs. If you feel like you could have done one more rep with good form when the set ends, that wasn't real failure: the goal is the last impossible rep, not volume.",
+      pt: "Supino (barra ou halteres) como movimento composto principal. Uma única série de aquecimento progressivo e depois 1-2 séries de trabalho levadas até a falha muscular positiva, técnica estrita, sem repique no peito nem ajuda das pernas. Se ao terminar a série você sentir que poderia ter feito mais uma repetição com boa forma, não era a falha real: o objetivo é a última repetição impossível, não o volume.",
+      de: "Bankdrücken (Langhantel oder Kurzhanteln) als wichtigste Grundübung. Ein einzelner progressiver Aufwärmsatz, danach 1-2 Arbeitssätze bis zum positiven Muskelversagen, strikte Technik, ohne den Griff auf der Brust abprallen zu lassen und ohne Schwung aus den Beinen. Wenn du nach dem Satz das Gefühl hast, mit sauberer Form noch eine Wiederholung schaffen zu können, war es kein echtes Versagen: Das Ziel ist die letzte unmögliche Wiederholung, nicht das Volumen.",
+      fr: "Développé couché (barre ou haltères) comme mouvement composé principal. Une seule série d'échauffement progressif, puis 1-2 séries de travail poussées jusqu'à l'échec musculaire positif, technique stricte, sans rebond sur la poitrine ni aide des jambes. Si en terminant la série tu sens que tu aurais pu faire une répétition de plus avec une bonne forme, ce n'était pas le véritable échec : l'objectif est la dernière répétition impossible, pas le volume.",
+      zh: "卧推(杠铃或哑铃)作为主要的复合动作。先做一组递增热身,然后做1-2组练到正向力竭的工作组,动作严格标准,胸部不借助反弹,腿部也不借力。如果一组结束时你觉得还能用标准动作再做一次,那就不是真正的力竭:目标是那最后一次做不到的重复,而不是训练量。",
+      ru: "Жим лёжа (со штангой или гантелями) как основное базовое движение. Один подход на прогрессивную разминку, затем 1-2 рабочих подхода до полного мышечного отказа, строгая техника, без отбива штанги от груди и без помощи ног. Если по окончании подхода чувствуешь, что мог бы сделать ещё одно повторение с хорошей техникой — это был не настоящий отказ: цель — последнее невозможное повторение, а не объём.",
+      ja: "ベンチプレス（バーベルまたはダンベル）をメインのコンパウンド種目とする。段階的なウォームアップセットを1セット行った後、本セットを1〜2セット、正のフォームでの筋力限界（フェイラー）まで追い込む。フォームは厳格に守り、胸で反動をつけたり脚の力を借りたりしない。セットを終えた時点で「フォームを崩さずにもう1回できたかも」と感じるなら、それは本当の限界ではない。目標は「絶対にできない最後の1レップ」であり、ボリュームではない。",
+    },
+    estiramiento: {
+      es: "Estiramiento de pectoral en marco de puerta o esquina: brazo a 90°, antebrazo apoyado, el cuerpo avanza hasta sentir tensión (no dolor) en el pecho y el hombro anterior. Mantener 20-30 segundos por lado, respiración lenta, sin rebotar.",
+      en: "Chest stretch in a doorway or corner: arm at 90°, forearm resting against the frame, body leaning forward until you feel tension (not pain) in the chest and front of the shoulder. Hold 20-30 seconds per side, slow breathing, no bouncing.",
+      pt: "Alongamento de peitoral no batente da porta ou no canto: braço a 90°, antebraço apoiado, o corpo avança até sentir tensão (não dor) no peito e no ombro anterior. Manter 20-30 segundos de cada lado, respiração lenta, sem balançar.",
+      de: "Brustdehnung im Türrahmen oder in der Ecke: Arm im 90°-Winkel, Unterarm aufgestützt, der Körper bewegt sich nach vorne, bis du Spannung (keinen Schmerz) in der Brust und der vorderen Schulter spürst. 20-30 Sekunden pro Seite halten, langsam atmen, ohne zu wippen.",
+      fr: "Étirement du pectoral dans l'encadrement d'une porte ou dans un coin : bras à 90°, avant-bras appuyé, le corps avance jusqu'à sentir une tension (pas de douleur) dans la poitrine et l'épaule antérieure. Maintenir 20-30 secondes de chaque côté, respiration lente, sans rebondir.",
+      zh: "门框或墙角胸部拉伸:手臂呈90度,前臂贴靠支撑面,身体向前倾直到胸部和肩前部感到张力(不是疼痛)。每侧保持20-30秒,呼吸缓慢,不要弹振。",
+      ru: "Растяжка грудных мышц в дверном проёме или углу: рука согнута под 90°, предплечье упирается в раму, корпус подаётся вперёд, пока не почувствуешь натяжение (не боль) в груди и передней части плеча. Удерживать 20-30 секунд на каждую сторону, дыхание медленное, без раскачивания.",
+      ja: "ドア枠や壁の角を使った大胸筋ストレッチ：腕を90度に曲げ、前腕を枠に当てて支える。胸と肩の前部にテンション（痛みではなく）を感じるところまで体を前に進める。左右各20〜30秒キープし、呼吸はゆっくり、反動をつけない。",
+    },
+    recuperacion: {
+      es: "El pecho necesita entre 5 y 7 días completos antes de volver a recibir un estímulo directo de esta intensidad. Señales de que todavía no recuperó: dolor residual al tacto, pérdida de fuerza respecto a la sesión anterior o fatiga que persiste más allá de 48h. Entrenarlo de nuevo antes de tiempo interrumpe la supercompensación y frena el progreso real.",
+      en: "The chest needs 5 to 7 full days before receiving another direct stimulus at this intensity. Signs it hasn't recovered yet: residual soreness to the touch, loss of strength compared to the previous session, or fatigue that persists beyond 48h. Training it again too soon interrupts supercompensation and stalls real progress.",
+      pt: "O peito precisa de 5 a 7 dias completos antes de voltar a receber um estímulo direto dessa intensidade. Sinais de que ainda não recuperou: dor residual ao toque, perda de força em relação à sessão anterior ou fadiga que persiste além de 48h. Treiná-lo de novo antes da hora interrompe a supercompensação e trava o progresso real.",
+      de: "Die Brust braucht zwischen 5 und 7 vollständige Tage, bevor sie wieder einen direkten Reiz dieser Intensität bekommt. Anzeichen dafür, dass sie noch nicht erholt ist: Restschmerz bei Berührung, Kraftverlust gegenüber der letzten Einheit oder Ermüdung, die länger als 48 Stunden anhält. Sie zu früh erneut zu trainieren unterbricht die Superkompensation und bremst den echten Fortschritt.",
+      fr: "La poitrine a besoin de 5 à 7 jours complets avant de recevoir à nouveau un stimulus direct de cette intensité. Signes qu'elle ne s'est pas encore rétablie : douleur résiduelle au toucher, perte de force par rapport à la séance précédente ou fatigue qui persiste au-delà de 48h. La réentraîner trop tôt interrompt la surcompensation et freine le vrai progrès.",
+      zh: "胸部需要完整休息5到7天,才能再次接受这种强度的直接刺激。尚未恢复的信号包括:触碰时仍有残留疼痛、力量比上次训练下降,或疲劳持续超过48小时。过早再次训练会打断超量恢复,反而拖慢真正的进步。",
+      ru: "Груди нужно от 5 до 7 полных дней перед тем, как снова получить прямую нагрузку такой интенсивности. Признаки того, что восстановление ещё не завершено: остаточная боль при касании, потеря силы по сравнению с предыдущей тренировкой или усталость, сохраняющаяся дольше 48 часов. Если тренировать её снова раньше срока, это прерывает суперкомпенсацию и тормозит реальный прогресс.",
+      ja: "胸はこの強度の直接的な刺激を再び受けるまでに、丸5〜7日間の完全な休養が必要。まだ回復していないサイン：触ると残る痛み、前回のセッションより力が出ない、48時間を超えて続く疲労感。時期尚早にまた鍛えると超回復のプロセスが中断され、実質的な進歩が止まる。",
+    },
   },
   "deltoide-anterior": {
-    nombre: "Deltoide anterior",
+    nombre: {
+      es: "Deltoide anterior",
+      en: "Anterior deltoid",
+      pt: "Deltoide anterior",
+      de: "Vorderer Deltamuskel",
+      fr: "Deltoïde antérieur",
+      zh: "三角肌前束",
+      ru: "Передняя дельта",
+      ja: "三角筋前部",
+    },
     grupo: "push",
-    ejercicio:
-      "Recibe estímulo indirecto suficiente desde el press de banca y el " +
-      "press militar; no hace falta aislarlo con ejercicios extra. Si se " +
-      "entrena de forma directa, un solo ejercicio (press militar estricto " +
-      "o press de hombro con mancuernas) con 1 serie al fallo alcanza y " +
-      "sobra: agregar más series solo acumula fatiga sin acumular estímulo.",
-    estiramiento:
-      "Estiramiento cruzado de hombro (brazo estirado al frente del " +
-      "cuerpo, sostenido con el otro brazo a la altura del codo) y " +
-      "estiramiento de deltoide anterior en marco de puerta con el brazo " +
-      "por debajo de la altura del hombro. 20-30 segundos por lado, sin " +
-      "forzar la articulación.",
-    recuperacion:
-      "Al recibir carga en cada sesión de Push, respeta el mismo descanso " +
-      "que el pecho: 5-7 días antes de la siguiente sesión de empuje. " +
-      "Dolor en la parte frontal del hombro al levantar el brazo o " +
-      "chasquidos dolorosos son señal de que necesita más días, no menos.",
+    ejercicio: {
+      es: "Recibe estímulo indirecto suficiente desde el press de banca y el press militar; no hace falta aislarlo con ejercicios extra. Si se entrena de forma directa, un solo ejercicio (press militar estricto o press de hombro con mancuernas) con 1 serie al fallo alcanza y sobra: agregar más series solo acumula fatiga sin acumular estímulo.",
+      en: "Gets enough indirect stimulus from the bench press and overhead press; there's no need to isolate it with extra exercises. If trained directly, a single exercise (strict overhead press or dumbbell shoulder press) with 1 set to failure is more than enough: adding more sets only piles on fatigue without adding stimulus.",
+      pt: "Recebe estímulo indireto suficiente do supino e do desenvolvimento militar; não é preciso isolá-lo com exercícios extras. Se for treinado de forma direta, um único exercício (desenvolvimento militar estrito ou desenvolvimento de ombro com halteres) com 1 série até a falha já é suficiente e sobra: adicionar mais séries só acumula fadiga sem acumular estímulo.",
+      de: "Er bekommt bereits genug indirekten Reiz durch Bankdrücken und Schulterdrücken; eine Isolation mit Zusatzübungen ist nicht nötig. Wird er direkt trainiert, reicht eine einzige Übung (strenges Military Press oder Kurzhantel-Schulterdrücken) mit 1 Satz bis zum Versagen völlig aus: zusätzliche Sätze häufen nur Ermüdung an, ohne zusätzlichen Reiz zu liefern.",
+      fr: "Reçoit un stimulus indirect suffisant du développé couché et du développé militaire ; inutile de l'isoler avec des exercices supplémentaires. S'il est entraîné directement, un seul exercice (développé militaire strict ou développé épaules avec haltères) avec 1 série à l'échec suffit largement : ajouter plus de séries ne fait qu'accumuler de la fatigue sans accumuler de stimulus.",
+      zh: "在卧推和坐姿推举中已经获得足够的间接刺激,不需要额外的孤立训练动作来单独刺激它。如果要直接训练,只做一个动作(严格坐姿推举或哑铃肩上推举),1组练到力竭就足够甚至绰绰有余:增加更多组数只会累积疲劳,不会累积刺激。",
+      ru: "Получает достаточную непрямую нагрузку от жима лёжа и жима стоя (армейского жима); изолировать её дополнительными упражнениями не нужно. Если тренировать её напрямую, достаточно одного упражнения (строгий жим стоя или жим гантелей сидя/стоя) с 1 подходом до отказа — этого более чем достаточно: добавление новых подходов только накапливает усталость, но не накапливает стимул.",
+      ja: "ベンチプレスとミリタリープレスからすでに十分な間接刺激を受けているため、追加種目でアイソレートする必要はない。直接鍛える場合は、種目を1つ（厳格なミリタリープレスまたはダンベルショルダープレス）に絞り、1セットを限界まで行えば十分すぎるほど：セットを増やしても刺激は増えず、疲労だけが蓄積する。",
+    },
+    estiramiento: {
+      es: "Estiramiento cruzado de hombro (brazo estirado al frente del cuerpo, sostenido con el otro brazo a la altura del codo) y estiramiento de deltoide anterior en marco de puerta con el brazo por debajo de la altura del hombro. 20-30 segundos por lado, sin forzar la articulación.",
+      en: "Cross-body shoulder stretch (arm extended in front of the body, held with the other arm at elbow height) and anterior deltoid stretch in a doorway frame with the arm below shoulder height. 20-30 seconds per side, without forcing the joint.",
+      pt: "Alongamento cruzado de ombro (braço estendido à frente do corpo, sustentado pelo outro braço na altura do cotovelo) e alongamento de deltoide anterior no batente da porta com o braço abaixo da altura do ombro. 20-30 segundos de cada lado, sem forçar a articulação.",
+      de: "Schulter-Überkreuzdehnung (Arm vor dem Körper ausgestreckt, mit dem anderen Arm auf Höhe des Ellbogens gehalten) sowie Dehnung des vorderen Deltamuskels im Türrahmen mit dem Arm unterhalb der Schulterhöhe. 20-30 Sekunden pro Seite, ohne das Gelenk zu forcieren.",
+      fr: "Étirement croisé de l'épaule (bras tendu devant le corps, soutenu par l'autre bras au niveau du coude) et étirement du deltoïde antérieur dans l'encadrement d'une porte avec le bras sous la hauteur de l'épaule. 20-30 secondes de chaque côté, sans forcer l'articulation.",
+      zh: "肩部交叉拉伸(手臂在身前伸直,另一只手扶住肘部位置)以及门框三角肌前束拉伸(手臂位置低于肩高)。每侧20-30秒,不要强行拉扯关节。",
+      ru: "Перекрёстная растяжка плеча (прямая рука вытянута перед корпусом, поддерживается другой рукой на уровне локтя) и растяжка передней дельты в дверном проёме с рукой ниже уровня плеча. 20-30 секунд на каждую сторону, без давления на сустав.",
+      ja: "肩のクロスストレッチ（腕を体の前に伸ばし、反対の腕で肘の高さを支えて引く）と、ドア枠を使った三角筋前部ストレッチ（腕を肩の高さより下にして行う）。左右各20〜30秒、関節に無理な力をかけない。",
+    },
+    recuperacion: {
+      es: "Al recibir carga en cada sesión de Push, respeta el mismo descanso que el pecho: 5-7 días antes de la siguiente sesión de empuje. Dolor en la parte frontal del hombro al levantar el brazo o chasquidos dolorosos son señal de que necesita más días, no menos.",
+      en: "Since it's loaded in every Push session, it follows the same rest period as the chest: 5-7 days before the next pushing session. Pain at the front of the shoulder when raising the arm, or painful clicking, are signs it needs more days, not fewer.",
+      pt: "Por receber carga em cada sessão de Push, respeita o mesmo descanso que o peito: 5-7 dias antes da próxima sessão de empurrar. Dor na parte frontal do ombro ao levantar o braço ou estalos dolorosos são sinal de que precisa de mais dias, não de menos.",
+      de: "Da er in jeder Push-Einheit mitbelastet wird, gilt dieselbe Pause wie für die Brust: 5-7 Tage bis zur nächsten Drück-Einheit. Schmerzen an der Schultervorderseite beim Anheben des Arms oder schmerzhaftes Knacken sind ein Zeichen, dass er mehr Tage braucht, nicht weniger.",
+      fr: "Recevant une charge à chaque séance de Push, il respecte le même repos que la poitrine : 5-7 jours avant la séance de poussée suivante. Une douleur à l'avant de l'épaule en levant le bras ou des craquements douloureux sont le signe qu'il a besoin de plus de jours, pas de moins.",
+      zh: "每次Push训练都会给它加负荷,恢复时间和胸部一致:下一次推系训练前需要5-7天。抬手时肩前部疼痛或出现痛性弹响,是需要更多天数而不是更少天数的信号。",
+      ru: "Получая нагрузку на каждой тренировке Push, соблюдай тот же отдых, что и для груди: 5-7 дней до следующей жимовой тренировки. Боль в передней части плеча при подъёме руки или болезненные щелчки — сигнал, что нужно больше дней, а не меньше.",
+      ja: "Pushセッションのたびに負荷を受けるため、胸と同じ休養期間を守る：次のプッシュセッションまで5〜7日。腕を上げたときの肩前部の痛みや、痛みを伴うクリック音は、休養日数を減らすのではなく増やすべきサイン。",
+    },
   },
   "deltoide-lateral": {
-    nombre: "Deltoide lateral",
+    nombre: {
+      es: "Deltoide lateral",
+      en: "Lateral deltoid",
+      pt: "Deltoide lateral",
+      de: "Seitlicher Deltamuskel",
+      fr: "Deltoïde latéral",
+      zh: "三角肌中束",
+      ru: "Средняя (боковая) дельта",
+      ja: "三角筋側部",
+    },
     grupo: "push",
-    ejercicio:
-      "Elevaciones laterales estrictas como único ejercicio de aislamiento " +
-      "para este haz, 1 serie al fallo con control total en la fase " +
-      "negativa. Priorizá la técnica limpia sobre el peso: usar impulso o " +
-      "balanceo le quita el estímulo directo al deltoide y se lo pasa a " +
-      "trapecio, que no es el objetivo.",
-    estiramiento:
-      "Brazo cruzado al frente del pecho, sostenido con el otro brazo por " +
-      "encima del codo, tirando suavemente hacia el hombro contrario. " +
-      "20-30 segundos por lado, tensión suave y constante.",
-    recuperacion:
-      "5-7 días de descanso antes de volver a estimularlo directamente. " +
-      "Si al levantar el brazo lateralmente sentís fatiga o molestia " +
-      "residual de la sesión anterior, todavía no está listo para otra " +
-      "serie al fallo.",
+    ejercicio: {
+      es: "Elevaciones laterales estrictas como único ejercicio de aislamiento para este haz, 1 serie al fallo con control total en la fase negativa. Priorizá la técnica limpia sobre el peso: usar impulso o balanceo le quita el estímulo directo al deltoide y se lo pasa a trapecio, que no es el objetivo.",
+      en: "Strict lateral raises as the only isolation exercise for this head, 1 set to failure with full control on the negative. Prioritize clean technique over weight: using momentum or swinging takes the direct stimulus away from the deltoid and hands it to the trapezius, which isn't the goal.",
+      pt: "Elevação lateral estrita como único exercício de isolamento para esse feixe, 1 série até a falha com controle total na fase negativa. Priorize a técnica limpa acima do peso: usar impulso ou balanço tira o estímulo direto do deltoide e o transfere para o trapézio, que não é o objetivo.",
+      de: "Strenge Seitheben als einzige Isolationsübung für diesen Muskelkopf, 1 Satz bis zum Versagen mit voller Kontrolle in der negativen Phase. Priorisiere saubere Technik über Gewicht: Schwung oder Schaukeln nimmt dem Deltamuskel den direkten Reiz und verlagert ihn auf den Trapezmuskel, was nicht das Ziel ist.",
+      fr: "Élévations latérales strictes comme unique exercice d'isolation pour ce faisceau, 1 série à l'échec avec un contrôle total dans la phase négative. Priorise la technique propre sur le poids : utiliser l'élan ou le balancement retire le stimulus direct du deltoïde pour le transférer au trapèze, ce qui n'est pas l'objectif.",
+      zh: "严格的哑铃侧平举作为这个肌束唯一的孤立训练动作,1组练到力竭,离心阶段全程控制。动作标准优先于重量:借助惯性或身体摇摆会把刺激从三角肌转移到斜方肌,而这不是目标。",
+      ru: "Строгие подъёмы гантелей через стороны как единственное изолирующее упражнение для этого пучка, 1 подход до отказа с полным контролем негативной фазы. Приоритет — чистая техника, а не вес: использование инерции или раскачивания забирает прямой стимул у дельты и передаёт его трапеции, а это не цель.",
+      ja: "この部位のアイソレーション種目はサイドレイズ一択とし、1セットを限界まで、ネガティブ局面を完全にコントロールして行う。重量よりもクリーンなフォームを優先すること：反動や体の揺れを使うと、三角筋への直接刺激が僧帽筋に逃げてしまい、狙いから外れる。",
+    },
+    estiramiento: {
+      es: "Brazo cruzado al frente del pecho, sostenido con el otro brazo por encima del codo, tirando suavemente hacia el hombro contrario. 20-30 segundos por lado, tensión suave y constante.",
+      en: "Arm crossed in front of the chest, held with the other arm above the elbow, gently pulling toward the opposite shoulder. 20-30 seconds per side, gentle and constant tension.",
+      pt: "Braço cruzado à frente do peito, sustentado pelo outro braço acima do cotovelo, puxando suavemente em direção ao ombro contrário. 20-30 segundos de cada lado, tensão suave e constante.",
+      de: "Arm vor der Brust überkreuzt, mit dem anderen Arm oberhalb des Ellbogens gehalten, sanft zur gegenüberliegenden Schulter ziehen. 20-30 Sekunden pro Seite, sanfte, gleichmäßige Spannung.",
+      fr: "Bras croisé devant la poitrine, soutenu par l'autre bras au-dessus du coude, en tirant doucement vers l'épaule opposée. 20-30 secondes de chaque côté, tension douce et constante.",
+      zh: "手臂在胸前交叉,用另一只手扶在肘部上方,轻轻向对侧肩膀方向拉动。每侧20-30秒,张力要柔和且持续。",
+      ru: "Рука скрещена перед грудью, поддерживается другой рукой выше локтя, лёгкое подтягивание в сторону противоположного плеча. 20-30 секунд на каждую сторону, мягкое и постоянное натяжение.",
+      ja: "腕を胸の前に横切らせ、反対の腕で肘の上を支えながら反対側の肩の方向へ優しく引く。左右各20〜30秒、穏やかで一定のテンションをかける。",
+    },
+    recuperacion: {
+      es: "5-7 días de descanso antes de volver a estimularlo directamente. Si al levantar el brazo lateralmente sentís fatiga o molestia residual de la sesión anterior, todavía no está listo para otra serie al fallo.",
+      en: "5-7 days of rest before stimulating it directly again. If raising the arm laterally still feels fatigued or brings residual soreness from the previous session, it isn't ready for another set to failure yet.",
+      pt: "5-7 dias de descanso antes de voltar a estimulá-lo diretamente. Se, ao levantar o braço lateralmente, você sentir fadiga ou desconforto residual da sessão anterior, ainda não está pronto para outra série até a falha.",
+      de: "5-7 Tage Pause, bevor er wieder direkt gereizt wird. Wenn du beim seitlichen Anheben des Arms noch Ermüdung oder Restbeschwerden von der letzten Einheit spürst, ist er noch nicht bereit für einen weiteren Satz bis zum Versagen.",
+      fr: "5-7 jours de repos avant de le stimuler à nouveau directement. Si en levant le bras latéralement tu sens de la fatigue ou une gêne résiduelle de la séance précédente, il n'est pas encore prêt pour une nouvelle série à l'échec.",
+      zh: "再次直接刺激它之前需要休息5-7天。如果侧平举手臂时仍能感到上次训练残留的疲劳或不适,说明还没准备好再做一组力竭训练。",
+      ru: "5-7 дней отдыха перед следующей прямой стимуляцией. Если при подъёме руки в сторону чувствуешь усталость или остаточный дискомфорт от прошлой тренировки, мышца ещё не готова к новому подходу до отказа.",
+      ja: "再び直接刺激を与えるまで5〜7日の休養。腕を横に上げたときに前回のセッションからの疲労感や違和感が残っている場合、まだ次の限界セットの準備ができていない。",
+    },
   },
-  triceps: {
-    nombre: "Tríceps",
+  "triceps": {
+    nombre: {
+      es: "Tríceps",
+      en: "Triceps",
+      pt: "Tríceps",
+      de: "Trizeps",
+      fr: "Triceps",
+      zh: "肱三头肌",
+      ru: "Трицепс",
+      ja: "上腕三頭筋",
+    },
     grupo: "push",
-    ejercicio:
-      "Fondos en paralelas o press francés como movimiento principal, " +
-      "priorizado sobre extensiones de aislamiento. 1-2 series al fallo, " +
-      "recorrido completo, bloqueo estricto de codo sin trabar la " +
-      "articulación de golpe. El press de banca y el press militar ya lo " +
-      "involucran fuerte, así que un solo ejercicio directo es suficiente.",
-    estiramiento:
-      "Brazo elevado, codo flexionado detrás de la cabeza, empujando " +
-      "suavemente con la otra mano sobre el codo hacia abajo y atrás. " +
-      "20-30 segundos por lado.",
-    recuperacion:
-      "5-7 días antes de la próxima sesión que lo involucre (Push " +
-      "completo). Al ser un músculo pequeño que además recibe carga " +
-      "indirecta del pecho y el hombro, es fácil sobreentrenarlo si se " +
-      "impacienta la vuelta: respetá el descanso aunque \"se sienta " +
-      "liviano\" antes de tiempo.",
+    ejercicio: {
+      es: "Fondos en paralelas o press francés como movimiento principal, priorizado sobre extensiones de aislamiento. 1-2 series al fallo, recorrido completo, bloqueo estricto de codo sin trabar la articulación de golpe. El press de banca y el press militar ya lo involucran fuerte, así que un solo ejercicio directo es suficiente.",
+      en: "Parallel bar dips or close-grip/French press as the main movement, prioritized over isolated extensions. 1-2 sets to failure, full range of motion, strict elbow lockout without slamming the joint. The bench press and overhead press already hit it hard, so a single direct exercise is enough.",
+      pt: "Paralelas (mergulho) ou tríceps testa como movimento principal, priorizado sobre extensões de isolamento. 1-2 séries até a falha, amplitude completa, travamento estrito do cotovelo sem travar a articulação de repente. O supino e o desenvolvimento militar já o envolvem fortemente, então um único exercício direto é suficiente.",
+      de: "Dips am Barren oder French Press als Hauptübung, priorisiert gegenüber isolierten Trizeps-Extensionen. 1-2 Sätze bis zum Versagen, voller Bewegungsumfang, strikte Ellbogenstreckung, ohne das Gelenk abrupt zu verriegeln. Bankdrücken und Military Press beanspruchen ihn bereits stark, daher reicht eine einzige direkte Übung.",
+      fr: "Dips aux barres parallèles ou développé français comme mouvement principal, priorisé sur les extensions d'isolation. 1-2 séries à l'échec, amplitude complète, verrouillage strict du coude sans bloquer l'articulation d'un coup sec. Le développé couché et le développé militaire le sollicitent déjà fortement, donc un seul exercice direct suffit.",
+      zh: "双杠臂屈伸或法式推举作为主要动作,优先于孤立的伸展动作。1-2组练到力竭,动作全程,手肘严格锁定但不要猛然顶死关节。卧推和坐姿推举已经让它承受了很大负荷,所以一个直接动作就足够。",
+      ru: "Отжимания на брусьях или французский жим как основное движение, приоритет перед изолирующими разгибаниями. 1-2 подхода до отказа, полная амплитуда, строгое разгибание локтя без резкого «щелчка» в суставе. Жим лёжа и жим стоя уже сильно нагружают трицепс, так что одного прямого упражнения достаточно.",
+      ja: "パラレルディップスまたはフレンチプレス（ライイングトライセプスエクステンション）をメイン種目とし、アイソレーション系のエクステンションより優先する。1〜2セットを限界まで、可動域はフルレンジで、肘を急に突っ張らせず厳格にロックする。ベンチプレスとミリタリープレスですでに強く関与しているため、直接種目は1つで十分。",
+    },
+    estiramiento: {
+      es: "Brazo elevado, codo flexionado detrás de la cabeza, empujando suavemente con la otra mano sobre el codo hacia abajo y atrás. 20-30 segundos por lado.",
+      en: "Arm raised, elbow bent behind the head, gently pushing down and back on the elbow with the other hand. 20-30 seconds per side.",
+      pt: "Braço elevado, cotovelo flexionado atrás da cabeça, empurrando suavemente com a outra mão sobre o cotovelo para baixo e para trás. 20-30 segundos de cada lado.",
+      de: "Arm angehoben, Ellbogen hinter dem Kopf gebeugt, mit der anderen Hand sanft am Ellbogen nach unten und hinten drücken. 20-30 Sekunden pro Seite.",
+      fr: "Bras levé, coude fléchi derrière la tête, en poussant doucement avec l'autre main sur le coude vers le bas et l'arrière. 20-30 secondes de chaque côté.",
+      zh: "手臂上举,肘部在头后弯曲,用另一只手轻轻将肘部向下、向后推。每侧20-30秒。",
+      ru: "Рука поднята вверх, локоть согнут за головой, другой рукой мягко надавливать на локоть вниз и назад. 20-30 секунд на каждую сторону.",
+      ja: "腕を上げて肘を曲げ、頭の後ろに持っていく。反対の手で肘を優しく下方・後方に押す。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de la próxima sesión que lo involucre (Push completo). Al ser un músculo pequeño que además recibe carga indirecta del pecho y el hombro, es fácil sobreentrenarlo si se impacienta la vuelta: respetá el descanso aunque \"se sienta liviano\" antes de tiempo.",
+      en: "5-7 days before the next session that involves it (a full Push day). Since it's a small muscle that also takes indirect load from the chest and shoulders, it's easy to overtrain if you rush back: respect the rest period even if it \"feels light\" before it's due.",
+      pt: "5-7 dias antes da próxima sessão que o envolva (Push completo). Por ser um músculo pequeno que também recebe carga indireta do peito e do ombro, é fácil sobretreiná-lo se a volta for apressada: respeite o descanso mesmo que ele \"pareça leve\" antes da hora.",
+      de: "5-7 Tage bis zur nächsten Einheit, die ihn beansprucht (der gesamte Push-Tag). Da es sich um einen kleinen Muskel handelt, der zusätzlich indirekte Belastung von Brust und Schulter bekommt, wird er leicht übertrainiert, wenn man ungeduldig wird: Halte die Pause ein, auch wenn er sich vorzeitig \"leicht\" anfühlt.",
+      fr: "5-7 jours avant la prochaine séance qui le sollicite (Push complet). Étant un petit muscle qui reçoit en plus une charge indirecte de la poitrine et de l'épaule, il est facile de le surentraîner si on est impatient de le réentraîner : respecte le repos même s'il \"semble léger\" avant l'heure.",
+      zh: "下一次涉及它的训练(完整的Push)前需要5-7天。作为一块同时从胸部和肩部训练中接受间接负荷的小肌肉,如果心急提前恢复训练很容易过度训练:即使\"感觉很轻松\",也要尊重休息时间。",
+      ru: "5-7 дней перед следующей тренировкой, которая его затронет (полный Push). Поскольку это небольшая мышца, получающая к тому же непрямую нагрузку от груди и плеч, её легко перетренировать, если поторопиться с возвращением: соблюдай отдых, даже если кажется, что она «уже отошла» раньше срока.",
+      ja: "次にこの部位が関与するセッション（Push全体）まで5〜7日。小さな筋肉である上に胸と肩からも間接的に負荷を受けるため、再開を焦るとオーバートレーニングになりやすい：「もう軽く感じる」としても、時期尚早に再開せず休養期間を守ること。",
+    },
   },
   "dorsal-ancho": {
-    nombre: "Dorsal ancho",
+    nombre: {
+      es: "Dorsal ancho",
+      en: "Lats (latissimus dorsi)",
+      pt: "Grande dorsal",
+      de: "Latissimus (breiter Rückenmuskel)",
+      fr: "Grand dorsal",
+      zh: "背阔肌",
+      ru: "Широчайшие мышцы спины",
+      ja: "広背筋",
+    },
     grupo: "pull",
-    ejercicio:
-      "Dominadas (o jalón al pecho si todavía no hay fuerza para " +
-      "dominadas estrictas) como ejercicio compuesto principal de espalda. " +
-      "1-2 series al fallo absoluto, tirando con el codo y no con la mano, " +
-      "pausa breve en la contracción máxima, bajada controlada sin dejarse " +
-      "caer.",
-    estiramiento:
-      "Colgado de una barra con los brazos extendidos, dejando que el " +
-      "propio peso del cuerpo estire dorsal y espalda alta durante 20-30 " +
-      "segundos, o alternativamente sentado con el brazo cruzado por " +
-      "encima de la cabeza inclinando el torso hacia el lado contrario.",
-    recuperacion:
-      "El dorsal es un músculo grande que responde igual que el pecho: " +
-      "5-7 días completos antes de volver a tirar con esta intensidad. " +
-      "Pérdida de fuerza de agarre o de repeticiones respecto a la sesión " +
-      "anterior es la señal más clara de que aún no recuperó del todo.",
+    ejercicio: {
+      es: "Dominadas (o jalón al pecho si todavía no hay fuerza para dominadas estrictas) como ejercicio compuesto principal de espalda. 1-2 series al fallo absoluto, tirando con el codo y no con la mano, pausa breve en la contracción máxima, bajada controlada sin dejarse caer.",
+      en: "Pull-ups (or lat pulldown if you don't yet have the strength for strict pull-ups) as the main compound back exercise. 1-2 sets to absolute failure, pulling with the elbow rather than the hand, a brief pause at peak contraction, controlled descent without dropping.",
+      pt: "Barra fixa (ou puxada frontal, se ainda não houver força para barra fixa estrita) como exercício composto principal de costas. 1-2 séries até a falha absoluta, puxando com o cotovelo e não com a mão, pausa breve na contração máxima, descida controlada sem se deixar cair.",
+      de: "Klimmzüge (oder Latzug zur Brust, falls die Kraft für strenge Klimmzüge noch nicht reicht) als wichtigste Grundübung für den Rücken. 1-2 Sätze bis zum absoluten Muskelversagen, gezogen mit dem Ellbogen und nicht mit der Hand, kurze Pause in der maximalen Kontraktion, kontrolliertes Absenken, ohne sich fallen zu lassen.",
+      fr: "Tractions (ou tirage vertical si la force pour des tractions strictes n'est pas encore là) comme exercice composé principal du dos. 1-2 séries à l'échec absolu, en tirant avec le coude et non avec la main, courte pause à la contraction maximale, descente contrôlée sans se laisser tomber.",
+      zh: "引体向上(如果严格引体向上的力量还不够,可用高位下拉代替)作为背部的主要复合动作。1-2组练到绝对力竭,用手肘发力而不是用手拉,在最大收缩处短暂停顿,下降阶段全程控制,不要让身体直接坠落。",
+      ru: "Подтягивания (или тяга верхнего блока к груди, если силы для строгих подтягиваний ещё не хватает) как основное базовое упражнение для спины. 1-2 подхода до полного отказа, тянуть локтем, а не рукой, короткая пауза в точке максимального сокращения, контролируемое опускание без «сброса» веса.",
+      ja: "懸垂（チンニング）（厳格な懸垂を行うだけの筋力がまだない場合はラットプルダウン）を背中のメインコンパウンド種目とする。1〜2セットを完全な限界まで、手ではなく肘で引く意識で行い、最大収縮位置で短くポーズを取り、体を落とさずコントロールしながら下ろす。",
+    },
+    estiramiento: {
+      es: "Colgado de una barra con los brazos extendidos, dejando que el propio peso del cuerpo estire dorsal y espalda alta durante 20-30 segundos, o alternativamente sentado con el brazo cruzado por encima de la cabeza inclinando el torso hacia el lado contrario.",
+      en: "Hanging from a bar with arms extended, letting your own bodyweight stretch the lats and upper back for 20-30 seconds, or alternatively seated with one arm crossed overhead, leaning the torso toward the opposite side.",
+      pt: "Pendurado em uma barra com os braços estendidos, deixando que o próprio peso do corpo alongue o grande dorsal e a parte superior das costas por 20-30 segundos, ou alternativamente sentado com o braço cruzado por cima da cabeça, inclinando o tronco para o lado contrário.",
+      de: "An einer Stange hängend mit gestreckten Armen, sodass das eigene Körpergewicht Latissimus und oberen Rücken 20-30 Sekunden lang dehnt, alternativ im Sitzen mit dem Arm über dem Kopf überkreuzt, während der Oberkörper zur Gegenseite geneigt wird.",
+      fr: "Suspendu à une barre avec les bras tendus, en laissant le poids du corps étirer le dorsal et le haut du dos pendant 20-30 secondes, ou alternativement assis avec le bras croisé au-dessus de la tête en inclinant le torse vers le côté opposé.",
+      zh: "悬挂在单杠上,手臂伸直,利用自身体重拉伸背阔肌和上背部20-30秒;或者坐姿,一只手臂举过头顶交叉,躯干向对侧倾斜。",
+      ru: "Вис на перекладине с выпрямленными руками, позволяя собственному весу тела растягивать широчайшие и верх спины в течение 20-30 секунд, либо сидя с рукой, заведённой над головой, наклоняя корпус в противоположную сторону.",
+      ja: "バーにぶら下がり腕を伸ばした状態で、自分の体重を利用して広背筋と背中上部を20〜30秒ストレッチする。あるいは座った状態で、腕を頭上で反対側に伸ばしながら体幹を反対方向に傾ける方法でもよい。",
+    },
+    recuperacion: {
+      es: "El dorsal es un músculo grande que responde igual que el pecho: 5-7 días completos antes de volver a tirar con esta intensidad. Pérdida de fuerza de agarre o de repeticiones respecto a la sesión anterior es la señal más clara de que aún no recuperó del todo.",
+      en: "The lats are a large muscle that respond like the chest: 5-7 full days before pulling at this intensity again. Loss of grip strength or fewer reps compared to the previous session is the clearest sign it hasn't fully recovered yet.",
+      pt: "O grande dorsal é um músculo grande que responde igual ao peito: 5-7 dias completos antes de voltar a puxar com essa intensidade. Perda de força de pegada ou de repetições em relação à sessão anterior é o sinal mais claro de que ainda não recuperou completamente.",
+      de: "Der Latissimus ist ein großer Muskel und reagiert genauso wie die Brust: 5-7 vollständige Tage, bevor wieder mit dieser Intensität gezogen wird. Nachlassende Griffkraft oder weniger Wiederholungen als in der letzten Einheit sind das deutlichste Zeichen, dass er sich noch nicht vollständig erholt hat.",
+      fr: "Le dorsal est un grand muscle qui répond comme la poitrine : 5-7 jours complets avant de tirer à nouveau à cette intensité. Une perte de force de préhension ou de répétitions par rapport à la séance précédente est le signe le plus clair qu'il ne s'est pas encore complètement rétabli.",
+      zh: "背阔肌是块大肌肉,恢复方式和胸部相同:再次以这种强度拉动之前需要完整休息5-7天。握力下降或次数比上次训练少,是它还没完全恢复的最明显信号。",
+      ru: "Широчайшая — крупная мышца, восстанавливающаяся так же, как грудь: 5-7 полных дней перед следующей тягой такой интенсивности. Потеря силы хвата или количества повторений по сравнению с прошлой тренировкой — самый явный сигнал, что восстановление ещё не завершилось полностью.",
+      ja: "広背筋は胸と同様に反応する大きな筋肉：この強度で再び引く動作を行うまで丸5〜7日が必要。前回のセッションと比べて握力やレップ数が落ちている場合、それはまだ完全に回復していない最も明確なサイン。",
+    },
   },
   "espalda-media": {
-    nombre: "Espalda media",
+    nombre: {
+      es: "Espalda media",
+      en: "Mid-back",
+      pt: "Costas médias",
+      de: "Mittlerer Rücken",
+      fr: "Milieu du dos",
+      zh: "背中部",
+      ru: "Средняя часть спины",
+      ja: "背中中部",
+    },
     grupo: "pull",
-    ejercicio:
-      "Remo con barra o remo en máquina, torso fijo, tirando hacia el " +
-      "abdomen con los codos pegados al cuerpo. 1-2 series al fallo, sin " +
-      "usar impulso de cadera para completar repeticiones: si aparece el " +
-      "balanceo, la serie terminó ahí, no antes con trampa.",
-    estiramiento:
-      "Sentado o de pie, brazos extendidos al frente sosteniendo un punto " +
-      "fijo, dejando caer el peso del torso hacia atrás para abrir la " +
-      "espalda media. 20-30 segundos, respiración profunda.",
-    recuperacion:
-      "5-7 días antes de la próxima sesión de Pull. Rigidez o dolor entre " +
-      "los omóplatos al día siguiente de entrenar es normal a las 24-48h, " +
-      "pero si persiste más allá de eso, esperá un día extra antes de " +
-      "volver a cargarla.",
+    ejercicio: {
+      es: "Remo con barra o remo en máquina, torso fijo, tirando hacia el abdomen con los codos pegados al cuerpo. 1-2 series al fallo, sin usar impulso de cadera para completar repeticiones: si aparece el balanceo, la serie terminó ahí, no antes con trampa.",
+      en: "Barbell row or machine row, torso fixed, pulling toward the abdomen with elbows close to the body. 1-2 sets to failure, without using hip momentum to complete reps: if swinging shows up, the set ends there, not before with cheating.",
+      pt: "Remo com barra ou remo na máquina, tronco fixo, puxando em direção ao abdômen com os cotovelos colados ao corpo. 1-2 séries até a falha, sem usar impulso do quadril para completar repetições: se aparecer o balanço, a série terminou ali, e não antes com trapaça.",
+      de: "Langhantelrudern oder Rudern an der Maschine, Oberkörper fixiert, zum Bauch ziehen mit den Ellbogen nah am Körper. 1-2 Sätze bis zum Versagen, ohne Schwung aus der Hüfte, um Wiederholungen zu erzwingen: Sobald Schaukeln auftritt, ist der Satz dort beendet — nicht früher durch Mogeln.",
+      fr: "Rowing à la barre ou rowing à la machine, torse fixe, en tirant vers l'abdomen avec les coudes collés au corps. 1-2 séries à l'échec, sans utiliser l'élan de la hanche pour terminer les répétitions : si le balancement apparaît, la série s'arrête là, pas plus tard en trichant.",
+      zh: "杠铃划船或器械划船,躯干固定,肘部贴近身体向腹部方向拉动。1-2组练到力竭,不借助髋部摆动完成动作:一旦出现摇摆借力,这组就该结束了,而不是靠犯规多做几次。",
+      ru: "Тяга штанги в наклоне или тяга в тренажёре, корпус зафиксирован, тянуть к животу, локти прижаты к телу. 1-2 подхода до отказа, без использования инерции таза для завершения повторений: как только появляется раскачивание, подход закончен — не раньше, обманом.",
+      ja: "バーベルロウまたはマシンロウで、体幹を固定し、肘を体に沿わせて腹部に向かって引く。1〜2セットを限界まで、レップを完了させるために腰の反動を使わないこと：体が揺れ始めたらそこでセット終了、反動を使ってまで続けない。",
+    },
+    estiramiento: {
+      es: "Sentado o de pie, brazos extendidos al frente sosteniendo un punto fijo, dejando caer el peso del torso hacia atrás para abrir la espalda media. 20-30 segundos, respiración profunda.",
+      en: "Seated or standing, arms extended in front holding a fixed point, letting the weight of the torso fall backward to open up the mid-back. 20-30 seconds, deep breathing.",
+      pt: "Sentado ou em pé, braços estendidos à frente segurando um ponto fixo, deixando o peso do tronco cair para trás para abrir o meio das costas. 20-30 segundos, respiração profunda.",
+      de: "Im Sitzen oder Stehen, Arme nach vorne gestreckt und an einem festen Punkt festgehalten, das Gewicht des Oberkörpers nach hinten sinken lassen, um den mittleren Rücken zu öffnen. 20-30 Sekunden, tiefe Atmung.",
+      fr: "Assis ou debout, bras tendus devant soi tenant un point fixe, en laissant tomber le poids du torse vers l'arrière pour ouvrir le milieu du dos. 20-30 secondes, respiration profonde.",
+      zh: "坐姿或站姿,手臂在身前伸直扶住固定物,让躯干重量向后下沉以打开背中部。保持20-30秒,深呼吸。",
+      ru: "Сидя или стоя, руки вытянуты вперёд и держатся за фиксированную точку, позволяя весу корпуса откинуться назад, раскрывая среднюю часть спины. 20-30 секунд, глубокое дыхание.",
+      ja: "座るか立った状態で、腕を前に伸ばして固定された物を掴み、体幹の重みを後ろに落として背中中部を開く。20〜30秒、深い呼吸をしながら。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de la próxima sesión de Pull. Rigidez o dolor entre los omóplatos al día siguiente de entrenar es normal a las 24-48h, pero si persiste más allá de eso, esperá un día extra antes de volver a cargarla.",
+      en: "5-7 days before the next Pull session. Stiffness or soreness between the shoulder blades the day after training is normal at 24-48h, but if it persists beyond that, wait one extra day before loading it again.",
+      pt: "5-7 dias antes da próxima sessão de Pull. Rigidez ou dor entre as escápulas no dia seguinte ao treino é normal nas 24-48h, mas se persistir além disso, espere mais um dia antes de voltar a sobrecarregá-la.",
+      de: "5-7 Tage bis zur nächsten Pull-Einheit. Steifheit oder Schmerzen zwischen den Schulterblättern am Tag nach dem Training sind in den ersten 24-48 Stunden normal, aber wenn es darüber hinaus anhält, warte einen zusätzlichen Tag, bevor du ihn wieder belastest.",
+      fr: "5-7 jours avant la prochaine séance de Pull. Une raideur ou une douleur entre les omoplates le lendemain de l'entraînement est normale à 24-48h, mais si elle persiste au-delà, attends un jour de plus avant de le recharger.",
+      zh: "下一次Pull训练前需要5-7天。训练后第二天肩胛骨之间出现僵硬或疼痛,在24-48小时内属于正常现象,但如果超过这个时间仍未消退,再多等一天后再次施加负荷。",
+      ru: "5-7 дней перед следующей тренировкой Pull. Скованность или боль между лопатками на следующий день после тренировки — норма в первые 24-48 часов, но если сохраняется дольше, подожди ещё один лишний день перед новой нагрузкой.",
+      ja: "次のPullセッションまで5〜7日。トレーニング翌日の肩甲骨間のこわばりや痛みは24〜48時間であれば正常だが、それ以上続く場合は、再び負荷をかける前にもう1日待つこと。",
+    },
   },
-  biceps: {
-    nombre: "Bíceps",
+  "biceps": {
+    nombre: {
+      es: "Bíceps",
+      en: "Biceps",
+      pt: "Bíceps",
+      de: "Bizeps",
+      fr: "Biceps",
+      zh: "肱二头肌",
+      ru: "Бицепс",
+      ja: "上腕二頭筋",
+    },
     grupo: "pull",
-    ejercicio:
-      "Ya recibe trabajo indirecto considerable en dominadas y remo. Si se " +
-      "aísla, un solo ejercicio (curl con barra o mancuernas, estricto, " +
-      "sin balancear el torso) con 1 serie al fallo es más que suficiente: " +
-      "es un músculo pequeño y se sobreentrena fácil si se le agregan " +
-      "series extra \"porque sí\".",
-    estiramiento:
-      "Brazo extendido detrás del cuerpo con la palma hacia arriba, " +
-      "apoyado contra una pared o marco, girando el torso levemente hacia " +
-      "el lado contrario hasta sentir tensión en el bíceps. 20-30 " +
-      "segundos por lado.",
-    recuperacion:
-      "5-7 días antes de volver a estimularlo de forma directa. Al recibir " +
-      "carga indirecta en cada sesión de Pull, forzarlo de nuevo antes de " +
-      "tiempo (por ejemplo agregando curls en días sueltos) es la forma " +
-      "más común de estancarse por sobreentrenamiento de este músculo.",
+    ejercicio: {
+      es: "Ya recibe trabajo indirecto considerable en dominadas y remo. Si se aísla, un solo ejercicio (curl con barra o mancuernas, estricto, sin balancear el torso) con 1 serie al fallo es más que suficiente: es un músculo pequeño y se sobreentrena fácil si se le agregan series extra \"porque sí\".",
+      en: "Already gets considerable indirect work from pull-ups and rows. If isolated, a single exercise (barbell or dumbbell curl, strict, without swinging the torso) with 1 set to failure is more than enough: it's a small muscle and easily overtrained if extra sets get added \"just because.\"",
+      pt: "Já recebe trabalho indireto considerável na barra fixa e no remo. Se for isolado, um único exercício (rosca direta com barra ou halteres, estrita, sem balançar o tronco) com 1 série até a falha já é mais que suficiente: é um músculo pequeno e se sobretreina fácil se forem adicionadas séries extras \"só porque sim\".",
+      de: "Er bekommt bereits erhebliche indirekte Arbeit durch Klimmzüge und Rudern. Wird er isoliert trainiert, reicht eine einzige Übung (Langhantel- oder Kurzhantel-Curls, streng, ohne den Oberkörper zu schwingen) mit 1 Satz bis zum Versagen völlig aus: Es ist ein kleiner Muskel und wird leicht übertrainiert, wenn \"einfach so\" zusätzliche Sätze hinzugefügt werden.",
+      fr: "Reçoit déjà un travail indirect considérable lors des tractions et du rowing. S'il est isolé, un seul exercice (curl à la barre ou aux haltères, strict, sans balancer le torse) avec 1 série à l'échec est plus que suffisant : c'est un petit muscle qui se surentraîne facilement si on lui ajoute des séries supplémentaires \"pour faire bonne mesure\".",
+      zh: "在引体向上和划船中已经获得相当可观的间接训练量。如果要孤立训练,只做一个动作(杠铃或哑铃弯举,动作严格,躯干不摇摆),1组练到力竭就绰绰有余:这是一块小肌肉,如果\"顺便\"多加几组很容易过度训练。",
+      ru: "Уже получает значительную непрямую нагрузку от подтягиваний и тяги. При изолированной проработке достаточно одного упражнения (строгий подъём штанги или гантелей на бицепс, без раскачивания корпуса) с 1 подходом до отказа: это небольшая мышца, и её легко перетренировать, добавляя лишние подходы «просто так».",
+      ja: "懸垂とロウイングですでにかなりの間接的な刺激を受けている。アイソレートする場合も、種目は1つ（バーベルまたはダンベルカール、体幹を揺らさない厳格なフォーム）に絞り、1セットを限界まで行えば十分すぎるほど：小さな筋肉なので「なんとなく」セットを追加するとすぐにオーバートレーニングになる。",
+    },
+    estiramiento: {
+      es: "Brazo extendido detrás del cuerpo con la palma hacia arriba, apoyado contra una pared o marco, girando el torso levemente hacia el lado contrario hasta sentir tensión en el bíceps. 20-30 segundos por lado.",
+      en: "Arm extended behind the body with the palm facing up, resting against a wall or door frame, rotating the torso slightly toward the opposite side until you feel tension in the biceps. 20-30 seconds per side.",
+      pt: "Braço estendido atrás do corpo com a palma para cima, apoiado contra uma parede ou batente, girando o tronco levemente para o lado contrário até sentir tensão no bíceps. 20-30 segundos de cada lado.",
+      de: "Arm hinter dem Körper gestreckt, Handfläche nach oben, gegen eine Wand oder einen Rahmen gestützt, den Oberkörper leicht zur Gegenseite drehen, bis Spannung im Bizeps spürbar wird. 20-30 Sekunden pro Seite.",
+      fr: "Bras tendu derrière le corps, paume vers le haut, appuyé contre un mur ou un encadrement, en tournant légèrement le torse vers le côté opposé jusqu'à sentir une tension dans le biceps. 20-30 secondes de chaque côté.",
+      zh: "手臂在身后伸直,掌心向上,靠在墙面或门框上,躯干轻轻向对侧旋转直到肱二头肌感到张力。每侧20-30秒。",
+      ru: "Рука вытянута за спиной ладонью вверх, упирается в стену или дверную раму, лёгкий поворот корпуса в противоположную сторону до ощущения натяжения в бицепсе. 20-30 секунд на каждую сторону.",
+      ja: "腕を体の後ろに伸ばし、手のひらを上に向けて壁や枠に当てる。上腕二頭筋にテンションを感じるところまで体幹を軽く反対方向にひねる。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de volver a estimularlo de forma directa. Al recibir carga indirecta en cada sesión de Pull, forzarlo de nuevo antes de tiempo (por ejemplo agregando curls en días sueltos) es la forma más común de estancarse por sobreentrenamiento de este músculo.",
+      en: "5-7 days before stimulating it directly again. Since it takes indirect load in every Pull session, forcing it again too soon (for example by adding curls on off days) is the most common way to stall through overtraining this muscle.",
+      pt: "5-7 dias antes de voltar a estimulá-lo diretamente. Por receber carga indireta em cada sessão de Pull, forçá-lo de novo antes da hora (por exemplo, adicionando roscas em dias avulsos) é a forma mais comum de estagnar por sobretreinamento desse músculo.",
+      de: "5-7 Tage, bevor er wieder direkt gereizt wird. Da er in jeder Pull-Einheit indirekt mitbelastet wird, ist es der häufigste Grund für ein Übertrainings-Plateau, ihn vorzeitig erneut zu belasten (zum Beispiel durch zusätzliche Curls an freien Tagen).",
+      fr: "5-7 jours avant de le stimuler à nouveau directement. Recevant une charge indirecte à chaque séance de Pull, le forcer à nouveau trop tôt (par exemple en ajoutant des curls des jours isolés) est la façon la plus courante de stagner par surentraînement de ce muscle.",
+      zh: "再次直接刺激之前需要休息5-7天。每次Pull训练它都会承受间接负荷,如果提前强行加练(比如在空闲的日子额外加弯举),是这块肌肉因过度训练而停滞不前最常见的原因。",
+      ru: "5-7 дней перед следующей прямой стимуляцией. Получая непрямую нагрузку на каждой тренировке Pull, форсировать бицепс раньше срока (например, добавляя подъёмы на бицепс в свободные дни) — самый частый способ застопориться из-за перетренированности этой мышцы.",
+      ja: "再び直接刺激を与えるまで5〜7日。毎回のPullセッションで間接的な負荷を受けているため、時期尚早に無理をさせる（例えば別の日にカールを追加するなど）ことが、この筋肉のオーバートレーニングによる停滞の最も一般的な原因になる。",
+    },
   },
   "deltoide-posterior": {
-    nombre: "Deltoide posterior",
+    nombre: {
+      es: "Deltoide posterior",
+      en: "Posterior deltoid",
+      pt: "Deltoide posterior",
+      de: "Hinterer Deltamuskel",
+      fr: "Deltoïde postérieur",
+      zh: "三角肌后束",
+      ru: "Задняя дельта",
+      ja: "三角筋後部",
+    },
     grupo: "pull",
-    ejercicio:
-      "Aperturas invertidas (pájaros) con mancuernas o en máquina peck-deck " +
-      "invertido, torso inclinado, codos con leve flexión fija. 1 serie al " +
-      "fallo, foco en apretar el omóplato al final del recorrido en lugar " +
-      "de mover peso por moverlo.",
-    estiramiento:
-      "Brazo cruzado al frente del pecho a la altura del hombro, sostenido " +
-      "con el otro brazo por debajo del codo, tirando suavemente hacia el " +
-      "cuerpo. 20-30 segundos por lado.",
-    recuperacion:
-      "5-7 días antes de la próxima sesión de Pull. Es un haz pequeño que " +
-      "se fatiga rápido pero también se recupera de forma pareja con el " +
-      "resto del grupo: no hace falta ni conviene entrenarlo por separado " +
-      "en días intermedios.",
+    ejercicio: {
+      es: "Aperturas invertidas (pájaros) con mancuernas o en máquina peck-deck invertido, torso inclinado, codos con leve flexión fija. 1 serie al fallo, foco en apretar el omóplato al final del recorrido en lugar de mover peso por moverlo.",
+      en: "Reverse flyes with dumbbells or on a reverse peck-deck machine, torso leaning forward, elbows with a slight, fixed bend. 1 set to failure, focusing on squeezing the shoulder blade at the end of the range rather than just moving weight for its own sake.",
+      pt: "Crucifixo invertido (voador invertido) com halteres ou na máquina peck-deck invertida, tronco inclinado, cotovelos com leve flexão fixa. 1 série até a falha, com foco em apertar a escápula no final do percurso em vez de mover peso só por mover.",
+      de: "Reverse Flys (\"Vögel\") mit Kurzhanteln oder am umgekehrten Butterfly/Peck-Deck, Oberkörper vorgebeugt, Ellbogen leicht und fest gebeugt. 1 Satz bis zum Versagen, mit Fokus darauf, das Schulterblatt am Ende der Bewegung zusammenzuziehen, statt einfach nur Gewicht zu bewegen.",
+      fr: "Oiseau (écartés inversés) avec haltères ou peck-deck inversé à la machine, torse incliné, coudes en légère flexion fixe. 1 série à l'échec, en se concentrant sur la contraction de l'omoplate en fin de mouvement plutôt que sur le déplacement du poids pour le déplacer.",
+      zh: "哑铃反向飞鸟或反向蝴蝶机,躯干前倾,肘部保持轻微固定弯曲。1组练到力竭,重点在动作末端夹紧肩胛骨,而不是单纯把重量移动完。",
+      ru: "Разведение рук в наклоне (или в обратном пек-деке) с гантелями или в тренажёре, корпус наклонён, локти слегка и стабильно согнуты. 1 подход до отказа, акцент на сведении лопаток в конце амплитуды, а не на перемещении веса ради самого перемещения.",
+      ja: "ダンベルでのリアレイズ（バードフライ）、またはペックデックマシンを逆向きに使ったリアデルトフライ。体幹を前傾させ、肘は軽く固定した角度を保つ。1セットを限界まで、ただ重量を動かすのではなく、可動域の終点で肩甲骨を締めることに意識を集中する。",
+    },
+    estiramiento: {
+      es: "Brazo cruzado al frente del pecho a la altura del hombro, sostenido con el otro brazo por debajo del codo, tirando suavemente hacia el cuerpo. 20-30 segundos por lado.",
+      en: "Arm crossed in front of the chest at shoulder height, held with the other arm below the elbow, gently pulling toward the body. 20-30 seconds per side.",
+      pt: "Braço cruzado à frente do peito na altura do ombro, sustentado pelo outro braço abaixo do cotovelo, puxando suavemente em direção ao corpo. 20-30 segundos de cada lado.",
+      de: "Arm auf Schulterhöhe vor der Brust überkreuzt, mit dem anderen Arm unterhalb des Ellbogens gehalten, sanft zum Körper ziehen. 20-30 Sekunden pro Seite.",
+      fr: "Bras croisé devant la poitrine à hauteur d'épaule, soutenu par l'autre bras sous le coude, en tirant doucement vers le corps. 20-30 secondes de chaque côté.",
+      zh: "手臂在胸前与肩同高交叉,用另一只手从肘部下方扶住,轻轻向身体方向拉动。每侧20-30秒。",
+      ru: "Рука скрещена перед грудью на уровне плеча, поддерживается другой рукой под локтем, мягкое подтягивание к телу. 20-30 секунд на каждую сторону.",
+      ja: "腕を肩の高さで胸の前に横切らせ、反対の腕で肘の下を支えながら体の方へ優しく引く。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de la próxima sesión de Pull. Es un haz pequeño que se fatiga rápido pero también se recupera de forma pareja con el resto del grupo: no hace falta ni conviene entrenarlo por separado en días intermedios.",
+      en: "5-7 days before the next Pull session. It's a small head that fatigues quickly but also recovers evenly with the rest of the group: there's no need — and no benefit — to train it separately on off days.",
+      pt: "5-7 dias antes da próxima sessão de Pull. É um feixe pequeno que fadiga rápido, mas também se recupera de forma equivalente ao restante do grupo: não é necessário nem conveniente treiná-lo separadamente em dias intermediários.",
+      de: "5-7 Tage bis zur nächsten Pull-Einheit. Es ist ein kleiner Muskelkopf, der schnell ermüdet, sich aber auch gleichmäßig mit dem Rest der Gruppe erholt: Es ist weder nötig noch sinnvoll, ihn an dazwischenliegenden Tagen separat zu trainieren.",
+      fr: "5-7 jours avant la prochaine séance de Pull. C'est un petit faisceau qui se fatigue vite mais qui récupère aussi de façon homogène avec le reste du groupe : il n'est ni nécessaire ni utile de l'entraîner séparément les jours intermédiaires.",
+      zh: "下一次Pull训练前需要5-7天。这是一块疲劳很快的小肌束,但恢复节奏和整组肌群一致:没有必要也不建议在训练中间的日子单独训练它。",
+      ru: "5-7 дней перед следующей тренировкой Pull. Это небольшой пучок, который быстро устаёт, но восстанавливается вместе с остальной группой равномерно: тренировать его отдельно в промежуточные дни не нужно и не стоит.",
+      ja: "次のPullセッションまで5〜7日。素早く疲労する小さな部位だが、他の部位と足並みをそろえて回復する：中間日に別に鍛える必要はなく、むしろ避けるべき。",
+    },
   },
-  trapecio: {
-    nombre: "Trapecio",
+  "trapecio": {
+    nombre: {
+      es: "Trapecio",
+      en: "Trapezius",
+      pt: "Trapézio",
+      de: "Trapezmuskel",
+      fr: "Trapèze",
+      zh: "斜方肌",
+      ru: "Трапеция",
+      ja: "僧帽筋",
+    },
     grupo: "pull",
-    ejercicio:
-      "Recibe estímulo directo del remo y la dominada; si se agrega " +
-      "trabajo aislado, encogimientos de hombros (\"shrugs\") con barra o " +
-      "mancuernas, 1 serie al fallo, subiendo recto sin rodar los hombros " +
-      "hacia adelante ni atrás, pausa en la contracción máxima.",
-    estiramiento:
-      "Inclinar la cabeza hacia un lado acercando la oreja al hombro, con " +
-      "una mano ayudando suavemente desde la sien, sin tirar del cuello " +
-      "con fuerza. 20-30 segundos por lado.",
-    recuperacion:
-      "5-7 días antes de volver a cargarlo con series al fallo. El " +
-      "trapecio tiende a acumular tensión general por estrés diario " +
-      "además del entrenamiento: si sigue rígido pasado ese período, un " +
-      "día extra de descanso rinde más que forzar la próxima sesión.",
+    ejercicio: {
+      es: "Recibe estímulo directo del remo y la dominada; si se agrega trabajo aislado, encogimientos de hombros (\"shrugs\") con barra o mancuernas, 1 serie al fallo, subiendo recto sin rodar los hombros hacia adelante ni atrás, pausa en la contracción máxima.",
+      en: "Gets direct stimulus from rows and pull-ups; if isolated work is added, shrugs with a barbell or dumbbells, 1 set to failure, lifting straight up without rolling the shoulders forward or back, pausing at peak contraction.",
+      pt: "Recebe estímulo direto do remo e da barra fixa; se for adicionado trabalho isolado, encolhimento de ombros (\"shrugs\") com barra ou halteres, 1 série até a falha, subindo reto sem rolar os ombros para frente ou para trás, pausa na contração máxima.",
+      de: "Er bekommt direkten Reiz durch Rudern und Klimmzüge; wird zusätzliche isolierte Arbeit ergänzt, dann Schulterheben (\"Shrugs\") mit Lang- oder Kurzhantel, 1 Satz bis zum Versagen, gerade nach oben ohne die Schultern nach vorne oder hinten zu rollen, Pause in der maximalen Kontraktion.",
+      fr: "Reçoit un stimulus direct du rowing et des tractions ; si un travail isolé est ajouté, des haussements d'épaules (\"shrugs\") à la barre ou aux haltères, 1 série à l'échec, en montant droit sans faire rouler les épaules vers l'avant ou l'arrière, pause à la contraction maximale.",
+      zh: "划船和引体向上已经给它直接刺激;如果要增加孤立训练,做杠铃或哑铃耸肩,1组练到力竭,笔直向上耸起,肩膀不要向前或向后转动,在最大收缩处停顿。",
+      ru: "Получает прямую нагрузку от тяги и подтягиваний; если добавляется изолированная работа — шраги со штангой или гантелями, 1 подход до отказа, подъём строго вверх без прокатывания плеч вперёд или назад, пауза в точке максимального сокращения.",
+      ja: "ロウイングと懸垂からすでに直接的な刺激を受けている。アイソレーション種目を加える場合はバーベルまたはダンベルでのシュラッグ、1セットを限界まで、肩を前や後ろに回さずまっすぐ上げ、最大収縮でポーズを取る。",
+    },
+    estiramiento: {
+      es: "Inclinar la cabeza hacia un lado acercando la oreja al hombro, con una mano ayudando suavemente desde la sien, sin tirar del cuello con fuerza. 20-30 segundos por lado.",
+      en: "Tilt the head to one side, bringing the ear toward the shoulder, with one hand gently assisting from the temple, without pulling hard on the neck. 20-30 seconds per side.",
+      pt: "Inclinar a cabeça para um lado aproximando a orelha do ombro, com uma mão ajudando suavemente a partir da têmpora, sem puxar o pescoço com força. 20-30 segundos de cada lado.",
+      de: "Den Kopf zur Seite neigen und das Ohr zur Schulter führen, mit einer Hand sanft von der Schläfe aus unterstützen, ohne kräftig am Nacken zu ziehen. 20-30 Sekunden pro Seite.",
+      fr: "Incliner la tête d'un côté en rapprochant l'oreille de l'épaule, avec une main aidant doucement depuis la tempe, sans tirer fort sur le cou. 20-30 secondes de chaque côté.",
+      zh: "头部向一侧倾斜,让耳朵靠近肩膀,一只手从太阳穴处轻轻辅助,不要用力拉扯颈部。每侧20-30秒。",
+      ru: "Наклонить голову в сторону, приближая ухо к плечу, слегка помогая рукой от виска, без сильного натяжения шеи. 20-30 секунд на каждую сторону.",
+      ja: "頭を横に傾け、耳を肩に近づける。片手でこめかみのあたりから優しく補助する（首を強く引っ張らない）。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de volver a cargarlo con series al fallo. El trapecio tiende a acumular tensión general por estrés diario además del entrenamiento: si sigue rígido pasado ese período, un día extra de descanso rinde más que forzar la próxima sesión.",
+      en: "5-7 days before loading it with sets to failure again. The trapezius tends to accumulate general tension from daily stress on top of training: if it's still stiff after that period, one extra rest day pays off more than forcing the next session.",
+      pt: "5-7 dias antes de voltar a sobrecarregá-lo com séries até a falha. O trapézio tende a acumular tensão geral por estresse diário além do treino: se continuar rígido depois desse período, um dia extra de descanso rende mais do que forçar a próxima sessão.",
+      de: "5-7 Tage, bevor er wieder mit Sätzen bis zum Versagen belastet wird. Der Trapezmuskel neigt dazu, zusätzlich zum Training allgemeine Spannung durch den Alltagsstress anzusammeln: Wenn er nach diesem Zeitraum noch steif ist, bringt ein zusätzlicher Ruhetag mehr als die nächste Einheit zu erzwingen.",
+      fr: "5-7 jours avant de le recharger avec des séries à l'échec. Le trapèze a tendance à accumuler une tension générale liée au stress quotidien en plus de l'entraînement : s'il reste raide passé cette période, un jour de repos supplémentaire rapporte plus que de forcer la séance suivante.",
+      zh: "再次以力竭组施加负荷之前需要休息5-7天。斜方肌除了训练之外,还容易因日常压力积累整体紧张感:如果过了这段时间依然僵硬,多休息一天比强行进行下一次训练效果更好。",
+      ru: "5-7 дней перед следующей нагрузкой подходами до отказа. Трапеция склонна накапливать общее напряжение из-за повседневного стресса вдобавок к тренировкам: если скованность сохраняется дольше этого срока, лишний день отдыха даст больше пользы, чем форсирование следующей тренировки.",
+      ja: "再び限界セットで負荷をかけるまで5〜7日。僧帽筋はトレーニングに加えて日常のストレスからも緊張が蓄積しやすい部位：その期間を過ぎてもまだこわばっている場合は、無理に次のセッションを行うより、もう1日休んだ方が結果的に有効。",
+    },
   },
-  romboides: {
-    nombre: "Romboides",
+  "romboides": {
+    nombre: {
+      es: "Romboides",
+      en: "Rhomboids",
+      pt: "Romboides",
+      de: "Rhomboiden (Rautenmuskeln)",
+      fr: "Rhomboïdes",
+      zh: "菱形肌",
+      ru: "Ромбовидные мышцы",
+      ja: "菱形筋",
+    },
     grupo: "espalda",
-    ejercicio:
-      "Sinergistas del dorsal ancho y el trapecio medio en cualquier " +
-      "remo o dominada: ya reciben trabajo directo suficiente ahí y no " +
-      "forman parte de ningún patrón Push/Pull/Legs por separado. Si se " +
-      "agrega trabajo aislado, remo con agarre estrecho o face pull, " +
-      "codos altos, apretando los omóplatos entre sí en la fase final, " +
-      "1 serie al fallo.",
-    estiramiento:
-      "Brazos cruzados al frente del cuerpo, tomando el hombro contrario " +
-      "con cada mano, redondeando la espalda alta suavemente hasta " +
-      "sentir la separación entre los omóplatos. 20-30 segundos, sin " +
-      "forzar el cuello.",
-    recuperacion:
-      "5-7 días antes de volver a exigirlos de forma directa, igual que " +
-      "el resto de la sesión de Pull en la que ya trabajan. Rigidez " +
-      "entre los omóplatos que persiste más allá de 48h es señal de que " +
-      "todavía no recuperaron del todo.",
+    ejercicio: {
+      es: "Sinergistas del dorsal ancho y el trapecio medio en cualquier remo o dominada: ya reciben trabajo directo suficiente ahí y no forman parte de ningún patrón Push/Pull/Legs por separado. Si se agrega trabajo aislado, remo con agarre estrecho o face pull, codos altos, apretando los omóplatos entre sí en la fase final, 1 serie al fallo.",
+      en: "Synergists of the lats and mid-trapezius in any row or pull-up: they already get enough direct work there and aren't part of any Push/Pull/Legs pattern on their own. If isolated work is added, close-grip row or face pulls, elbows high, squeezing the shoulder blades together on the final phase, 1 set to failure.",
+      pt: "Sinergistas do grande dorsal e do trapézio médio em qualquer remo ou barra fixa: já recebem trabalho direto suficiente ali e não fazem parte de nenhum padrão Push/Pull/Legs separado. Se for adicionado trabalho isolado, remo com pegada fechada ou face pull, cotovelos altos, apertando as escápulas entre si na fase final, 1 série até a falha.",
+      de: "Synergisten des Latissimus und des mittleren Trapezmuskels bei jedem Rudern oder Klimmzug: Sie bekommen dort bereits ausreichend direkte Arbeit und gehören zu keinem eigenständigen Push/Pull/Legs-Muster. Wird zusätzliche isolierte Arbeit ergänzt, dann Rudern im engen Griff oder Face Pull, hohe Ellbogen, mit Zusammenziehen der Schulterblätter in der Endphase, 1 Satz bis zum Versagen.",
+      fr: "Synergistes du grand dorsal et du trapèze moyen dans tout rowing ou traction : ils reçoivent déjà un travail direct suffisant à cet endroit et ne font partie d'aucun schéma Push/Pull/Legs à part. Si un travail isolé est ajouté, rowing en prise serrée ou face pull, coudes hauts, en serrant les omoplates entre elles en fin de mouvement, 1 série à l'échec.",
+      zh: "在任何划船或引体向上动作中都是背阔肌和斜方肌中束的协同肌:在那些动作里已经获得足够的直接训练量,并不单独属于任何Push/Pull/Legs分类。如果要增加孤立训练,做窄握划船或面拉,肘部抬高,在动作末端将肩胛骨相互夹紧,1组练到力竭。",
+      ru: "Синергисты широчайших и средней части трапеции в любой тяге или подтягивании: уже получают достаточную прямую нагрузку там и не входят отдельно ни в один паттерн Push/Pull/Legs. Если добавляется изолированная работа — тяга узким хватом или тяга к лицу, локти высоко, сведение лопаток в финальной фазе, 1 подход до отказа.",
+      ja: "あらゆるロウイングや懸垂において広背筋と僧帽筋中部の協働筋として働き、そこですでに十分な直接刺激を受けている。Push/Pull/Legsのいずれのパターンにも単独では属さない。アイソレーション種目を加える場合は、ナローグリップロウまたはフェイスプルを、肘を高く保ち、最終局面で肩甲骨同士を寄せるように行い、1セットを限界まで。",
+    },
+    estiramiento: {
+      es: "Brazos cruzados al frente del cuerpo, tomando el hombro contrario con cada mano, redondeando la espalda alta suavemente hasta sentir la separación entre los omóplatos. 20-30 segundos, sin forzar el cuello.",
+      en: "Arms crossed in front of the body, grabbing the opposite shoulder with each hand, gently rounding the upper back until you feel the separation between the shoulder blades. 20-30 seconds, without forcing the neck.",
+      pt: "Braços cruzados à frente do corpo, segurando o ombro contrário com cada mão, arredondando a parte superior das costas suavemente até sentir a separação entre as escápulas. 20-30 segundos, sem forçar o pescoço.",
+      de: "Arme vor dem Körper überkreuzt, mit jeder Hand die gegenüberliegende Schulter fassen, den oberen Rücken sanft runden, bis du die Trennung zwischen den Schulterblättern spürst. 20-30 Sekunden, ohne den Nacken zu forcieren.",
+      fr: "Bras croisés devant le corps, en prenant l'épaule opposée avec chaque main, en arrondissant doucement le haut du dos jusqu'à sentir l'écartement entre les omoplates. 20-30 secondes, sans forcer sur le cou.",
+      zh: "双臂在身前交叉,双手各扶住对侧肩膀,轻轻拱起上背部直到感觉到肩胛骨之间被拉开。保持20-30秒,不要强迫颈部。",
+      ru: "Руки скрещены перед корпусом, каждая рука держится за противоположное плечо, мягкое округление верха спины до ощущения разведения лопаток. 20-30 секунд, без напряжения шеи.",
+      ja: "両腕を体の前で交差させ、それぞれの手で反対側の肩をつかむ。肩甲骨の間が開く感覚を感じるまで背中上部を優しく丸める。20〜30秒、首に無理な力をかけない。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de volver a exigirlos de forma directa, igual que el resto de la sesión de Pull en la que ya trabajan. Rigidez entre los omóplatos que persiste más allá de 48h es señal de que todavía no recuperaron del todo.",
+      en: "5-7 days before working them directly again, the same as the rest of the Pull session they already work in. Stiffness between the shoulder blades that persists beyond 48h is a sign they haven't fully recovered yet.",
+      pt: "5-7 dias antes de voltar a exigi-los diretamente, igual ao restante da sessão de Pull na qual já trabalham. Rigidez entre as escápulas que persiste além de 48h é sinal de que ainda não recuperaram completamente.",
+      de: "5-7 Tage, bevor sie wieder direkt beansprucht werden, genauso wie der Rest der Pull-Einheit, in der sie bereits mitarbeiten. Steifheit zwischen den Schulterblättern, die länger als 48 Stunden anhält, ist ein Zeichen, dass sie sich noch nicht vollständig erholt haben.",
+      fr: "5-7 jours avant de les solliciter à nouveau directement, tout comme le reste de la séance de Pull dans laquelle ils travaillent déjà. Une raideur entre les omoplates qui persiste au-delà de 48h est le signe qu'ils ne se sont pas encore complètement rétablis.",
+      zh: "再次直接施加负荷之前需要休息5-7天,和它们本来就参与的Pull训练其余部分一致。肩胛骨之间的僵硬如果持续超过48小时,说明还没有完全恢复。",
+      ru: "5-7 дней перед следующей прямой нагрузкой, как и остальная часть тренировки Pull, в которой они уже участвуют. Скованность между лопатками, сохраняющаяся дольше 48 часов, — сигнал, что восстановление ещё не завершилось полностью.",
+      ja: "再び直接負荷をかけるまで5〜7日、これはすでに関与しているPullセッションの他の部位と同じ。肩甲骨間のこわばりが48時間を超えて続く場合は、まだ完全に回復していないサイン。",
+    },
   },
   "erectores-espinales": {
-    nombre: "Erectores espinales",
+    nombre: {
+      es: "Erectores espinales",
+      en: "Spinal erectors",
+      pt: "Eretores da espinha",
+      de: "Rückenstrecker (Erector spinae)",
+      fr: "Érecteurs du rachis",
+      zh: "竖脊肌",
+      ru: "Разгибатели позвоночника",
+      ja: "脊柱起立筋",
+    },
     grupo: "espalda",
-    ejercicio:
-      "Trabajan de forma isométrica intensa como estabilizadores en la " +
-      "sentadilla y, sobre todo, en el peso muerto rumano: no forman " +
-      "parte de ningún patrón Push/Pull/Legs propio y ese estímulo " +
-      "indirecto suele alcanzar y sobrar. Si se agrega trabajo directo, " +
-      "hiperextensiones de espalda baja con el propio peso corporal, " +
-      "recorrido controlado sin hiperextender de golpe, 1 serie al " +
-      "fallo.",
-    estiramiento:
-      "Sentado o de pie, flexionando el torso hacia adelante desde la " +
-      "cadera con las rodillas levemente flexionadas, dejando caer el " +
-      "peso de los brazos hacia el piso hasta sentir el estiramiento a " +
-      "lo largo de la espalda baja. 20-30 segundos, sin rebotar.",
-    recuperacion:
-      "5-7 días antes de someterlos de nuevo a trabajo directo. Al ser " +
-      "estabilizadores activos en la sentadilla, el peso muerto rumano y " +
-      "prácticamente cualquier ejercicio compuesto de pie, cualquier " +
-      "molestia en la espalda baja que persista más allá de 48-72h pide " +
-      "un día extra de descanso antes de la próxima sesión.",
+    ejercicio: {
+      es: "Trabajan de forma isométrica intensa como estabilizadores en la sentadilla y, sobre todo, en el peso muerto rumano: no forman parte de ningún patrón Push/Pull/Legs propio y ese estímulo indirecto suele alcanzar y sobrar. Si se agrega trabajo directo, hiperextensiones de espalda baja con el propio peso corporal, recorrido controlado sin hiperextender de golpe, 1 serie al fallo.",
+      en: "Work with intense isometric effort as stabilizers in the squat and, above all, in the Romanian deadlift: they aren't part of any pattern of their own in Push/Pull/Legs, and that indirect stimulus is usually more than enough. If direct work is added, bodyweight back extensions, controlled range of motion without hyperextending abruptly, 1 set to failure.",
+      pt: "Trabalham de forma isométrica intensa como estabilizadores no agachamento e, sobretudo, no levantamento terra romeno: não fazem parte de nenhum padrão Push/Pull/Legs próprio, e esse estímulo indireto costuma ser suficiente e sobrar. Se for adicionado trabalho direto, hiperextensão de lombar com o próprio peso corporal, percurso controlado sem hiperestender de repente, 1 série até a falha.",
+      de: "Sie arbeiten intensiv isometrisch als Stabilisatoren bei der Kniebeuge und vor allem beim rumänischen Kreuzheben: Sie gehören zu keinem eigenen Push/Pull/Legs-Muster, und dieser indirekte Reiz reicht in der Regel völlig aus. Wird zusätzliche direkte Arbeit ergänzt, dann Rückenstrecker-Hyperextensionen mit dem eigenen Körpergewicht, kontrollierte Bewegung ohne abruptes Überstrecken, 1 Satz bis zum Versagen.",
+      fr: "Travaillent de façon isométrique intense comme stabilisateurs dans le squat et, surtout, dans le soulevé de terre roumain : ils ne font partie d'aucun schéma Push/Pull/Legs propre et ce stimulus indirect suffit généralement largement. Si un travail direct est ajouté, des hyperextensions du bas du dos avec le poids du corps, amplitude contrôlée sans hyperextension brusque, 1 série à l'échec.",
+      zh: "在深蹲、尤其是罗马尼亚硬拉中作为稳定肌进行高强度的等长收缩工作:并不单独属于任何Push/Pull/Legs分类,这种间接刺激通常已经足够甚至绰绰有余。如果要增加直接训练,做自重下背部过伸,动作全程控制,不要猛然过度伸展,1组练到力竭。",
+      ru: "Работают в интенсивном изометрическом режиме как стабилизаторы в приседе и особенно в румынской становой тяге: не входят отдельно ни в один паттерн Push/Pull/Legs, и этой непрямой нагрузки обычно более чем достаточно. Если добавляется прямая работа — гиперэкстензии с собственным весом тела, контролируемая амплитуда без резкого переразгибания, 1 подход до отказа.",
+      ja: "スクワット、特にルーマニアンデッドリフトにおいて安定筋として強い等尺性収縮の働きをする：Push/Pull/Legsのいずれのパターンにも単独では属さず、その間接刺激だけで十分すぎるほど足りることが多い。直接種目を加える場合は自重でのバックエクステンション、急激に反り返らずコントロールされた可動域で、1セットを限界まで。",
+    },
+    estiramiento: {
+      es: "Sentado o de pie, flexionando el torso hacia adelante desde la cadera con las rodillas levemente flexionadas, dejando caer el peso de los brazos hacia el piso hasta sentir el estiramiento a lo largo de la espalda baja. 20-30 segundos, sin rebotar.",
+      en: "Seated or standing, bending the torso forward from the hips with the knees slightly bent, letting the weight of the arms drop toward the floor until you feel the stretch along the lower back. 20-30 seconds, without bouncing.",
+      pt: "Sentado ou em pé, flexionando o tronco para frente a partir do quadril com os joelhos levemente flexionados, deixando o peso dos braços cair em direção ao chão até sentir o alongamento ao longo da lombar. 20-30 segundos, sem balançar.",
+      de: "Im Sitzen oder Stehen den Oberkörper aus der Hüfte nach vorne beugen, die Knie leicht gebeugt, das Gewicht der Arme Richtung Boden sinken lassen, bis die Dehnung entlang des unteren Rückens spürbar wird. 20-30 Sekunden, ohne zu wippen.",
+      fr: "Assis ou debout, en fléchissant le torse vers l'avant depuis la hanche avec les genoux légèrement fléchis, en laissant tomber le poids des bras vers le sol jusqu'à sentir l'étirement le long du bas du dos. 20-30 secondes, sans rebondir.",
+      zh: "坐姿或站姿,从髋部开始将躯干向前弯曲,膝盖微屈,让双臂重量自然下垂直到感觉整条下背部被拉伸。保持20-30秒,不要弹振。",
+      ru: "Сидя или стоя, наклон корпуса вперёд от бедра с слегка согнутыми коленями, руки свободно опускаются к полу до ощущения растяжения вдоль поясницы. 20-30 секунд, без раскачивания.",
+      ja: "座るか立った状態で、膝を軽く曲げながら股関節から体幹を前に倒し、腕の重みを床に向かって落として腰全体にストレッチを感じる。20〜30秒、反動をつけない。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de someterlos de nuevo a trabajo directo. Al ser estabilizadores activos en la sentadilla, el peso muerto rumano y prácticamente cualquier ejercicio compuesto de pie, cualquier molestia en la espalda baja que persista más allá de 48-72h pide un día extra de descanso antes de la próxima sesión.",
+      en: "5-7 days before subjecting them to direct work again. Since they're active stabilizers in the squat, the Romanian deadlift, and practically any standing compound exercise, any lower-back discomfort that persists beyond 48-72h calls for one extra rest day before the next session.",
+      pt: "5-7 dias antes de submetê-los novamente a trabalho direto. Por serem estabilizadores ativos no agachamento, no levantamento terra romeno e em praticamente qualquer exercício composto em pé, qualquer desconforto na lombar que persista além de 48-72h pede um dia extra de descanso antes da próxima sessão.",
+      de: "5-7 Tage, bevor sie erneut direkter Arbeit ausgesetzt werden. Da sie als aktive Stabilisatoren bei der Kniebeuge, dem rumänischen Kreuzheben und praktisch jeder stehend ausgeführten Grundübung mitarbeiten, verlangt jede Beschwerde im unteren Rücken, die länger als 48-72 Stunden anhält, einen zusätzlichen Ruhetag vor der nächsten Einheit.",
+      fr: "5-7 jours avant de les soumettre à nouveau à un travail direct. Étant des stabilisateurs actifs dans le squat, le soulevé de terre roumain et pratiquement tout exercice composé debout, toute gêne dans le bas du dos qui persiste au-delà de 48-72h demande un jour de repos supplémentaire avant la séance suivante.",
+      zh: "再次让它们承受直接训练之前需要休息5-7天。作为深蹲、罗马尼亚硬拉以及几乎任何站姿复合动作中活跃的稳定肌,如果下背部的任何不适持续超过48-72小时,在下一次训练前需要多休息一天。",
+      ru: "5-7 дней перед повторной прямой нагрузкой. Будучи активными стабилизаторами в приседе, румынской становой тяге и практически любом базовом упражнении стоя, любой дискомфорт в пояснице, сохраняющийся дольше 48-72 часов, требует лишнего дня отдыха перед следующей тренировкой.",
+      ja: "再び直接的な負荷をかけるまで5〜7日。スクワット、ルーマニアンデッドリフト、そしてほぼすべての立位コンパウンド種目で活発に働く安定筋であるため、48〜72時間を超えて腰に違和感が残る場合は、次のセッションの前にもう1日休養日を追加すること。",
+    },
   },
-  cuadriceps: {
-    nombre: "Cuádriceps",
+  "cuadriceps": {
+    nombre: {
+      es: "Cuádriceps",
+      en: "Quadriceps",
+      pt: "Quadríceps",
+      de: "Quadrizeps",
+      fr: "Quadriceps",
+      zh: "股四头肌",
+      ru: "Квадрицепс",
+      ja: "大腿四頭筋",
+    },
     grupo: "legs",
-    ejercicio:
-      "Sentadilla (o prensa de piernas si la técnica de sentadilla libre " +
-      "todavía no es sólida) como movimiento compuesto principal de la " +
-      "sesión de piernas. 1-2 series al fallo, profundidad completa " +
-      "controlada, sin rebotar en el punto más bajo. Es el ejercicio más " +
-      "demandante de todo el entrenamiento: una sola serie bien hecha al " +
-      "fallo ya es un estímulo enorme, no hacen falta series adicionales.",
-    estiramiento:
-      "De pie, sosteniendo el tobillo por detrás del cuerpo y llevando el " +
-      "talón hacia el glúteo, rodillas juntas, cadera empujada levemente " +
-      "hacia adelante. 20-30 segundos por lado, apoyándose de una pared si " +
-      "hace falta equilibrio.",
-    recuperacion:
-      "El cuádriceps es el músculo que más tarda en recuperarse de todo el " +
-      "cuerpo: 6-8 días completos antes de la siguiente sesión de piernas. " +
-      "Dolor muscular (agujetas) que todavía se siente al bajar escaleras, " +
-      "o piernas \"pesadas\" al caminar, son señal clara de que el cuerpo " +
-      "sigue reconstruyendo tejido y necesita más días, nunca menos.",
+    ejercicio: {
+      es: "Sentadilla (o prensa de piernas si la técnica de sentadilla libre todavía no es sólida) como movimiento compuesto principal de la sesión de piernas. 1-2 series al fallo, profundidad completa controlada, sin rebotar en el punto más bajo. Es el ejercicio más demandante de todo el entrenamiento: una sola serie bien hecha al fallo ya es un estímulo enorme, no hacen falta series adicionales.",
+      en: "Squat (or leg press if free-squat technique isn't solid yet) as the main compound movement of the leg session. 1-2 sets to failure, full controlled depth, no bouncing at the bottom. It's the most demanding exercise in the whole workout: a single well-executed set to failure is already a huge stimulus, no extra sets needed.",
+      pt: "Agachamento (ou leg press, se a técnica de agachamento livre ainda não estiver sólida) como movimento composto principal da sessão de pernas. 1-2 séries até a falha, profundidade completa controlada, sem quicar no ponto mais baixo. É o exercício mais exigente de todo o treino: uma única série bem feita até a falha já é um estímulo enorme, não são necessárias séries adicionais.",
+      de: "Kniebeuge (oder Beinpresse, falls die Technik der freien Kniebeuge noch nicht sicher sitzt) als wichtigste Grundübung der Bein-Einheit. 1-2 Sätze bis zum Versagen, kontrollierte volle Tiefe, ohne am tiefsten Punkt abzuprallen. Es ist die anspruchsvollste Übung des gesamten Trainings: Ein einziger, sauber bis zum Versagen ausgeführter Satz ist bereits ein enormer Reiz, zusätzliche Sätze sind nicht nötig.",
+      fr: "Squat (ou presse à cuisses si la technique du squat libre n'est pas encore solide) comme mouvement composé principal de la séance de jambes. 1-2 séries à l'échec, profondeur complète contrôlée, sans rebondir au point le plus bas. C'est l'exercice le plus exigeant de tout l'entraînement : une seule série bien exécutée à l'échec est déjà un stimulus énorme, aucune série supplémentaire n'est nécessaire.",
+      zh: "深蹲(如果自由深蹲的技术还不够扎实,可用腿举代替)作为腿部训练日的主要复合动作。1-2组练到力竭,全程可控的完整深度,不在最低点弹振。这是整个训练中最消耗体力的动作:一组认真做到力竭的训练量已经是巨大的刺激,不需要额外的组数。",
+      ru: "Присед (или жим ногами, если техника приседа со свободным весом ещё недостаточно отработана) как основное базовое движение тренировки ног. 1-2 подхода до отказа, полная контролируемая амплитуда, без отбива в нижней точке. Это самое тяжёлое упражнение всей тренировки: один хорошо выполненный подход до отказа уже даёт огромный стимул, дополнительные подходы не нужны.",
+      ja: "スクワット（フリーウェイトでのスクワットのフォームがまだ安定していない場合はレッグプレス）を脚の日のメインコンパウンド種目とする。1〜2セットを限界まで、フルレンジのしゃがみ込みをコントロールして行い、最下点で反動をつけない。トレーニング全体の中で最も過酷な種目：正しく限界まで行った1セットだけですでに巨大な刺激であり、追加のセットは必要ない。",
+    },
+    estiramiento: {
+      es: "De pie, sosteniendo el tobillo por detrás del cuerpo y llevando el talón hacia el glúteo, rodillas juntas, cadera empujada levemente hacia adelante. 20-30 segundos por lado, apoyándose de una pared si hace falta equilibrio.",
+      en: "Standing, holding the ankle behind the body and bringing the heel toward the glute, knees together, hips pushed slightly forward. 20-30 seconds per side, using a wall for balance if needed.",
+      pt: "Em pé, segurando o tornozelo atrás do corpo e levando o calcanhar em direção ao glúteo, joelhos juntos, quadril levemente projetado para frente. 20-30 segundos de cada lado, apoiando-se em uma parede se precisar de equilíbrio.",
+      de: "Im Stehen den Knöchel hinter dem Körper festhalten und die Ferse Richtung Gesäß führen, Knie zusammen, Hüfte leicht nach vorne geschoben. 20-30 Sekunden pro Seite, bei Bedarf zur Balance an einer Wand abstützen.",
+      fr: "Debout, en tenant la cheville derrière le corps et en amenant le talon vers le fessier, genoux joints, hanche légèrement poussée vers l'avant. 20-30 secondes de chaque côté, en s'appuyant contre un mur si besoin d'équilibre.",
+      zh: "站立,从身后抓住脚踝,将脚跟拉向臀部,双膝并拢,髋部微微向前顶出。每侧20-30秒,需要平衡时可以扶墙。",
+      ru: "Стоя, удерживая голеностоп за спиной и подтягивая пятку к ягодице, колени вместе, таз слегка подан вперёд. 20-30 секунд на каждую сторону, при необходимости опираясь на стену для равновесия.",
+      ja: "立った状態で足首を体の後ろでつかみ、かかとを臀部に近づける。膝同士を揃え、骨盤を軽く前に押し出す。左右各20〜30秒、バランスが必要な場合は壁に手をついてもよい。",
+    },
+    recuperacion: {
+      es: "El cuádriceps es el músculo que más tarda en recuperarse de todo el cuerpo: 6-8 días completos antes de la siguiente sesión de piernas. Dolor muscular (agujetas) que todavía se siente al bajar escaleras, o piernas \"pesadas\" al caminar, son señal clara de que el cuerpo sigue reconstruyendo tejido y necesita más días, nunca menos.",
+      en: "The quadriceps is the slowest muscle in the whole body to recover: 6-8 full days before the next leg session. Muscle soreness (DOMS) still felt going down stairs, or \"heavy\" legs when walking, are a clear sign the body is still rebuilding tissue and needs more days, never fewer.",
+      pt: "O quadríceps é o músculo que mais demora para se recuperar em todo o corpo: 6-8 dias completos antes da próxima sessão de pernas. Dor muscular (dor tardia) que ainda é sentida ao descer escadas, ou pernas \"pesadas\" ao caminhar, são sinal claro de que o corpo ainda está reconstruindo tecido e precisa de mais dias, nunca de menos.",
+      de: "Der Quadrizeps ist der Muskel, der von allen im Körper am längsten zur Erholung braucht: 6-8 vollständige Tage bis zur nächsten Bein-Einheit. Muskelkater, der beim Treppabgehen noch spürbar ist, oder \"schwere\" Beine beim Gehen sind ein deutliches Zeichen, dass der Körper das Gewebe noch wiederaufbaut und mehr Tage braucht — niemals weniger.",
+      fr: "Le quadriceps est le muscle qui met le plus de temps à récupérer de tout le corps : 6-8 jours complets avant la prochaine séance de jambes. Des courbatures encore ressenties en descendant les escaliers, ou des jambes \"lourdes\" en marchant, sont le signe clair que le corps continue de reconstruire du tissu et a besoin de plus de jours, jamais de moins.",
+      zh: "股四头肌是全身恢复最慢的肌肉:下一次腿部训练前需要完整休息6-8天。下楼梯时仍能感到肌肉酸痛,或走路时双腿\"沉重\",都是身体仍在重建组织、需要更多天数而绝不是更少天数的明确信号。",
+      ru: "Квадрицепс — мышца, которая восстанавливается дольше всех в теле: 6-8 полных дней перед следующей тренировкой ног. Мышечная боль (крепатура), которая всё ещё ощущается при спуске по лестнице, или «тяжёлые» ноги при ходьбе — явный сигнал, что тело всё ещё восстанавливает ткань и нуждается в большем количестве дней, никогда не в меньшем.",
+      ja: "大腿四頭筋は全身の中で最も回復に時間がかかる筋肉：次の脚の日まで丸6〜8日が必要。階段を下りるときにまだ筋肉痛を感じる、歩くと脚が「重い」と感じる、といった状態は、体がまだ組織を再構築中であり、休養日数を減らすのではなく増やす必要がある明確なサイン。",
+    },
   },
-  gluteos: {
-    nombre: "Glúteos",
+  "gluteos": {
+    nombre: {
+      es: "Glúteos",
+      en: "Glutes",
+      pt: "Glúteos",
+      de: "Gesäßmuskulatur",
+      fr: "Fessiers",
+      zh: "臀肌",
+      ru: "Ягодичные мышцы",
+      ja: "臀筋",
+    },
     grupo: "legs",
-    ejercicio:
-      "Ya reciben una carga enorme desde la sentadilla; el peso muerto " +
-      "rumano suma el segundo estímulo compuesto clave. 1-2 series al " +
-      "fallo, cadera hacia atrás sin redondear la zona lumbar, apretando " +
-      "fuerte el glúteo en la extensión final de cada repetición.",
-    estiramiento:
-      "Sentado, tobillo de una pierna apoyado sobre la rodilla contraria, " +
-      "inclinando el torso hacia adelante manteniendo la espalda recta " +
-      "hasta sentir el estiramiento en el glúteo. 20-30 segundos por lado.",
-    recuperacion:
-      "6-8 días antes de volver a someterlos a esta intensidad, igual que " +
-      "el cuádriceps al compartir sesión. Molestia al sentarse o al subir " +
-      "escalones más allá de las 48-72h indica que la recuperación todavía " +
-      "no terminó.",
+    ejercicio: {
+      es: "Ya reciben una carga enorme desde la sentadilla; el peso muerto rumano suma el segundo estímulo compuesto clave. 1-2 series al fallo, cadera hacia atrás sin redondear la zona lumbar, apretando fuerte el glúteo en la extensión final de cada repetición.",
+      en: "Already take on a huge load from the squat; the Romanian deadlift adds the second key compound stimulus. 1-2 sets to failure, hips pushed back without rounding the lower back, squeezing the glutes hard at the top of each rep.",
+      pt: "Já recebem uma carga enorme a partir do agachamento; o levantamento terra romeno soma o segundo estímulo composto chave. 1-2 séries até a falha, quadril para trás sem arredondar a lombar, apertando forte o glúteo na extensão final de cada repetição.",
+      de: "Sie bekommen bereits eine enorme Belastung durch die Kniebeuge; das rumänische Kreuzheben liefert den zweiten entscheidenden Grundübungsreiz. 1-2 Sätze bis zum Versagen, Hüfte nach hinten, ohne den unteren Rücken zu runden, mit kräftigem Anspannen des Gesäßes in der Endstreckung jeder Wiederholung.",
+      fr: "Reçoivent déjà une charge énorme grâce au squat ; le soulevé de terre roumain ajoute le second stimulus composé clé. 1-2 séries à l'échec, hanche vers l'arrière sans arrondir le bas du dos, en serrant fort le fessier à l'extension finale de chaque répétition.",
+      zh: "深蹲已经给它带来巨大的负荷;罗马尼亚硬拉再补上第二个关键的复合刺激。1-2组练到力竭,髋部向后推而不弓起下背部,每次动作末端伸展时用力夹紧臀部。",
+      ru: "Уже получают огромную нагрузку от приседа; румынская становая тяга добавляет второй ключевой базовый стимул. 1-2 подхода до отказа, таз отводится назад без округления поясницы, сильное сжатие ягодиц в финальной точке разгибания каждого повторения.",
+      ja: "スクワットからすでに巨大な負荷を受けており、ルーマニアンデッドリフトが2つ目の重要なコンパウンド刺激を加える。1〜2セットを限界まで、腰を丸めずに股関節を後ろに引き、各レップの最終伸展位置で臀筋を強く締める。",
+    },
+    estiramiento: {
+      es: "Sentado, tobillo de una pierna apoyado sobre la rodilla contraria, inclinando el torso hacia adelante manteniendo la espalda recta hasta sentir el estiramiento en el glúteo. 20-30 segundos por lado.",
+      en: "Seated, ankle of one leg resting on the opposite knee, leaning the torso forward while keeping the back straight until you feel the stretch in the glute. 20-30 seconds per side.",
+      pt: "Sentado, tornozelo de uma perna apoiado sobre o joelho contrário, inclinando o tronco para frente mantendo as costas retas até sentir o alongamento no glúteo. 20-30 segundos de cada lado.",
+      de: "Im Sitzen den Knöchel eines Beins auf das gegenüberliegende Knie legen, den Oberkörper mit geradem Rücken nach vorne neigen, bis die Dehnung im Gesäß spürbar wird. 20-30 Sekunden pro Seite.",
+      fr: "Assis, cheville d'une jambe posée sur le genou opposé, en inclinant le torse vers l'avant tout en gardant le dos droit jusqu'à sentir l'étirement dans le fessier. 20-30 secondes de chaque côté.",
+      zh: "坐姿,一条腿的脚踝搭在对侧膝盖上,保持背部挺直将躯干前倾,直到臀部感到拉伸。每侧20-30秒。",
+      ru: "Сидя, голеностоп одной ноги опирается на противоположное колено, наклон корпуса вперёд с прямой спиной до ощущения растяжения в ягодице. 20-30 секунд на каждую сторону.",
+      ja: "座った状態で片方の足首を反対の膝の上に乗せ、背中をまっすぐに保ったまま体幹を前に倒して臀筋にストレッチを感じる。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "6-8 días antes de volver a someterlos a esta intensidad, igual que el cuádriceps al compartir sesión. Molestia al sentarse o al subir escalones más allá de las 48-72h indica que la recuperación todavía no terminó.",
+      en: "6-8 days before subjecting them to this intensity again, same as the quadriceps since they share the session. Discomfort when sitting down or climbing stairs beyond 48-72h means recovery isn't finished yet.",
+      pt: "6-8 dias antes de voltar a submetê-los a essa intensidade, igual ao quadríceps por compartilhar a sessão. Desconforto ao sentar ou ao subir degraus além de 48-72h indica que a recuperação ainda não terminou.",
+      de: "6-8 Tage, bevor sie wieder dieser Intensität ausgesetzt werden, genau wie der Quadrizeps, mit dem sie sich die Einheit teilen. Beschwerden beim Sitzen oder Treppensteigen, die über 48-72 Stunden hinaus andauern, zeigen, dass die Erholung noch nicht abgeschlossen ist.",
+      fr: "6-8 jours avant de les soumettre à nouveau à cette intensité, tout comme le quadriceps puisqu'ils partagent la séance. Une gêne en s'asseyant ou en montant des marches au-delà de 48-72h indique que la récupération n'est pas encore terminée.",
+      zh: "再次承受这种强度之前需要6-8天,因为和股四头肌共用同一次训练日。如果坐下或上台阶时的不适持续超过48-72小时,说明恢复还没有结束。",
+      ru: "6-8 дней перед следующей нагрузкой такой интенсивности, так же как квадрицепс, поскольку они работают в одной тренировке. Дискомфорт при сидении или подъёме по ступенькам дольше 48-72 часов означает, что восстановление ещё не завершилось.",
+      ja: "同じセッションを共有する大腿四頭筋と同様、再びこの強度の負荷をかけるまで6〜8日。座るときや階段を上るときの違和感が48〜72時間を超えて続く場合は、回復がまだ終わっていないことを示す。",
+    },
   },
-  isquiotibiales: {
-    nombre: "Isquiotibiales",
+  "isquiotibiales": {
+    nombre: {
+      es: "Isquiotibiales",
+      en: "Hamstrings",
+      pt: "Isquiotibiais",
+      de: "Ischiocrurale Muskulatur (hintere Oberschenkelmuskulatur)",
+      fr: "Ischio-jambiers",
+      zh: "腘绳肌",
+      ru: "Задняя поверхность бедра (бицепс бедра)",
+      ja: "ハムストリングス",
+    },
     grupo: "legs",
-    ejercicio:
-      "Peso muerto rumano como movimiento principal (compuesto, prioridad " +
-      "sobre el curl femoral aislado), rodillas con flexión leve y fija, " +
-      "bajando la barra pegada a las piernas hasta sentir el estiramiento, " +
-      "sin redondear la espalda. 1-2 series al fallo, técnica estricta.",
-    estiramiento:
-      "Pierna extendida apoyada sobre un soporte a baja altura, espalda " +
-      "recta, inclinando el torso desde la cadera hacia adelante hasta " +
-      "sentir tensión detrás del muslo. 20-30 segundos por lado.",
-    recuperacion:
-      "6-8 días antes de la siguiente sesión de piernas. Los isquiotibiales " +
-      "son propensos a molestias si se entrenan sin haber recuperado del " +
-      "todo: cualquier tirantez residual al caminar o al flexionar el " +
-      "torso es motivo suficiente para sumar un día más de descanso.",
+    ejercicio: {
+      es: "Peso muerto rumano como movimiento principal (compuesto, prioridad sobre el curl femoral aislado), rodillas con flexión leve y fija, bajando la barra pegada a las piernas hasta sentir el estiramiento, sin redondear la espalda. 1-2 series al fallo, técnica estricta.",
+      en: "Romanian deadlift as the main movement (compound, prioritized over isolated leg curls), knees with a slight, fixed bend, lowering the bar close to the legs until you feel the stretch, without rounding the back. 1-2 sets to failure, strict technique.",
+      pt: "Levantamento terra romeno como movimento principal (composto, prioridade sobre a mesa flexora isolada), joelhos com flexão leve e fixa, descendo a barra rente às pernas até sentir o alongamento, sem arredondar as costas. 1-2 séries até a falha, técnica estrita.",
+      de: "Rumänisches Kreuzheben als Hauptübung (Grundübung, priorisiert gegenüber isoliertem Beinbeuger-Curl), Knie leicht und fest gebeugt, die Stange nah am Bein nach unten führen, bis die Dehnung spürbar wird, ohne den Rücken zu runden. 1-2 Sätze bis zum Versagen, strikte Technik.",
+      fr: "Soulevé de terre roumain comme mouvement principal (composé, priorité sur le leg curl isolé), genoux en légère flexion fixe, en descendant la barre le long des jambes jusqu'à sentir l'étirement, sans arrondir le dos. 1-2 séries à l'échec, technique stricte.",
+      zh: "罗马尼亚硬拉作为主要动作(复合动作,优先于孤立的腘绳肌弯举),膝盖保持轻微且固定的弯曲,杠铃贴着腿部下降直到感觉到拉伸,不要弓背。1-2组练到力竭,动作严格标准。",
+      ru: "Румынская становая тяга как основное движение (базовое, приоритет перед изолированным сгибанием ног в тренажёре), колени слегка и стабильно согнуты, штанга опускается вдоль ног до ощущения растяжения, без округления спины. 1-2 подхода до отказа, строгая техника.",
+      ja: "ルーマニアンデッドリフトをメイン種目とする（コンパウンド種目であり、アイソレーションのレッグカールより優先する）。膝は軽く固定した曲げ角度を保ち、バーを脚に沿わせながらストレッチを感じるところまで下ろす。背中を丸めない。1〜2セットを限界まで、厳格なフォームで。",
+    },
+    estiramiento: {
+      es: "Pierna extendida apoyada sobre un soporte a baja altura, espalda recta, inclinando el torso desde la cadera hacia adelante hasta sentir tensión detrás del muslo. 20-30 segundos por lado.",
+      en: "Extended leg resting on a low support, back straight, leaning the torso forward from the hips until you feel tension behind the thigh. 20-30 seconds per side.",
+      pt: "Perna estendida apoiada sobre um suporte baixo, costas retas, inclinando o tronco a partir do quadril para frente até sentir tensão atrás da coxa. 20-30 segundos de cada lado.",
+      de: "Ein gestrecktes Bein auf einer niedrigen Ablage abstützen, gerader Rücken, den Oberkörper aus der Hüfte nach vorne neigen, bis Spannung an der Oberschenkelrückseite spürbar wird. 20-30 Sekunden pro Seite.",
+      fr: "Jambe tendue posée sur un support bas, dos droit, en inclinant le torse depuis la hanche vers l'avant jusqu'à sentir une tension à l'arrière de la cuisse. 20-30 secondes de chaque côté.",
+      zh: "一条腿伸直搭在低矮支撑物上,背部挺直,从髋部将躯干前倾直到大腿后侧感到张力。每侧20-30秒。",
+      ru: "Прямая нога опирается на невысокую опору, спина прямая, наклон корпуса от бедра вперёд до ощущения натяжения задней поверхности бедра. 20-30 секунд на каждую сторону.",
+      ja: "片脚を伸ばして低い台の上に乗せ、背中をまっすぐに保ったまま股関節から体幹を前に倒し、太もも裏にテンションを感じる。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "6-8 días antes de la siguiente sesión de piernas. Los isquiotibiales son propensos a molestias si se entrenan sin haber recuperado del todo: cualquier tirantez residual al caminar o al flexionar el torso es motivo suficiente para sumar un día más de descanso.",
+      en: "6-8 days before the next leg session. Hamstrings are prone to strain if trained without having fully recovered: any residual tightness when walking or bending forward is reason enough to add one more rest day.",
+      pt: "6-8 dias antes da próxima sessão de pernas. Os isquiotibiais são propensos a desconforto se treinados sem terem recuperado completamente: qualquer tensão residual ao caminhar ou ao flexionar o tronco já é motivo suficiente para somar mais um dia de descanso.",
+      de: "6-8 Tage bis zur nächsten Bein-Einheit. Die ischiocrurale Muskulatur neigt zu Beschwerden, wenn sie ohne vollständige Erholung trainiert wird: Jedes verbleibende Ziehen beim Gehen oder beim Beugen des Oberkörpers ist Grund genug, einen weiteren Ruhetag einzuplanen.",
+      fr: "6-8 jours avant la prochaine séance de jambes. Les ischio-jambiers sont sujets aux gênes s'ils sont entraînés sans une récupération complète : toute tension résiduelle en marchant ou en fléchissant le torse justifie d'ajouter un jour de repos supplémentaire.",
+      zh: "下一次腿部训练前需要6-8天。腘绳肌如果在尚未完全恢复时就训练,很容易出现不适:走路或弯腰时任何残留的紧绷感,都足以再多休息一天。",
+      ru: "6-8 дней перед следующей тренировкой ног. Задняя поверхность бедра склонна к дискомфорту, если тренировать её не до конца восстановившейся: любая остаточная тугоподвижность при ходьбе или наклоне корпуса — достаточный повод добавить ещё один день отдыха.",
+      ja: "次の脚の日まで6〜8日。ハムストリングスは完全に回復しないまま鍛えると違和感が出やすい部位：歩くときや体幹を前に曲げたときに残るつっぱり感があれば、休養日をもう1日追加する十分な理由になる。",
+    },
   },
-  gemelos: {
-    nombre: "Gemelos",
+  "gemelos": {
+    nombre: {
+      es: "Gemelos",
+      en: "Calves",
+      pt: "Panturrilhas",
+      de: "Waden",
+      fr: "Mollets",
+      zh: "小腿肌群",
+      ru: "Икроножные мышцы",
+      ja: "下腿三頭筋（ふくらはぎ）",
+    },
     grupo: "legs",
-    ejercicio:
-      "Elevación de talones de pie o sentado, recorrido completo desde el " +
-      "estiramiento máximo hasta la contracción máxima, con una pausa " +
-      "breve arriba. 1-2 series al fallo: es un músculo acostumbrado al " +
-      "esfuerzo diario (caminar, subir escaleras), así que el fallo real " +
-      "suele tardar más en llegar y hay que ser estricto para no cortar la " +
-      "serie antes de tiempo.",
-    estiramiento:
-      "De pie frente a una pared, un pie atrás con el talón apoyado en el " +
-      "piso y la rodilla extendida, inclinando el cuerpo hacia la pared " +
-      "hasta sentir el estiramiento en la pantorrilla. 20-30 segundos por " +
-      "lado.",
-    recuperacion:
-      "5-6 días antes de volver a entrenarlos de forma directa. Al recibir " +
-      "uso constante fuera del gimnasio, es tentador entrenarlos más " +
-      "seguido pensando que \"aguantan más\" — pero sin descanso completo " +
-      "el estímulo directo se diluye igual que en cualquier otro músculo.",
+    ejercicio: {
+      es: "Elevación de talones de pie o sentado, recorrido completo desde el estiramiento máximo hasta la contracción máxima, con una pausa breve arriba. 1-2 series al fallo: es un músculo acostumbrado al esfuerzo diario (caminar, subir escaleras), así que el fallo real suele tardar más en llegar y hay que ser estricto para no cortar la serie antes de tiempo.",
+      en: "Standing or seated heel raises, full range of motion from maximum stretch to peak contraction, with a brief pause at the top. 1-2 sets to failure: it's a muscle used to daily effort (walking, climbing stairs), so real failure tends to take longer to arrive and you need to be strict not to cut the set short.",
+      pt: "Elevação de panturrilha em pé ou sentado, percurso completo desde o alongamento máximo até a contração máxima, com uma pausa breve no topo. 1-2 séries até a falha: é um músculo acostumado ao esforço diário (caminhar, subir escadas), então a falha real costuma demorar mais para chegar, e é preciso ser estrito para não cortar a série antes da hora.",
+      de: "Wadenheben im Stehen oder Sitzen, voller Bewegungsumfang von der maximalen Dehnung bis zur maximalen Kontraktion, mit einer kurzen Pause oben. 1-2 Sätze bis zum Versagen: Es ist ein Muskel, der an tägliche Belastung gewöhnt ist (Gehen, Treppensteigen), daher dauert das echte Versagen meist länger, und man muss diszipliniert sein, um den Satz nicht vorzeitig abzubrechen.",
+      fr: "Extension des mollets debout ou assis, amplitude complète depuis l'étirement maximal jusqu'à la contraction maximale, avec une courte pause en haut. 1-2 séries à l'échec : c'est un muscle habitué à l'effort quotidien (marcher, monter des escaliers), donc le véritable échec met généralement plus de temps à arriver et il faut être strict pour ne pas couper la série trop tôt.",
+      zh: "站姿或坐姿提踵,从最大拉伸到最大收缩的完整动作范围,顶点短暂停顿。1-2组练到力竭:这是一块习惯了日常负荷(走路、上楼梯)的肌肉,所以真正的力竭往往需要更久才能到达,必须严格执行,不要提前结束这组。",
+      ru: "Подъёмы на носки стоя или сидя, полная амплитуда от максимального растяжения до максимального сокращения, с короткой паузой вверху. 1-2 подхода до отказа: это мышца, привыкшая к ежедневной нагрузке (ходьба, подъём по лестнице), поэтому настоящий отказ обычно наступает позже, и важно быть строгим, чтобы не прервать подход раньше времени.",
+      ja: "スタンディングまたはシーテッドカーフレイズを、最大ストレッチ位置から最大収縮位置までフルレンジで行い、トップポジションで短くポーズを取る。1〜2セットを限界まで：この筋肉は日常的な負荷（歩行、階段昇降）に慣れているため、本当の限界に達するまで時間がかかりやすく、セットを早く切り上げすぎないよう厳格に行う必要がある。",
+    },
+    estiramiento: {
+      es: "De pie frente a una pared, un pie atrás con el talón apoyado en el piso y la rodilla extendida, inclinando el cuerpo hacia la pared hasta sentir el estiramiento en la pantorrilla. 20-30 segundos por lado.",
+      en: "Standing facing a wall, one foot back with the heel on the floor and the knee extended, leaning the body toward the wall until you feel the stretch in the calf. 20-30 seconds per side.",
+      pt: "Em pé de frente para uma parede, um pé atrás com o calcanhar apoiado no chão e o joelho estendido, inclinando o corpo em direção à parede até sentir o alongamento na panturrilha. 20-30 segundos de cada lado.",
+      de: "Im Stehen vor einer Wand, ein Fuß nach hinten mit der Ferse am Boden und gestrecktem Knie, den Körper zur Wand neigen, bis die Dehnung in der Wade spürbar wird. 20-30 Sekunden pro Seite.",
+      fr: "Debout face à un mur, un pied en arrière avec le talon posé au sol et le genou tendu, en inclinant le corps vers le mur jusqu'à sentir l'étirement dans le mollet. 20-30 secondes de chaque côté.",
+      zh: "面对墙壁站立,一只脚在后,脚跟贴地、膝盖伸直,身体向墙倾斜直到小腿感到拉伸。每侧20-30秒。",
+      ru: "Стоя лицом к стене, одна нога отведена назад, пятка на полу, колено выпрямлено, наклон тела к стене до ощущения растяжения в икре. 20-30 секунд на каждую сторону.",
+      ja: "壁の前に立ち、片足を後ろに引いてかかとを床につけ膝を伸ばした状態で、体を壁の方に傾けてふくらはぎにストレッチを感じる。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "5-6 días antes de volver a entrenarlos de forma directa. Al recibir uso constante fuera del gimnasio, es tentador entrenarlos más seguido pensando que \"aguantan más\" — pero sin descanso completo el estímulo directo se diluye igual que en cualquier otro músculo.",
+      en: "5-6 days before training them directly again. Since they get constant use outside the gym, it's tempting to train them more often thinking they \"can take more\" — but without full rest, the direct stimulus gets diluted just like in any other muscle.",
+      pt: "5-6 dias antes de voltar a treiná-las diretamente. Por receberem uso constante fora da academia, é tentador treiná-las com mais frequência pensando que \"aguentam mais\" — mas sem descanso completo o estímulo direto se dilui igual a qualquer outro músculo.",
+      de: "5-6 Tage, bevor sie wieder direkt trainiert werden. Da sie außerhalb des Gyms ständig beansprucht werden, ist es verlockend, sie häufiger zu trainieren, weil sie vermeintlich \"mehr aushalten\" — aber ohne vollständige Erholung verwässert sich der direkte Reiz genauso wie bei jedem anderen Muskel.",
+      fr: "5-6 jours avant de les entraîner à nouveau directement. Recevant un usage constant en dehors de la salle, il est tentant de les entraîner plus souvent en pensant qu'\"ils tiennent plus\" — mais sans repos complet, le stimulus direct se dilue comme pour tout autre muscle.",
+      zh: "再次直接训练它之前需要休息5-6天。由于在健身房之外也持续承受日常使用,很容易误以为\"它们更耐练\"而想更频繁地训练——但如果没有完整休息,直接刺激的效果和其他任何肌肉一样都会被稀释。",
+      ru: "5-6 дней перед следующей прямой тренировкой. Поскольку икры постоянно нагружаются вне зала, возникает соблазн тренировать их чаще, думая, что они «выдерживают больше», — но без полного отдыха прямой стимул размывается точно так же, как у любой другой мышцы.",
+      ja: "再び直接鍛えるまで5〜6日。ジムの外でも常時使われている部位なので「もっと頻繁に鍛えられるはず」と考えがちだが、完全な休養なしでは他のどの筋肉とも同じように直接的な刺激効果が薄れてしまう。",
+    },
   },
   "antebrazo-flexor": {
-    nombre: "Antebrazo (flexores)",
+    nombre: {
+      es: "Antebrazo (flexores)",
+      en: "Forearm (flexors)",
+      pt: "Antebraço (flexores)",
+      de: "Unterarm (Beugemuskulatur)",
+      fr: "Avant-bras (fléchisseurs)",
+      zh: "前臂(屈肌)",
+      ru: "Предплечье (сгибатели)",
+      ja: "前腕（屈筋群）",
+    },
     grupo: "antebrazos",
-    ejercicio:
-      "Ya reciben trabajo isométrico intenso sosteniendo la barra en " +
-      "dominadas, remo y curl: no forman parte de ningún patrón " +
-      "Push/Pull/Legs y el trabajo directo es opcional. Si se agrega, un " +
-      "solo ejercicio (curl de muñeca con barra o mancuerna, antebrazo " +
-      "apoyado) con 1 serie al fallo, recorrido completo desde la " +
-      "extensión máxima hasta la flexión máxima.",
-    estiramiento:
-      "Brazo extendido al frente, palma hacia arriba, con la otra mano " +
-      "llevando los dedos hacia abajo y atrás hasta sentir tensión en la " +
-      "cara interna del antebrazo. 20-30 segundos por lado.",
-    recuperacion:
-      "4-5 días antes de volver a estimularlos de forma directa. Al recibir " +
-      "uso constante como agarre en casi cualquier ejercicio de tirón, " +
-      "sumar series de curl de muñeca en días \"libres\" es la forma más " +
-      "común de no dejarlos recuperar del todo.",
+    ejercicio: {
+      es: "Ya reciben trabajo isométrico intenso sosteniendo la barra en dominadas, remo y curl: no forman parte de ningún patrón Push/Pull/Legs y el trabajo directo es opcional. Si se agrega, un solo ejercicio (curl de muñeca con barra o mancuerna, antebrazo apoyado) con 1 serie al fallo, recorrido completo desde la extensión máxima hasta la flexión máxima.",
+      en: "Already get intense isometric work holding the bar in pull-ups, rows, and curls: they aren't part of any Push/Pull/Legs pattern and direct work is optional. If added, a single exercise (wrist curl with barbell or dumbbell, forearm supported) with 1 set to failure, full range of motion from maximum extension to maximum flexion.",
+      pt: "Já recebem trabalho isométrico intenso segurando a barra na barra fixa, no remo e na rosca: não fazem parte de nenhum padrão Push/Pull/Legs e o trabalho direto é opcional. Se for adicionado, um único exercício (rosca de punho com barra ou halter, antebraço apoiado) com 1 série até a falha, percurso completo desde a extensão máxima até a flexão máxima.",
+      de: "Sie bekommen bereits intensive isometrische Arbeit durch das Halten der Stange bei Klimmzügen, Rudern und Curls: Sie gehören zu keinem Push/Pull/Legs-Muster, direktes Training ist optional. Wird es ergänzt, dann eine einzige Übung (Handgelenk-Curl mit Lang- oder Kurzhantel, Unterarm aufgestützt) mit 1 Satz bis zum Versagen, voller Bewegungsumfang von der maximalen Streckung bis zur maximalen Beugung.",
+      fr: "Reçoivent déjà un travail isométrique intense en tenant la barre lors des tractions, du rowing et du curl : ils ne font partie d'aucun schéma Push/Pull/Legs et le travail direct est facultatif. S'il est ajouté, un seul exercice (curl de poignet à la barre ou à l'haltère, avant-bras appuyé) avec 1 série à l'échec, amplitude complète depuis l'extension maximale jusqu'à la flexion maximale.",
+      zh: "在引体向上、划船和弯举中握住杠铃时已经承受了高强度的等长收缩训练:不属于任何Push/Pull/Legs分类,直接训练是可选的。如果要增加,只做一个动作(杠铃或哑铃腕弯举,前臂支撑),1组练到力竭,从最大伸展到最大屈曲完整动作范围。",
+      ru: "Уже получают интенсивную изометрическую нагрузку, удерживая гриф в подтягиваниях, тяге и подъёме на бицепс: не входят ни в один паттерн Push/Pull/Legs, и прямая работа необязательна. Если добавляется, достаточно одного упражнения (сгибание запястья со штангой или гантелью, предплечье лежит на опоре) с 1 подходом до отказа, полная амплитуда от максимального разгибания до максимального сгибания.",
+      ja: "懸垂、ロウイング、カールでバーを握ることによってすでに強い等尺性収縮の刺激を受けている：Push/Pull/Legsのいずれのパターンにも属さず、直接種目は任意。加える場合は種目を1つ（前腕を台に乗せて行う、バーベルまたはダンベルでのリストカール）に絞り、1セットを限界まで、最大伸展位置から最大屈曲位置までフルレンジで行う。",
+    },
+    estiramiento: {
+      es: "Brazo extendido al frente, palma hacia arriba, con la otra mano llevando los dedos hacia abajo y atrás hasta sentir tensión en la cara interna del antebrazo. 20-30 segundos por lado.",
+      en: "Arm extended in front, palm facing up, with the other hand pulling the fingers down and back until you feel tension on the inner side of the forearm. 20-30 seconds per side.",
+      pt: "Braço estendido à frente, palma para cima, com a outra mão levando os dedos para baixo e para trás até sentir tensão na face interna do antebraço. 20-30 segundos de cada lado.",
+      de: "Arm nach vorne gestreckt, Handfläche nach oben, mit der anderen Hand die Finger nach unten und hinten ziehen, bis Spannung an der Innenseite des Unterarms spürbar wird. 20-30 Sekunden pro Seite.",
+      fr: "Bras tendu devant soi, paume vers le haut, avec l'autre main amenant les doigts vers le bas et l'arrière jusqu'à sentir une tension sur la face interne de l'avant-bras. 20-30 secondes de chaque côté.",
+      zh: "手臂在身前伸直,掌心向上,用另一只手将手指向下、向后拉动,直到前臂内侧感到张力。每侧20-30秒。",
+      ru: "Рука вытянута вперёд, ладонь вверх, другой рукой отвести пальцы вниз и назад до ощущения натяжения на внутренней стороне предплечья. 20-30 секунд на каждую сторону.",
+      ja: "腕を前に伸ばし手のひらを上に向け、反対の手で指を下方・後方に引いて前腕内側にテンションを感じる。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "4-5 días antes de volver a estimularlos de forma directa. Al recibir uso constante como agarre en casi cualquier ejercicio de tirón, sumar series de curl de muñeca en días \"libres\" es la forma más común de no dejarlos recuperar del todo.",
+      en: "4-5 days before stimulating them directly again. Since they get constant use as grip in almost any pulling exercise, adding wrist curl sets on \"free\" days is the most common way to not let them fully recover.",
+      pt: "4-5 dias antes de voltar a estimulá-los diretamente. Por receberem uso constante como pegada em quase qualquer exercício de puxada, somar séries de rosca de punho em dias \"livres\" é a forma mais comum de não deixá-los recuperar completamente.",
+      de: "4-5 Tage, bevor sie wieder direkt gereizt werden. Da sie bei fast jeder Zugübung ständig als Griff beansprucht werden, ist es der häufigste Fehler, an \"freien\" Tagen zusätzliche Handgelenk-Curl-Sätze einzubauen und ihnen so die vollständige Erholung zu verwehren.",
+      fr: "4-5 jours avant de les stimuler à nouveau directement. Recevant un usage constant comme prise dans presque tout exercice de tirage, ajouter des séries de curl de poignet les jours \"libres\" est la façon la plus courante de ne pas les laisser récupérer complètement.",
+      zh: "再次直接刺激之前需要休息4-5天。由于在几乎任何拉的动作中作为握力持续承受负荷,在\"空闲\"的日子里加练腕弯举组数,是最常见的让它们无法完全恢复的方式。",
+      ru: "4-5 дней перед следующей прямой стимуляцией. Поскольку предплечья постоянно задействованы как хват почти в любом тянущем упражнении, добавление подходов сгибания запястья в «свободные» дни — самый частый способ не дать им восстановиться полностью.",
+      ja: "再び直接刺激を与えるまで4〜5日。ほぼすべての引く種目でグリップとして常時使われているため、「オフ」の日にリストカールのセットを追加することが、完全に回復させられない最も一般的な原因になる。",
+    },
   },
   "antebrazo-extensor": {
-    nombre: "Antebrazo (extensores)",
+    nombre: {
+      es: "Antebrazo (extensores)",
+      en: "Forearm (extensors)",
+      pt: "Antebraço (extensores)",
+      de: "Unterarm (Streckmuskulatur)",
+      fr: "Avant-bras (extenseurs)",
+      zh: "前臂(伸肌)",
+      ru: "Предплечье (разгибатели)",
+      ja: "前腕（伸筋群）",
+    },
     grupo: "antebrazos",
-    ejercicio:
-      "Ya reciben estímulo indirecto sosteniendo la barra con la muñeca " +
-      "fija en el press de banca y el press militar; no forman parte de " +
-      "ningún patrón Push/Pull/Legs. Si se entrenan de forma directa, " +
-      "extensión de muñeca con mancuerna liviana o barra, antebrazo " +
-      "apoyado, 1 serie al fallo, recorrido completo y controlado.",
-    estiramiento:
-      "Brazo extendido al frente, palma hacia abajo, con la otra mano " +
-      "flexionando la muñeca hacia abajo hasta sentir tensión en la cara " +
-      "externa del antebrazo. 20-30 segundos por lado.",
-    recuperacion:
-      "4-5 días antes de volver a cargarlos directo. Son músculos pequeños " +
-      "que se fatigan rápido pero también se recuperan rápido: forzarlos " +
-      "de nuevo antes de tiempo no acelera el progreso, solo acumula " +
-      "fatiga sobre un agarre que ya está en uso en la próxima sesión.",
+    ejercicio: {
+      es: "Ya reciben estímulo indirecto sosteniendo la barra con la muñeca fija en el press de banca y el press militar; no forman parte de ningún patrón Push/Pull/Legs. Si se entrenan de forma directa, extensión de muñeca con mancuerna liviana o barra, antebrazo apoyado, 1 serie al fallo, recorrido completo y controlado.",
+      en: "Already get indirect stimulus holding the bar with a fixed wrist in the bench press and overhead press; they aren't part of any Push/Pull/Legs pattern. If trained directly, wrist extension with a light dumbbell or bar, forearm supported, 1 set to failure, full and controlled range of motion.",
+      pt: "Já recebem estímulo indireto segurando a barra com o punho fixo no supino e no desenvolvimento militar; não fazem parte de nenhum padrão Push/Pull/Legs. Se forem treinados diretamente, extensão de punho com halter leve ou barra, antebraço apoiado, 1 série até a falha, percurso completo e controlado.",
+      de: "Sie bekommen bereits indirekten Reiz durch das Halten der Stange mit fixiertem Handgelenk beim Bankdrücken und Military Press; sie gehören zu keinem Push/Pull/Legs-Muster. Werden sie direkt trainiert, dann Handgelenkstreckung mit leichter Kurzhantel oder Langhantel, Unterarm aufgestützt, 1 Satz bis zum Versagen, voller kontrollierter Bewegungsumfang.",
+      fr: "Reçoivent déjà un stimulus indirect en tenant la barre avec le poignet fixe lors du développé couché et du développé militaire ; ils ne font partie d'aucun schéma Push/Pull/Legs. S'ils sont entraînés directement, extension de poignet avec un haltère léger ou une barre, avant-bras appuyé, 1 série à l'échec, amplitude complète et contrôlée.",
+      zh: "在卧推和坐姿推举中手腕固定握住杠铃时已经获得间接刺激;不属于任何Push/Pull/Legs分类。如果要直接训练,用轻哑铃或杠铃做腕伸展,前臂支撑,1组练到力竭,动作全程可控。",
+      ru: "Уже получают непрямой стимул, удерживая гриф с зафиксированным запястьем в жиме лёжа и жиме стоя; не входят ни в один паттерн Push/Pull/Legs. При прямой тренировке — разгибание запястья с лёгкой гантелью или штангой, предплечье лежит на опоре, 1 подход до отказа, полная контролируемая амплитуда.",
+      ja: "ベンチプレスやミリタリープレスで手首を固定してバーを支えることによってすでに間接刺激を受けている：Push/Pull/Legsのいずれのパターンにも属さない。直接鍛える場合は、前腕を台に乗せて行う軽いダンベルまたはバーベルでのリストエクステンション、1セットを限界まで、フルレンジでコントロールして行う。",
+    },
+    estiramiento: {
+      es: "Brazo extendido al frente, palma hacia abajo, con la otra mano flexionando la muñeca hacia abajo hasta sentir tensión en la cara externa del antebrazo. 20-30 segundos por lado.",
+      en: "Arm extended in front, palm facing down, with the other hand flexing the wrist downward until you feel tension on the outer side of the forearm. 20-30 seconds per side.",
+      pt: "Braço estendido à frente, palma para baixo, com a outra mão flexionando o punho para baixo até sentir tensão na face externa do antebraço. 20-30 segundos de cada lado.",
+      de: "Arm nach vorne gestreckt, Handfläche nach unten, mit der anderen Hand das Handgelenk nach unten beugen, bis Spannung an der Außenseite des Unterarms spürbar wird. 20-30 Sekunden pro Seite.",
+      fr: "Bras tendu devant soi, paume vers le bas, avec l'autre main fléchissant le poignet vers le bas jusqu'à sentir une tension sur la face externe de l'avant-bras. 20-30 secondes de chaque côté.",
+      zh: "手臂在身前伸直,掌心向下,用另一只手将手腕向下弯曲,直到前臂外侧感到张力。每侧20-30秒。",
+      ru: "Рука вытянута вперёд, ладонь вниз, другой рукой согнуть запястье вниз до ощущения натяжения на внешней стороне предплечья. 20-30 секунд на каждую сторону.",
+      ja: "腕を前に伸ばし手のひらを下に向け、反対の手で手首を下に曲げて前腕外側にテンションを感じる。左右各20〜30秒。",
+    },
+    recuperacion: {
+      es: "4-5 días antes de volver a cargarlos directo. Son músculos pequeños que se fatigan rápido pero también se recuperan rápido: forzarlos de nuevo antes de tiempo no acelera el progreso, solo acumula fatiga sobre un agarre que ya está en uso en la próxima sesión.",
+      en: "4-5 days before loading them directly again. They're small muscles that fatigue quickly but also recover quickly: forcing them again too soon doesn't speed up progress, it just piles fatigue onto a grip that's already in use in the next session.",
+      pt: "4-5 dias antes de voltar a sobrecarregá-los diretamente. São músculos pequenos que fadigam rápido, mas também se recuperam rápido: forçá-los de novo antes da hora não acelera o progresso, só acumula fadiga sobre uma pegada que já está em uso na próxima sessão.",
+      de: "4-5 Tage, bevor sie wieder direkt belastet werden. Es sind kleine Muskeln, die schnell ermüden, sich aber auch schnell erholen: Sie vorzeitig erneut zu belasten beschleunigt den Fortschritt nicht, sondern häuft nur Ermüdung auf einen Griff an, der in der nächsten Einheit ohnehin schon im Einsatz ist.",
+      fr: "4-5 jours avant de les recharger directement. Ce sont de petits muscles qui se fatiguent vite mais qui récupèrent aussi vite : les forcer à nouveau trop tôt n'accélère pas le progrès, cela ne fait qu'accumuler de la fatigue sur une prise déjà utilisée lors de la séance suivante.",
+      zh: "再次直接施加负荷之前需要休息4-5天。这是一块疲劳很快、但也恢复很快的小肌肉:提前强行训练不会加快进步,只会在下一次训练已经在使用的握力上继续累积疲劳。",
+      ru: "4-5 дней перед следующей прямой нагрузкой. Это небольшие мышцы, которые быстро устают, но и быстро восстанавливаются: форсировать их раньше срока не ускоряет прогресс, а лишь накапливает усталость на хвате, который уже будет задействован на следующей тренировке.",
+      ja: "再び直接負荷をかけるまで4〜5日。素早く疲労するが素早く回復する小さな筋肉：時期尚早に無理をさせても進歩は早まらず、次のセッションですでに使われるグリップに疲労を上乗せするだけになる。",
+    },
   },
-  abdominales: {
-    nombre: "Abdominales",
+  "abdominales": {
+    nombre: {
+      es: "Abdominales",
+      en: "Abs",
+      pt: "Abdominais",
+      de: "Bauchmuskeln",
+      fr: "Abdominaux",
+      zh: "腹肌",
+      ru: "Пресс (прямая мышца живота)",
+      ja: "腹筋",
+    },
     grupo: "core",
-    ejercicio:
-      "Ya reciben trabajo isométrico intenso como estabilizadores en la " +
-      "sentadilla, el peso muerto rumano y el press militar; no forman " +
-      "parte de ningún patrón Push/Pull/Legs y el trabajo directo es " +
-      "opcional. Si se agrega, un solo ejercicio (elevaciones de piernas " +
-      "colgado o crunch en polea) con 1 serie al fallo, recorrido completo, " +
-      "sin tirar del cuello con las manos.",
-    estiramiento:
-      "Tendido boca abajo, apoyado sobre los antebrazos o con los brazos " +
-      "extendidos (posición de cobra), dejando caer la cadera para " +
-      "extender suavemente el torso. 20-30 segundos, sin forzar la zona " +
-      "lumbar.",
-    recuperacion:
-      "5-7 días si se entrenaron directo al fallo. Al ser estabilizadores " +
-      "activos en casi cualquier ejercicio compuesto, sumar series extra en " +
-      "días \"libres\" es la forma más común de no dejarlos recuperar del " +
-      "todo.",
+    ejercicio: {
+      es: "Ya reciben trabajo isométrico intenso como estabilizadores en la sentadilla, el peso muerto rumano y el press militar; no forman parte de ningún patrón Push/Pull/Legs y el trabajo directo es opcional. Si se agrega, un solo ejercicio (elevaciones de piernas colgado o crunch en polea) con 1 serie al fallo, recorrido completo, sin tirar del cuello con las manos.",
+      en: "Already get intense isometric work as stabilizers in the squat, the Romanian deadlift, and the overhead press; they aren't part of any Push/Pull/Legs pattern and direct work is optional. If added, a single exercise (hanging leg raises or cable crunch) with 1 set to failure, full range of motion, without pulling on the neck with the hands.",
+      pt: "Já recebem trabalho isométrico intenso como estabilizadores no agachamento, no levantamento terra romeno e no desenvolvimento militar; não fazem parte de nenhum padrão Push/Pull/Legs e o trabalho direto é opcional. Se for adicionado, um único exercício (elevação de pernas suspenso ou crunch na polia) com 1 série até a falha, percurso completo, sem puxar o pescoço com as mãos.",
+      de: "Sie bekommen bereits intensive isometrische Arbeit als Stabilisatoren bei der Kniebeuge, dem rumänischen Kreuzheben und dem Military Press; sie gehören zu keinem Push/Pull/Legs-Muster, direktes Training ist optional. Wird es ergänzt, dann eine einzige Übung (hängendes Beinheben oder Kabelzug-Crunch) mit 1 Satz bis zum Versagen, voller Bewegungsumfang, ohne mit den Händen am Nacken zu ziehen.",
+      fr: "Reçoivent déjà un travail isométrique intense comme stabilisateurs dans le squat, le soulevé de terre roumain et le développé militaire ; ils ne font partie d'aucun schéma Push/Pull/Legs et le travail direct est facultatif. S'il est ajouté, un seul exercice (relevés de jambes suspendu ou crunch à la poulie) avec 1 série à l'échec, amplitude complète, sans tirer sur le cou avec les mains.",
+      zh: "在深蹲、罗马尼亚硬拉和坐姿推举中作为稳定肌已经承受了高强度的等长收缩训练;不属于任何Push/Pull/Legs分类,直接训练是可选的。如果要增加,只做一个动作(悬垂举腿或绳索卷腹),1组练到力竭,动作全程,不要用手拉扯颈部。",
+      ru: "Уже получают интенсивную изометрическую нагрузку как стабилизаторы в приседе, румынской становой тяге и жиме стоя; не входят ни в один паттерн Push/Pull/Legs, и прямая работа необязательна. Если добавляется, достаточно одного упражнения (подъёмы ног в висе или скручивания на блоке) с 1 подходом до отказа, полная амплитуда, без подтягивания головы руками.",
+      ja: "スクワット、ルーマニアンデッドリフト、ミリタリープレスにおいて安定筋としてすでに強い等尺性収縮の刺激を受けている：Push/Pull/Legsのいずれのパターンにも属さず、直接種目は任意。加える場合は種目を1つ（ハンギングレッグレイズまたはケーブルクランチ）に絞り、1セットを限界まで、フルレンジで、手で首を引っ張らずに行う。",
+    },
+    estiramiento: {
+      es: "Tendido boca abajo, apoyado sobre los antebrazos o con los brazos extendidos (posición de cobra), dejando caer la cadera para extender suavemente el torso. 20-30 segundos, sin forzar la zona lumbar.",
+      en: "Lying face down, propped up on the forearms or with arms extended (cobra position), letting the hips drop to gently extend the torso. 20-30 seconds, without forcing the lower back.",
+      pt: "Deitado de bruços, apoiado sobre os antebraços ou com os braços estendidos (posição de cobra), deixando o quadril cair para estender suavemente o tronco. 20-30 segundos, sem forçar a lombar.",
+      de: "In Bauchlage, auf den Unterarmen abgestützt oder mit gestreckten Armen (Kobra-Position), die Hüfte sinken lassen, um den Oberkörper sanft zu strecken. 20-30 Sekunden, ohne den unteren Rücken zu forcieren.",
+      fr: "Allongé sur le ventre, appuyé sur les avant-bras ou avec les bras tendus (position du cobra), en laissant tomber la hanche pour étendre doucement le torse. 20-30 secondes, sans forcer sur le bas du dos.",
+      zh: "俯卧,用前臂或伸直的手臂支撑身体(眼镜蛇式姿势),让髋部下沉以轻轻伸展躯干。保持20-30秒,不要强迫下背部。",
+      ru: "Лёжа на животе, опираясь на предплечья или с вытянутыми руками (поза кобры), таз опускается вниз, мягко разгибая корпус. 20-30 секунд, без давления на поясницу.",
+      ja: "うつ伏せになり、前腕または伸ばした腕で上体を支える（コブラのポーズ）。骨盤を床に落とし、体幹を優しく伸展させる。20〜30秒、腰に無理な力をかけない。",
+    },
+    recuperacion: {
+      es: "5-7 días si se entrenaron directo al fallo. Al ser estabilizadores activos en casi cualquier ejercicio compuesto, sumar series extra en días \"libres\" es la forma más común de no dejarlos recuperar del todo.",
+      en: "5-7 days if trained directly to failure. Since they're active stabilizers in almost any compound exercise, adding extra sets on \"free\" days is the most common way to not let them fully recover.",
+      pt: "5-7 dias se treinados diretamente até a falha. Por serem estabilizadores ativos em quase qualquer exercício composto, somar séries extras em dias \"livres\" é a forma mais comum de não deixá-los recuperar completamente.",
+      de: "5-7 Tage, wenn sie direkt bis zum Versagen trainiert wurden. Da sie bei fast jeder Grundübung als aktive Stabilisatoren mitarbeiten, ist es der häufigste Fehler, an \"freien\" Tagen zusätzliche Sätze einzubauen und ihnen so die vollständige Erholung zu verwehren.",
+      fr: "5-7 jours s'ils ont été entraînés directement à l'échec. Étant des stabilisateurs actifs dans presque tout exercice composé, ajouter des séries supplémentaires les jours \"libres\" est la façon la plus courante de ne pas les laisser récupérer complètement.",
+      zh: "如果直接练到力竭,需要休息5-7天。作为几乎任何复合动作中活跃的稳定肌,在\"空闲\"的日子里加练额外组数,是最常见的让它们无法完全恢复的方式。",
+      ru: "5-7 дней, если тренировались напрямую до отказа. Будучи активными стабилизаторами почти в любом базовом упражнении, добавление лишних подходов в «свободные» дни — самый частый способ не дать им восстановиться полностью.",
+      ja: "限界まで直接鍛えた場合は5〜7日。ほぼすべてのコンパウンド種目で活発に働く安定筋であるため、「オフ」の日に追加セットを行うことが、完全に回復させられない最も一般的な原因になる。",
+    },
   },
-  oblicuos: {
-    nombre: "Oblicuos",
+  "oblicuos": {
+    nombre: {
+      es: "Oblicuos",
+      en: "Obliques",
+      pt: "Oblíquos",
+      de: "Schräge Bauchmuskeln (Obliquen)",
+      fr: "Obliques",
+      zh: "腹斜肌",
+      ru: "Косые мышцы живота",
+      ja: "腹斜筋",
+    },
     grupo: "core",
-    ejercicio:
-      "Reciben suficiente estímulo indirecto de la sentadilla, el peso " +
-      "muerto y el press por su rol estabilizador del torso; no pertenecen " +
-      "a ningún patrón Push/Pull/Legs. Si se entrenan de forma directa, " +
-      "flexión lateral de torso con mancuerna o giros en polea, 1 serie al " +
-      "fallo por lado, movimiento controlado sin balancear la cadera.",
-    estiramiento:
-      "De pie, un brazo elevado por encima de la cabeza, inclinando el " +
-      "torso hacia el lado contrario hasta sentir el estiramiento en el " +
-      "costado. 20-30 segundos por lado, sin rebotar.",
-    recuperacion:
-      "5-7 días antes de volver a cargarlos directo. Dolor lateral al " +
-      "girar el torso o al toser más allá de 48-72h es señal de que " +
-      "todavía no recuperaron del todo.",
+    ejercicio: {
+      es: "Reciben suficiente estímulo indirecto de la sentadilla, el peso muerto y el press por su rol estabilizador del torso; no pertenecen a ningún patrón Push/Pull/Legs. Si se entrenan de forma directa, flexión lateral de torso con mancuerna o giros en polea, 1 serie al fallo por lado, movimiento controlado sin balancear la cadera.",
+      en: "Get enough indirect stimulus from the squat, deadlift, and press through their role stabilizing the torso; they don't belong to any Push/Pull/Legs pattern. If trained directly, side bend with a dumbbell or cable twists, 1 set to failure per side, controlled movement without swinging the hips.",
+      pt: "Recebem estímulo indireto suficiente do agachamento, do levantamento terra e do supino por seu papel estabilizador do tronco; não pertencem a nenhum padrão Push/Pull/Legs. Se forem treinados diretamente, flexão lateral de tronco com halter ou giros na polia, 1 série até a falha por lado, movimento controlado sem balançar o quadril.",
+      de: "Sie bekommen ausreichend indirekten Reiz durch Kniebeuge, Kreuzheben und Drückübungen aufgrund ihrer stabilisierenden Rolle für den Rumpf; sie gehören zu keinem Push/Pull/Legs-Muster. Werden sie direkt trainiert, dann seitliche Rumpfbeugen mit Kurzhantel oder Rotationen am Kabelzug, 1 Satz bis zum Versagen pro Seite, kontrollierte Bewegung ohne Schwung aus der Hüfte.",
+      fr: "Reçoivent un stimulus indirect suffisant du squat, du soulevé de terre et du développé grâce à leur rôle stabilisateur du torse ; ils n'appartiennent à aucun schéma Push/Pull/Legs. S'ils sont entraînés directement, flexion latérale du torse avec haltère ou rotations à la poulie, 1 série à l'échec par côté, mouvement contrôlé sans balancer la hanche.",
+      zh: "由于在深蹲、硬拉和推举中承担躯干稳定作用,已经获得足够的间接刺激;不属于任何Push/Pull/Legs分类。如果要直接训练,用哑铃做躯干侧屈或绳索转体,每侧1组练到力竭,动作可控,不要摇摆髋部。",
+      ru: "Получают достаточную непрямую нагрузку от приседа, становой тяги и жима благодаря своей стабилизирующей роли для корпуса; не относятся ни к одному паттерну Push/Pull/Legs. При прямой тренировке — боковые наклоны корпуса с гантелей или повороты на блоке, 1 подход до отказа на каждую сторону, контролируемое движение без раскачивания таза.",
+      ja: "体幹の安定筋としての役割を通じて、スクワット、デッドリフト、プレス種目から十分な間接刺激を受けている：Push/Pull/Legsのいずれのパターンにも属さない。直接鍛える場合は、ダンベルを使ったサイドベンドまたはケーブルでのツイスト、左右各1セットを限界まで、骨盤を振らずコントロールされた動作で行う。",
+    },
+    estiramiento: {
+      es: "De pie, un brazo elevado por encima de la cabeza, inclinando el torso hacia el lado contrario hasta sentir el estiramiento en el costado. 20-30 segundos por lado, sin rebotar.",
+      en: "Standing, one arm raised overhead, leaning the torso toward the opposite side until you feel the stretch along the flank. 20-30 seconds per side, without bouncing.",
+      pt: "Em pé, um braço elevado acima da cabeça, inclinando o tronco para o lado contrário até sentir o alongamento na lateral do corpo. 20-30 segundos de cada lado, sem balançar.",
+      de: "Im Stehen einen Arm über den Kopf heben, den Oberkörper zur Gegenseite neigen, bis die Dehnung an der Flanke spürbar wird. 20-30 Sekunden pro Seite, ohne zu wippen.",
+      fr: "Debout, un bras levé au-dessus de la tête, en inclinant le torse vers le côté opposé jusqu'à sentir l'étirement sur le flanc. 20-30 secondes de chaque côté, sans rebondir.",
+      zh: "站立,一只手臂举过头顶,躯干向对侧倾斜,直到体侧感到拉伸。每侧20-30秒,不要弹振。",
+      ru: "Стоя, одна рука поднята над головой, наклон корпуса в противоположную сторону до ощущения растяжения в боку. 20-30 секунд на каждую сторону, без раскачивания.",
+      ja: "立った状態で片腕を頭上に上げ、体幹を反対側に傾けて脇腹にストレッチを感じる。左右各20〜30秒、反動をつけない。",
+    },
+    recuperacion: {
+      es: "5-7 días antes de volver a cargarlos directo. Dolor lateral al girar el torso o al toser más allá de 48-72h es señal de que todavía no recuperaron del todo.",
+      en: "5-7 days before loading them directly again. Pain on the side when twisting the torso or coughing beyond 48-72h is a sign they haven't fully recovered yet.",
+      pt: "5-7 dias antes de voltar a sobrecarregá-los diretamente. Dor lateral ao girar o tronco ou ao tossir além de 48-72h é sinal de que ainda não recuperaram completamente.",
+      de: "5-7 Tage, bevor sie wieder direkt belastet werden. Seitliche Schmerzen beim Drehen des Oberkörpers oder beim Husten, die über 48-72 Stunden hinaus anhalten, sind ein Zeichen, dass sie sich noch nicht vollständig erholt haben.",
+      fr: "5-7 jours avant de les recharger directement. Une douleur latérale en tournant le torse ou en toussant au-delà de 48-72h est le signe qu'ils ne se sont pas encore complètement rétablis.",
+      zh: "再次直接施加负荷之前需要休息5-7天。如果转动躯干或咳嗽时的体侧疼痛持续超过48-72小时,说明还没有完全恢复。",
+      ru: "5-7 дней перед следующей прямой нагрузкой. Боль сбоку при повороте корпуса или кашле, сохраняющаяся дольше 48-72 часов, — сигнал, что восстановление ещё не завершилось полностью.",
+      ja: "再び直接負荷をかけるまで5〜7日。体幹をひねったり咳をしたりしたときの脇腹の痛みが48〜72時間を超えて続く場合は、まだ完全に回復していないサイン。",
+    },
   },
 };
