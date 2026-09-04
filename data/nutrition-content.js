@@ -87,7 +87,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "7:00",
         nombre: {
@@ -164,7 +164,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:00",
         nombre: {
@@ -241,7 +241,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "17:00",
         nombre: {
@@ -318,7 +318,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "21:00",
         nombre: {
@@ -433,7 +433,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "7:30",
         nombre: {
@@ -510,7 +510,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:00",
         nombre: {
@@ -587,7 +587,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "17:00",
         nombre: {
@@ -654,7 +654,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "20:30",
         nombre: {
@@ -759,7 +759,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "7:00",
         nombre: {
@@ -836,7 +836,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:00",
         nombre: {
@@ -913,7 +913,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "17:30",
         nombre: {
@@ -980,7 +980,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "21:00",
         nombre: {
@@ -1085,7 +1085,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "7:30",
         nombre: {
@@ -1162,7 +1162,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:00",
         nombre: {
@@ -1229,7 +1229,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "17:00",
         nombre: {
@@ -1296,7 +1296,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "20:30",
         nombre: {
@@ -1401,7 +1401,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "7:00",
         nombre: {
@@ -1478,7 +1478,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:00",
         nombre: {
@@ -1555,7 +1555,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "16:30",
         nombre: {
@@ -1632,7 +1632,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "21:00",
         nombre: {
@@ -1737,7 +1737,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "8:30",
         nombre: {
@@ -1804,7 +1804,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:30",
         nombre: {
@@ -1871,7 +1871,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "17:30",
         nombre: {
@@ -1938,7 +1938,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "21:00",
         nombre: {
@@ -2043,7 +2043,7 @@ const NUTRITION_PLAN = [
       fr: "Petit-déjeuner",
       zh: "早餐",
       ru: "Завтрак",
-      ja: "Desayuno",
+      ja: "朝食",
     },
         hora: "9:00",
         nombre: {
@@ -2130,7 +2130,7 @@ const NUTRITION_PLAN = [
       fr: "Déjeuner",
       zh: "午餐",
       ru: "Обед",
-      ja: "Almuerzo",
+      ja: "昼食",
     },
         hora: "13:30",
         nombre: {
@@ -2207,7 +2207,7 @@ const NUTRITION_PLAN = [
       fr: "Collation",
       zh: "加餐",
       ru: "Полдник",
-      ja: "Merienda",
+      ja: "間食",
     },
         hora: "17:30",
         nombre: {
@@ -2274,7 +2274,7 @@ const NUTRITION_PLAN = [
       fr: "Dîner",
       zh: "晚餐",
       ru: "Ужин",
-      ja: "Cena",
+      ja: "夕食",
     },
         hora: "20:30",
         nombre: {
