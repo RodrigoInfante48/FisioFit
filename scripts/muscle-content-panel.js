@@ -51,6 +51,11 @@ const SWAP_OUT_MS = window.matchMedia("(prefers-reduced-motion: reduce)")
   ? 0
   : 220;
 
+// data/muscle-content.js: nombre/ejercicio/estiramiento/recuperacion son
+// objetos keyed por idioma (mismo patrón que I18N_STRINGS) — se resuelven
+// acá al idioma actual, con fallback a "es".
+const pick = (field) => window.FisioFitI18n.pick(field);
+
 let panelEl = null;
 let scrollEl = null;
 // Prefijo "panel" para no colisionar con "selectedMuscle"/"selectedGroup",
@@ -122,7 +127,7 @@ function buildSectionList(title, iconKey, muscleIds, field) {
   const items = muscleIds
     .map((id) => {
       const data = MUSCLE_CONTENT[id];
-      return `<li><strong>${data.nombre}:</strong> ${data[field]}</li>`;
+      return `<li><strong>${pick(data.nombre)}:</strong> ${pick(data[field])}</li>`;
     })
     .join("");
 
@@ -138,19 +143,20 @@ function buildSectionList(title, iconKey, muscleIds, field) {
 
 function buildMuscleBody(muscleId) {
   const data = MUSCLE_CONTENT[muscleId];
+  const nombre = pick(data.nombre);
 
   return `
     <div class="content-panel__body">
       <header class="content-panel__header">
-        <h2 class="content-panel__title">${data.nombre}</h2>
+        <h2 class="content-panel__title">${nombre}</h2>
         <span class="content-panel__badge content-panel__badge--${data.grupo}">${groupLabel(data.grupo)}</span>
       </header>
       <div class="content-panel__sections">
-        ${buildSection(window.FisioFitI18n.t("panel.section.exercise"), "ejercicio", data.ejercicio)}
-        ${buildSection(window.FisioFitI18n.t("panel.section.stretch"), "estiramiento", data.estiramiento)}
-        ${buildSection(window.FisioFitI18n.t("panel.section.recovery"), "recuperacion", data.recuperacion)}
+        ${buildSection(window.FisioFitI18n.t("panel.section.exercise"), "ejercicio", pick(data.ejercicio))}
+        ${buildSection(window.FisioFitI18n.t("panel.section.stretch"), "estiramiento", pick(data.estiramiento))}
+        ${buildSection(window.FisioFitI18n.t("panel.section.recovery"), "recuperacion", pick(data.recuperacion))}
       </div>
-      ${buildRecoveryCTA(data.nombre)}
+      ${buildRecoveryCTA(nombre)}
     </div>
   `;
 }

@@ -114,8 +114,9 @@
         tabindex="0"
         aria-roledescription="carrusel"
         aria-label="Plan de comidas por día"
+        data-i18n-aria-label="nutrition.carouselLabel"
       >
-        <div class="nutrition-carousel__tabs" role="tablist" aria-label="Elegir día de la semana"></div>
+        <div class="nutrition-carousel__tabs" role="tablist" aria-label="Elegir día de la semana" data-i18n-aria-label="nutrition.dayPickerLabel"></div>
 
         <div class="nutrition-carousel__viewport">
           <div class="nutrition-carousel__track"></div>
@@ -126,7 +127,7 @@
         </div>
 
         <div class="nutrition-carousel__controls">
-          <button class="nutrition-carousel__arrow nutrition-carousel__arrow--prev" type="button" aria-label="Día anterior">
+          <button class="nutrition-carousel__arrow nutrition-carousel__arrow--prev" type="button" aria-label="Día anterior" data-i18n-aria-label="nutrition.dayPrev">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
               stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M15 6l-6 6 6 6" />
@@ -135,14 +136,14 @@
 
           <div class="nutrition-carousel__dots"></div>
 
-          <button class="nutrition-carousel__arrow nutrition-carousel__arrow--next" type="button" aria-label="Día siguiente">
+          <button class="nutrition-carousel__arrow nutrition-carousel__arrow--next" type="button" aria-label="Día siguiente" data-i18n-aria-label="nutrition.dayNext">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
               stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M9 6l6 6-6 6" />
             </svg>
           </button>
 
-          <button class="nutrition-carousel__playpause" type="button" aria-pressed="false" aria-label="Pausar avance automático">
+          <button class="nutrition-carousel__playpause" type="button" aria-pressed="false" aria-label="Pausar avance automático" data-i18n-aria-label="nutrition.pause">
             <svg class="icon-play" viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
               <path d="M8 5v14l11-7z" />
             </svg>
@@ -165,9 +166,5 @@
   <script src="data/nutrition-content.js"></script>
   <script src="scripts/nutrition.js"></script>
   <script src="scripts/ui-controls.js"></script>
-  <script>
-    document.getElementById("nutrition-intro-title").textContent = NUTRITION_INTRO.titulo;
-    document.getElementById("nutrition-intro-text").textContent = NUTRITION_INTRO.texto;
-  </script>
 </body>
 </html>

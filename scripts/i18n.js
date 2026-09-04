@@ -224,6 +224,106 @@ const I18N_STRINGS = {
     ru: "Запишись на баночный массаж или физиотерапию к Cami или Pipe — через WhatsApp",
     ja: "WhatsAppでCamiまたはPipeにカッピングや理学療法のセッションを予約しよう",
   },
+  "nutrition.group.rest": {
+    es: "Descanso",
+    en: "Rest",
+    pt: "Descanso",
+    de: "Ruhetag",
+    fr: "Repos",
+    zh: "休息",
+    ru: "Отдых",
+    ja: "休養",
+  },
+  "nutrition.carouselLabel": {
+    es: "Plan de comidas por día",
+    en: "Meal plan by day",
+    pt: "Plano de refeições por dia",
+    de: "Essensplan nach Tag",
+    fr: "Plan de repas par jour",
+    zh: "按日查看饮食计划",
+    ru: "План питания по дням",
+    ja: "曜日別ミールプラン",
+  },
+  "nutrition.dayPickerLabel": {
+    es: "Elegir día de la semana",
+    en: "Choose day of the week",
+    pt: "Escolher dia da semana",
+    de: "Wochentag auswählen",
+    fr: "Choisir le jour de la semaine",
+    zh: "选择星期几",
+    ru: "Выбрать день недели",
+    ja: "曜日を選択",
+  },
+  "nutrition.goToDay": {
+    es: "Ir a {day}",
+    en: "Go to {day}",
+    pt: "Ir para {day}",
+    de: "Zu {day} wechseln",
+    fr: "Aller à {day}",
+    zh: "转到{day}",
+    ru: "Перейти к {day}",
+    ja: "{day}へ移動",
+  },
+  "nutrition.dayPrev": {
+    es: "Día anterior",
+    en: "Previous day",
+    pt: "Dia anterior",
+    de: "Vorheriger Tag",
+    fr: "Jour précédent",
+    zh: "前一天",
+    ru: "Предыдущий день",
+    ja: "前の日",
+  },
+  "nutrition.dayNext": {
+    es: "Día siguiente",
+    en: "Next day",
+    pt: "Próximo dia",
+    de: "Nächster Tag",
+    fr: "Jour suivant",
+    zh: "后一天",
+    ru: "Следующий день",
+    ja: "次の日",
+  },
+  "nutrition.pause": {
+    es: "Pausar avance automático",
+    en: "Pause automatic advance",
+    pt: "Pausar avanço automático",
+    de: "Automatischen Wechsel pausieren",
+    fr: "Mettre en pause le défilement automatique",
+    zh: "暂停自动切换",
+    ru: "Приостановить автопрокрутку",
+    ja: "自動送りを一時停止",
+  },
+  "nutrition.resume": {
+    es: "Reanudar avance automático",
+    en: "Resume automatic advance",
+    pt: "Retomar avanço automático",
+    de: "Automatischen Wechsel fortsetzen",
+    fr: "Reprendre le défilement automatique",
+    zh: "恢复自动切换",
+    ru: "Возобновить автопрокрутку",
+    ja: "自動送りを再開",
+  },
+  "nutrition.kcalApprox": {
+    es: "{value} kcal aprox.",
+    en: "approx. {value} kcal",
+    pt: "{value} kcal aprox.",
+    de: "ca. {value} kcal",
+    fr: "{value} kcal environ",
+    zh: "约{value}千卡",
+    ru: "≈{value} ккал",
+    ja: "約{value} kcal",
+  },
+  "nutrition.proteinApprox": {
+    es: "{value} proteína aprox.",
+    en: "approx. {value} protein",
+    pt: "{value} de proteína aprox.",
+    de: "ca. {value} Protein",
+    fr: "{value} de protéines environ",
+    zh: "约{value}蛋白质",
+    ru: "≈{value} белка",
+    ja: "約{value}のたんぱく質",
+  },
   "cta.waMessage": {
     es: "Hola! Estuve viendo en la app FisioFit la recuperación de {context} y quiero agendar una sesión de ventosas / fisioterapia. ¿Tenés disponibilidad?",
     en: "Hi! I was looking at the recovery info for {context} in the FisioFit app and I'd like to book a cupping / physiotherapy session. Do you have availability?",
@@ -271,6 +371,19 @@ function i18nT(key, vars) {
   return text;
 }
 
+// Resuelve un campo de contenido keyed por idioma (mismo patrón que
+// I18N_STRINGS) — usado por data/muscle-content.js y
+// data/nutrition-content.js, donde cada campo traducible es un objeto
+// { es, en, pt, de, fr, zh, ru, ja } en vez de un string plano. Falla hacia
+// "es" si falta la traducción para el idioma actual (ver CLAUDE.md: el
+// contenido en español es la fuente de verdad).
+function i18nPick(field) {
+  if (field == null) return "";
+  if (typeof field === "string") return field;
+  var lang = i18nGetLang();
+  return field[lang] || field[I18N_DEFAULT_LANG] || "";
+}
+
 // Aplica las traducciones a todo el DOM ya presente: texto (data-i18n) y
 // atributos como aria-label (data-i18n-aria-label).
 function i18nApplyToDocument() {
@@ -287,6 +400,7 @@ window.FisioFitI18n = {
   getLang: i18nGetLang,
   setLang: i18nSetLang,
   t: i18nT,
+  pick: i18nPick,
   applyToDocument: i18nApplyToDocument,
 };
 
